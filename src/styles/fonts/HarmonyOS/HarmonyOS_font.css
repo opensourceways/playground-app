@@ -1,0 +1,121 @@
+/* 
+  100 Thin (Hairline)
+  200 Extra Light (Ultra Light)
+  300 Light
+  400 Normal
+  500 Medium
+  600 Semi Bold (Demi Bold)
+  700 Bold
+  800 Extra Bold (Ultra Bold)
+  900 Black (Heavy) 
+*/
+
+/* 鸿蒙中文 */
+@font-face {
+  font-family: "HarmonyOS Sans SC Web";
+  src: 
+    url(./HarmonyOS_Sans_SC/HarmonyOS_Sans_SC_Thin.woff2) format("woff2"),
+    url(./HarmonyOS_Sans_SC/HarmonyOS_Sans_SC_Thin.woff)  format("woff");
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "HarmonyOS Sans SC Web";
+  src: 
+    url(./HarmonyOS_Sans_SC/HarmonyOS_Sans_SC_Light.woff2) format("woff2"),
+    url(./HarmonyOS_Sans_SC/HarmonyOS_Sans_SC_Light.woff)  format("woff");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "HarmonyOS Sans SC Web";
+  src: 
+    url(./HarmonyOS_Sans_SC/HarmonyOS_Sans_SC_Regular.woff2) format("woff2"),
+    url(./HarmonyOS_Sans_SC/HarmonyOS_Sans_SC_Regular.woff)  format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "HarmonyOS Sans SC Web";
+  src: 
+    url(./HarmonyOS_Sans_SC/HarmonyOS_Sans_SC_Medium.woff2) format("woff2"),
+    url(./HarmonyOS_Sans_SC/HarmonyOS_Sans_SC_Medium.woff)  format("woff");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "HarmonyOS Sans SC Web";
+  src: 
+    url(./HarmonyOS_Sans_SC/HarmonyOS_Sans_SC_Bold.woff2) format("woff2"),
+    url(./HarmonyOS_Sans_SC/HarmonyOS_Sans_SC_Bold.woff)  format("woff");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "HarmonyOS Sans SC Web";
+  src: 
+    url(./HarmonyOS_Sans_SC/HarmonyOS_Sans_SC_Black.woff2) format("woff2"),
+    url(./HarmonyOS_Sans_SC/HarmonyOS_Sans_SC_Black.woff)  format("woff");
+  font-weight: 900;
+  font-style: normal;
+}
+
+/*  鸿蒙西文字体 */
+@font-face {
+  font-family: "HarmonyOS Sans Web";
+  src: 
+    url(./HarmonyOS_Sans/HarmonyOS_Sans_Thin.woff2) format("woff2"),
+    url(./HarmonyOS_Sans/HarmonyOS_Sans_Thin.woff)  format("woff");
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "HarmonyOS Sans Web";
+  src: 
+    url(./HarmonyOS_Sans/HarmonyOS_Sans_Light.woff2) format("woff2"),
+    url(./HarmonyOS_Sans/HarmonyOS_Sans_Light.woff)  format("woff");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "HarmonyOS Sans Web";
+  src: 
+    url(./HarmonyOS_Sans/HarmonyOS_Sans_Regular.woff2) format("woff2"),
+    url(./HarmonyOS_Sans/HarmonyOS_Sans_Regular.woff)  format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "HarmonyOS Sans Web";
+  src: 
+    url(./HarmonyOS_Sans/HarmonyOS_Sans_Medium.woff2) format("woff2"),
+    url(./HarmonyOS_Sans/HarmonyOS_Sans_Medium.woff)  format("woff");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "HarmonyOS Sans Web";
+  src: 
+    url(./HarmonyOS_Sans/HarmonyOS_Sans_Bold.woff2) format("woff2"),
+    url(./HarmonyOS_Sans/HarmonyOS_Sans_Bold.woff)  format("woff");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face  {
+  font-family: "HarmonyOS Sans Web";
+  src: 
+    url(./HarmonyOS_Sans/HarmonyOS_Sans_Black.woff2) format("woff2"),
+    url(./HarmonyOS_Sans/HarmonyOS_Sans_Black.woff)  format("woff");
+  font-weight: 900;
+  font-style: normal;
+}
