@@ -10,10 +10,12 @@ specifiers:
   sass: ^1.43.4
   vite: ^2.6.4
   vue: ^3.2.16
+  vue-router: '4'
   xterm: ^4.15.0
 
 dependencies:
   vue: registry.npmmirror.com/vue/3.2.21
+  vue-router: registry.npmmirror.com/vue-router/4.0.12_vue@3.2.21
   xterm: registry.npmmirror.com/xterm/4.15.0
 
 devDependencies:
@@ -888,6 +890,12 @@ packages:
       '@vue/shared': registry.npmmirror.com/@vue/shared/3.2.21
     dev: false
 
+  registry.npmmirror.com/@vue/devtools-api/6.0.0-beta.20:
+    resolution: {integrity: sha1-tUBcmoT7RGh9BefEx4VLFjkUEQY=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@vue/devtools-api/download/@vue/devtools-api-6.0.0-beta.20.tgz?cache=0&sync_timestamp=1635995955373&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40vue%2Fdevtools-api%2Fdownload%2F%40vue%2Fdevtools-api-6.0.0-beta.20.tgz}
+    name: '@vue/devtools-api'
+    version: 6.0.0-beta.20
+    dev: false
+
   registry.npmmirror.com/@vue/eslint-config-prettier/6.0.0_5ef9ff6669b626527300390dc84546fb:
     resolution: {integrity: sha1-rVkSswj0rkaEWOAqKwXbC50kZwA=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@vue/eslint-config-prettier/download/@vue/eslint-config-prettier-6.0.0.tgz}
     id: registry.npmmirror.com/@vue/eslint-config-prettier/6.0.0
@@ -1496,6 +1504,18 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  registry.npmmirror.com/vue-router/4.0.12_vue@3.2.21:
+    resolution: {integrity: sha1-jceSzd9bsavMOQj5BkE23n4TxGA=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vue-router/download/vue-router-4.0.12.tgz}
+    id: registry.npmmirror.com/vue-router/4.0.12
+    name: vue-router
+    version: 4.0.12
+    peerDependencies:
+      vue: ^3.0.0
+    dependencies:
+      '@vue/devtools-api': registry.npmmirror.com/@vue/devtools-api/6.0.0-beta.20
+      vue: registry.npmmirror.com/vue/3.2.21
+    dev: false
 
   registry.npmmirror.com/vue/3.2.21:
     resolution: {integrity: sha1-VfVmUXLZXPl+gGuarQo3UYC+I6E=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vue/download/vue-3.2.21.tgz}

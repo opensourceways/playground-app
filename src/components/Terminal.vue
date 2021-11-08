@@ -1,0 +1,29 @@
+<script setup>
+import { ref, onMounted } from "vue";
+
+const terminal = ref(null);
+
+onMounted(() => {
+  console.log(terminal.value);
+});
+</script>
+
+<template>
+  <div class="oe-terminal">
+    <div ref="terminal" class="terminal-el">Terminal</div>
+  </div>
+</template>
+
+<style lang="scss">
+.oe-terminal {
+  height: 100%;
+  .terminal-el {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+  }
+}
+</style>

@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "vue": "^3.2.16",
+    "vue-router": "4",
     "xterm": "^4.15.0"
   },
   "devDependencies": {

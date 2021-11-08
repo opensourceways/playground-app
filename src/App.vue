@@ -1,19 +1,19 @@
 <script setup>
-import { ref, onMounted } from "vue";
 import AppHeader from "@/components/AppHeader.vue";
-
-const terminal = ref(null);
-
-onMounted(() => {
-  console.log(terminal.value);
-});
 </script>
 
 <template>
-  <app-header></app-header>
+  <AppHeader class="app-header"></AppHeader>
   <div class="app-body">
-    <div ref="terminal"></div>
+    <router-view></router-view>
   </div>
 </template>
 
-<style lang="sass"></style>
+<style lang="scss" scoped>
+.app-header {
+  height: 80px;
+}
+.app-body {
+  height: calc(100vh - 80px);
+}
+</style>
