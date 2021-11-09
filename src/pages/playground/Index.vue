@@ -46,7 +46,7 @@ const loginDlgSet = {
       </div>
       <Teleport to="body">
         <ODialog ref="loginDialog" class="login-dialog">
-          <template #[head]>
+          <template #head>
             <h3>{{ loginDlgSet.title }}</h3>
           </template>
           <div class="dlg-content">{{ loginDlgSet.content }}</div>
@@ -107,6 +107,7 @@ const loginDlgSet = {
     font-size: 36px;
     line-height: 48px;
     text-align: center;
+    font-family: monospace;
   }
   .bling {
     animation: bling 0.8s ease-in-out infinite;

@@ -19,7 +19,10 @@ function onClick(e) {
 </script>
 <template>
   <button class="o-button" :class="{ primary: primary }" @click="onClick">
-    <slot></slot>
+    <div class="wrap">
+      <slot></slot>
+      <svg-icon v-if="icon" class="icon" :name="icon"></svg-icon>
+    </div>
   </button>
 </template>
 <style lang="scss">
@@ -40,6 +43,16 @@ function onClick(e) {
     &:active {
       background-color: #032783;
     }
+  }
+  .wrap {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .icon {
+    margin-left: 8px;
   }
 }
 </style>

@@ -10,6 +10,10 @@ export const routes = [
         path: "welcome",
         component: () => import("@/pages/playground/Welcome.vue"),
       },
+      {
+        path: "introduction",
+        component: () => import("@/pages/playground/Introduction.vue"),
+      },
     ],
   },
 ];
