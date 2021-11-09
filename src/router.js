@@ -6,6 +6,7 @@ export const routes = [
     path: "/app",
     component: Playground,
     children: [
+      { path: "", redirect: "/app/welcome" },
       {
         path: "welcome",
         component: () => import("@/pages/playground/Welcome.vue"),

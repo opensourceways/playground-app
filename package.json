@@ -7,10 +7,12 @@
     "serve": "vite preview"
   },
   "dependencies": {
+    "axios": "^0.24.0",
     "libapps": "github:yudai/libapps#release-hterm-1.70",
     "vue": "^3.2.16",
     "vue-router": "4",
-    "xterm": "^4.15.0"
+    "xterm": "^4.15.0",
+    "xterm-addon-fit": "^0.5.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^1.9.3",

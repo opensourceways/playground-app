@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, reactive } from "vue";
+import { ref, onMounted, reactive, onBeforeUpdate, nextTick } from "vue";
 import Terminal from "./Terminal.vue";
 
 defineProps({
@@ -12,6 +12,8 @@ defineProps({
 const terminalList = reactive([]);
 let terminalId = 0;
 const currentId = ref(0);
+const isFullscreen = ref(false);
+let terminals = [];
 
 function addTerminal(params) {
   terminalId += 1;
@@ -40,10 +42,22 @@ function selectTerminal(id) {
   currentId.value = id;
 }
 
+function fullscreen(full = true) {
+  isFullscreen.value = full;
+  nextTick(() => {
+    if (Array.isArray(terminals)) {
+      terminals.forEach((term) => {
+        term.fit();
+      });
+    }
+  });
+}
+
 defineExpose({
   addTerminal,
   closeTerminal,
   selectTerminal,
+  fullscreen,
 });
 
 function add() {
@@ -52,35 +66,67 @@ function add() {
 function remove(ter) {
   closeTerminal({ id: ter.id });
 }
+
+function setItemRef(el) {
+  terminals.push(el);
+}
+onBeforeUpdate(() => {
+  terminals = [];
+});
+
+// TODO
+add();
 </script>
 
 <template>
-  <div class="oe-terminal-group">
-    <div class="head-navs-wrap">
-      <div class="head-navs">
+  <div class="oe-terminal-group" :class="{ fullscreen: isFullscreen }">
+    <div class="terminal-head">
+      <div class="head-navs-wrap">
+        <div class="head-navs">
+          <div
+            v-for="ter in terminalList"
+            :key="ter.id"
+            class="nav-item"
+            :class="{ active: currentId === ter.id }"
+            @click="selectTerminal(ter.id)"
+          >
+            <span class="label">{{ ter.name }}</span>
+            <span class="btn-close" @click.stop="remove(ter)"
+              ><svg-icon name="x"></svg-icon
+            ></span>
+          </div>
+          <div
+            v-if="max > terminalList.length"
+            class="btn-plus"
+            @click.stop="add"
+          >
+            <svg-icon name="plus"></svg-icon>
+          </div>
+        </div>
+      </div>
+      <div class="tools">
         <div
-          v-for="ter in terminalList"
-          :key="ter.id"
-          class="nav-item"
-          :class="{ active: currentId === ter.id }"
-          @click="selectTerminal(ter.id)"
+          v-if="!isFullscreen"
+          class="tool-item"
+          @click.stop="fullscreen(true)"
         >
-          <span class="label">{{ ter.name }}</span>
-          <span class="btn-close" @click.stop="remove(ter)"
-            ><svg-icon name="x"></svg-icon
-          ></span>
+          <svg-icon name="maximize"></svg-icon>
         </div>
         <div
-          v-if="max > terminalList.length"
-          class="btn-plus"
-          @click.stop="add"
+          v-if="isFullscreen"
+          class="tool-item"
+          @click.stop="fullscreen(false)"
         >
-          <svg-icon name="plus"></svg-icon>
+          <svg-icon name="minimize"></svg-icon>
         </div>
       </div>
     </div>
     <div class="terminal-list">
-      <Terminal v-for="ter in terminalList" :key="ter.id"></Terminal>
+      <Terminal
+        v-for="ter in terminalList"
+        :key="ter.id"
+        :ref="setItemRef"
+      ></Terminal>
     </div>
   </div>
 </template>
@@ -91,11 +137,39 @@ function remove(ter) {
 
   height: 100%;
   background-color: #141414;
+
+  &.fullscreen {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 10;
+  }
+  .terminal-head {
+    display: flex;
+    justify-content: space-between;
+    .tools {
+      display: flex;
+      color: #ccc;
+      align-items: center;
+      padding-right: 8px;
+    }
+    .tool-item {
+      font-size: 20px;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      &:hover {
+        color: #fff;
+      }
+    }
+  }
   .head-navs-wrap {
     overflow: auto;
   }
   .head-navs {
-    background-color: #222222;
     display: flex;
     align-items: center;
   }
@@ -156,7 +230,7 @@ function remove(ter) {
     justify-content: center;
     &:hover {
       color: #fff;
-      background-color: #111;
+      background-color: #333;
       border-radius: 50%;
     }
   }

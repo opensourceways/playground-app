@@ -1,20 +1,47 @@
 <script setup>
+import "xterm/css/xterm.css";
 import { ref, onMounted } from "vue";
-import { Xterm } from "@/shared/xterm";
-import { WebTTY, protocols } from "@/shared/webtty";
-import { ConnectionFactory } from "@/shared/websocket";
+import { Xterm } from "@/plugins/terminal/xterm";
+import { WebTTY, protocols } from "@/plugins/terminal/webtty";
+import { ConnectionFactory } from "@/plugins/terminal/websocket";
 
-const terminal = ref(null);
+const terminalEl = ref(null);
+let terminal;
+
+function initConnection(term) {
+  const url = "ws://7.250.69.147/:8080/ws";
+  const gotty_auth_token = "";
+  const args = window.location.search;
+
+  const factory = new ConnectionFactory(url, protocols);
+  const wt = new WebTTY(term, factory, args, gotty_auth_token);
+  const closer = wt.open();
+
+  window.addEventListener("unload", () => {
+    closer();
+    term.close();
+  });
+}
 
 onMounted(() => {
-  console.log(terminal.value);
-  const term = new Xterm(terminal.value);
+  terminal = new Xterm(terminalEl.value);
+  initConnection(terminal);
+});
+
+function fit() {
+  if (terminal) {
+    terminal.fitResize();
+  }
+}
+
+defineExpose({
+  fit,
 });
 </script>
 
 <template>
   <div class="oe-terminal">
-    <div ref="terminal" class="terminal-el">Terminal</div>
+    <div ref="terminalEl" class="terminal-el"></div>
   </div>
 </template>
 
@@ -24,10 +51,6 @@ onMounted(() => {
   .terminal-el {
     width: 100%;
     height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
   }
 }
 </style>

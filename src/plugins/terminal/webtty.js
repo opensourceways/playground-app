@@ -29,7 +29,6 @@ export class WebTTY {
     const setup = () => {
       connection.onOpen(() => {
         const termInfo = this.term.info();
-
         connection.send(
           JSON.stringify({
             Arguments: this.args,
@@ -85,7 +84,6 @@ export class WebTTY {
       connection.onClose(() => {
         clearInterval(pingTimer);
         this.term.deactivate();
-        this.term.showMessage("Connection Closed", 0);
         if (this.reconnect > 0) {
           reconnectTimeout = setTimeout(() => {
             connection = this.connectionFactory.create();

@@ -27,7 +27,6 @@ function normalize(texts) {
 const articles = computed(() => {
   return normalize(props.contents);
 });
-console.log(articles.value);
 </script>
 
 <template>
