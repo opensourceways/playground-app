@@ -4,15 +4,6 @@ import { lib } from "libapps";
 bare.loadAddon("fit");
 
 export class Xterm {
-  // elem: HTMLElement;
-  // term: bare;
-  // resizeListener: () => void;
-  // decoder: lib.UTF8Decoder;
-
-  // message: HTMLElement;
-  // messageTimeout: number;
-  // messageTimer: number;
-
   constructor(elem) {
     this.elem = elem;
     this.term = new bare();

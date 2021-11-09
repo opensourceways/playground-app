@@ -1,10 +1,14 @@
 <script setup>
 import { ref, onMounted } from "vue";
+import { Xterm } from "@/shared/xterm";
+import { WebTTY, protocols } from "@/shared/webtty";
+import { ConnectionFactory } from "@/shared/websocket";
 
 const terminal = ref(null);
 
 onMounted(() => {
   console.log(terminal.value);
+  const term = new Xterm(terminal.value);
 });
 </script>
 
