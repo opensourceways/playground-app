@@ -9,11 +9,17 @@ const showTip = (tip) => {
   //     message: tip || '请求出错啦',
   //     duration: 1500
   // })
-  console.log(tip);
+  console.error(tip);
 };
 
+/**
+ * intactRequest是只在axios基础上更改了请求配置。
+ * 而request是基于axios创建的实例，实例只有常见的数据请求方法，没有axios.isCancel/ axios.CancelToken等方法，
+ * 也就是没有**取消请求**和**批量请求**的方法。
+ * 所以如果需要在实例中调用取消某个请求的方法（例如取消上传），请用intactRequest。
+ */
 export let intactRequest = setConfig(axios);
-export let request = setConfig(intactRequest.create());
+export let request = intactRequest.create();
 
 // 请求中的api
 let pendingPool = new Map();
@@ -32,7 +38,7 @@ const requestInterceptorId = request.interceptors.request.use(
         ? cancelFn(`${config.url}请求重复`)
         : pendingPool.set(config.url, { cancelFn, global: config.global });
     });
-
+    console.log(config);
     return config;
   },
   (err) => {
@@ -54,7 +60,9 @@ const responseInterceptorId = request.interceptors.response.use(
   // 对异常响应处理
   (err) => {
     const { config } = request;
-    if (!axios.isCancel(err)) pendingPool.delete(config.url);
+    if (!axios.isCancel(err)) {
+      pendingPool.delete(config.url);
+    }
 
     if (!err) return Promise.reject(err);
 

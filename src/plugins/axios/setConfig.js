@@ -24,7 +24,6 @@ export default (axios, config = {}) => {
       // },
     },
   };
-
-  merge(axios.defaults, defaultConfig, config);
+  Object.assign(axios.defaults, defaultConfig, config);
   return axios;
 };

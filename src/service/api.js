@@ -1,21 +1,12 @@
-import { get, post } from "@/plugins/axios";
+import { request } from "@/plugins/axios";
 
 /**
  * 获取回调链接
  * @returns
  */
 export function queryLinks() {
-  const url = "/plauground/oauth2/callback/links";
-  return get(url);
-}
-
-/**
- * 码云授权回调
- * @returns
- */
-export function queryGiteeAuth() {
-  const url = "/plauground/oauth2/callback";
-  return get(url);
+  const url = "/playground/oauth2/callback/links";
+  return request.get(url);
 }
 
 /**
@@ -24,7 +15,7 @@ export function queryGiteeAuth() {
  */
 export function queryAuthentication(params) {
   const url = "/plauground/oauth2/authentication";
-  return post(url, params);
+  return request.post(url, params);
 }
 
 /**
@@ -33,7 +24,7 @@ export function queryAuthentication(params) {
  */
 export function queryUserInfo() {
   const url = "/plauground/oauth2/callback";
-  return get(url);
+  return request.get(url);
 }
 
 /**

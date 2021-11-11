@@ -17,4 +17,12 @@ export default defineConfig({
       symbolId: "icon-[dir]-[name]",
     }),
   ],
+  server: {
+    proxy: {
+      "/playground": {
+        target: "https://test.playground.osinfra.cn/",
+        changeOrigin: true,
+      },
+    },
+  },
 });

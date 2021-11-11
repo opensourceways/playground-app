@@ -3,6 +3,7 @@ import TerminalGroup from "@/components/TerminalGroup.vue";
 import ODialog from "@/components/ODialog.vue";
 import { ref, watch } from "vue";
 import { isBegin } from "./shared";
+import { queryLinks } from "@/service/api";
 
 const loginDialog = ref(null);
 
@@ -24,6 +25,10 @@ const loginDlgSet = {
   content:
     "体验openEuler playground需要Gitee开发者身份权限，请您允许授权登录Gitee验证用户信息",
 };
+
+queryLinks().then((res) => {
+  console.log(res);
+});
 </script>
 
 <template>
