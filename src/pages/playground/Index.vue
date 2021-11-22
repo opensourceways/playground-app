@@ -2,11 +2,12 @@
 import TerminalGroup from "@/components/TerminalGroup.vue";
 import OButton from "@/components/OButton.vue";
 import ODialog from "@/components/ODialog.vue";
-import { ref, watch } from "vue";
-import { isBegin } from "./shared";
-import { isLogined, showLogin, goAuthorize, LOGIN_KEYS } from "@/shared/login";
+import { ref } from "vue";
+import { PLAY_KEYS } from "./shared";
+import { goAuthorize, LOGIN_KEYS } from "@/shared/login";
 import mitt from "@/shared/mitt";
 import { useRouter } from "vue-router";
+import { remainTime, updateRemainTime } from "./remainTime";
 
 const router = useRouter();
 const loginDialog = ref(null);
@@ -18,16 +19,16 @@ function startTry() {
   router.push({
     name: "introduction",
   });
-}
-const terminals = ref(null);
 
-watch(isBegin, (val) => {
-  console.log(val);
-  if (!isLogined()) {
-    showLogin();
-  } else {
-    startTry();
-  }
+  updateRemainTime();
+}
+
+const terminals = ref(null);
+const isBegin = ref(false);
+
+mitt.on(PLAY_KEYS.STAERT, () => {
+  isBegin.value = true;
+  startTry();
 });
 
 mitt.on(LOGIN_KEYS.SHOW_LOGIN, () => {
@@ -61,6 +62,11 @@ const loginDlgSet = {
   <div class="playground-app">
     <div class="ground-head">
       <h3 class="title">{{ title }}</h3>
+      <div class="remain-time">
+        <span class="time-item">{{ remainTime.hour }}</span
+        >:<span class="time-item">{{ remainTime.minute }}</span
+        >:<span class="time-item">{{ remainTime.second }}</span>
+      </div>
     </div>
     <div class="ground-body">
       <div class="ground-article">
@@ -110,10 +116,11 @@ const loginDlgSet = {
   background: #f5f7fb;
 }
 .ground-head {
-  width: 1440px;
   margin: 0 auto;
   padding: 25px 12px;
   line-height: 30px;
+  display: flex;
+  justify-content: space-between;
 }
 .ground-body {
   height: calc(100% - 80px);
@@ -183,6 +190,22 @@ const loginDlgSet = {
       color: #083fca;
       text-decoration: underline;
     }
+  }
+}
+
+.remain-time {
+  font-size: 18px;
+  color: #002fa7;
+  display: flex;
+  .time-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 32px;
+    width: 32px;
+    background-color: #fff;
+    margin: 0 4px;
+    box-shadow: 0px 12px 32px 0px rgba(190, 196, 204, 0.2);
   }
 }
 </style>

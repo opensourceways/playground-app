@@ -1,13 +1,14 @@
-import { ref } from "vue";
 import { isLogined, showLogin } from "@/shared/login";
+import mitt from "@/shared/mitt";
 
-// 是否开始体验的标志位
-export const isBegin = ref(false);
+export const PLAY_KEYS = {
+  STAERT: "start-to-try",
+};
 
 export function beginToTry() {
   if (!isLogined()) {
     showLogin();
   } else {
-    isBegin.value = true;
+    mitt.emit(PLAY_KEYS.STAERT);
   }
 }

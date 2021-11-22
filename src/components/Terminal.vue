@@ -5,6 +5,14 @@ import { Xterm } from "@/plugins/terminal/xterm";
 import { WebTTY, protocols } from "@/plugins/terminal/webtty";
 import { ConnectionFactory } from "@/plugins/terminal/websocket";
 
+defineProps({
+  instance: {
+    type: Object,
+    default() {
+      return null;
+    },
+  },
+});
 const terminalEl = ref(null);
 let terminal;
 
@@ -24,6 +32,9 @@ function initConnection(term) {
 }
 
 onMounted(() => {
+  if (!instance) {
+    return;
+  }
   terminal = new Xterm(terminalEl.value);
   initConnection(terminal);
 });
@@ -41,6 +52,7 @@ defineExpose({
 
 <template>
   <div class="oe-terminal">
+    <div class="remain-time">{{}}</div>
     <div ref="terminalEl" class="terminal-el"></div>
   </div>
 </template>

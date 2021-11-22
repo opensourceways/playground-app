@@ -16,7 +16,6 @@ const contents = [
         icon: "arrow-right",
         primary: true,
         click(btn) {
-          console.log(btn);
           beginToTry();
         },
       },

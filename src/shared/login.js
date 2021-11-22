@@ -1,4 +1,3 @@
-import { ref } from "vue";
 import mitt from "@/shared/mitt";
 import {
   queryAuthParams,
@@ -42,7 +41,11 @@ export async function doSignUp() {
       const res = await queryAuthentication({
         code,
       });
-      afterLogined(res.userInfo);
+      if (res.code === 200) {
+        afterLogined(res.userInfo);
+      } else {
+        throw new Error(res.message);
+      }
     } catch (error) {
       console.error("授权获取用户信息失败", error);
     }
@@ -54,7 +57,8 @@ export async function doSignUp() {
 export async function goAuthorize() {
   try {
     const data = await queryAuthParams();
-    if (!data.callbackInfo) {
+    if (res.code !== 200) {
+      throw new Error(res.message);
       return;
     }
     const { callbackUrl, clientId } = data.callbackInfo;
@@ -96,9 +100,16 @@ export function saveUserAuth(id, code) {
 }
 // 获取用户id及token
 export function getUserAuth() {
+  let token = localStorage.getItem(LOGIN_KEYS.USER_TOKEN);
+  let userId = localStorage.getItem(LOGIN_KEYS.USER_ID);
+  if (token === "undefined" || userId === "undefined") {
+    saveUserAuth();
+    token = "";
+    userId = "";
+  }
   return {
-    userId: localStorage.getItem(LOGIN_KEYS.USER_ID),
-    userToken: localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+    userId,
+    token,
   };
 }
 // 退出
@@ -110,14 +121,21 @@ export function logout() {
 }
 // 请求用户信息
 export async function requestUserInfo() {
-  const { userId, userToken } = getUserAuth();
-  if (userId && userToken) {
-    const res = await queryUserInfo({
-      token: userToken,
-      userId: userId,
-    });
-
-    afterLogined(res.userInfo);
+  const { userId, token } = getUserAuth();
+  if (userId && token) {
+    try {
+      const res = await queryUserInfo({
+        token,
+        userId,
+      });
+      if (res.code === 200) {
+        afterLogined(res.userInfo);
+      } else {
+        throw new Error(res.message);
+      }
+    } catch (err) {
+      console.error("获取用户信息失败", err);
+    }
   }
 }
 

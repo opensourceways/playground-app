@@ -1,4 +1,6 @@
 <script setup>
+import { createCrdResouse } from "@/service/api";
+import { getUserAuth } from "@/shared/login";
 import { ref, computed, reactive, onBeforeUpdate, nextTick } from "vue";
 import Terminal from "./Terminal.vue";
 
@@ -15,13 +17,19 @@ const activeTerminalList = computed(() => terminalList.filter((item) => item));
 let terminalId = 0;
 const currentId = ref(0);
 const isFullscreen = ref(false);
-let terminals = [];
+let terminalRefs = [];
 
-function addTerminal(params) {
+async function addTerminal(params) {
+  const rlt = await createRes();
+  if (!rlt) {
+    return;
+  }
+
   terminalId += 1;
   terminalList.push({
     id: terminalId,
     name: (params && params.name) || "终端" + terminalId,
+    instanceInfo: rlt,
   });
 
   currentId.value = terminalId;
@@ -56,8 +64,8 @@ function selectTerminal(id) {
 function fullscreen(full = true) {
   isFullscreen.value = full;
   nextTick(() => {
-    if (Array.isArray(terminals)) {
-      terminals.forEach((term) => {
+    if (Array.isArray(terminalRefs)) {
+      terminalRefs.forEach((term) => {
         term.fit();
       });
     }
@@ -80,14 +88,36 @@ function remove(ter) {
 }
 
 function setItemRef(el) {
-  terminals.push(el);
+  terminalRefs.push(el);
 }
+
 onBeforeUpdate(() => {
-  terminals = [];
+  terminalRefs = [];
 });
 
-// TODO
-// add();
+async function createRes() {
+  const { userId, token } = getUserAuth();
+  if (!userId) {
+    return;
+  }
+  try {
+    const res = await createCrdResouse({
+      token,
+      userId,
+      contactEmail: "contact@openeuler.io",
+      templatePath: "openeuler-20.03-lts-sp1/container/x86.tmpl",
+      resourceId: "1",
+    });
+    if (res.code !== 200) {
+      console.warn(res.message);
+      return null;
+    }
+    return res.instanceInfo;
+  } catch (error) {
+    console.error("创建资源失败");
+    return null;
+  }
+}
 </script>
 
 <template>
@@ -138,6 +168,7 @@ onBeforeUpdate(() => {
         v-for="ter in activeTerminalList"
         :key="ter.id"
         :ref="setItemRef"
+        :instance="ter.instanceInfo"
       ></Terminal>
     </div>
   </div>
