@@ -1,12 +1,12 @@
 import { request } from "@/plugins/axios";
 
 /**
- * 获取回调链接
+ * 获取授权的相关回调链接
  * @returns
  */
-export function queryLinks() {
+export function queryAuthParams() {
   const url = "/playground/oauth2/callback/links";
-  return request.get(url);
+  return request.get(url).then((res) => res.data);
 }
 
 /**
@@ -14,17 +14,17 @@ export function queryLinks() {
  * @returns
  */
 export function queryAuthentication(params) {
-  const url = "/plauground/oauth2/authentication";
-  return request.post(url, params);
+  const url = "/playground/oauth2/authentication";
+  return request.post(url, params).then((res) => res.data);
 }
 
 /**
  * 获取用户信息
  * @returns
  */
-export function queryUserInfo() {
-  const url = "/plauground/oauth2/callback";
-  return request.get(url);
+export function queryUserInfo(params) {
+  const url = "/playground/user/information";
+  return request.get(url, { params }).then((res) => res.data);
 }
 
 /**
@@ -32,8 +32,8 @@ export function queryUserInfo() {
  * @returns
  */
 export function createCrdResouse(params) {
-  const url = "/plauground/crd/resource";
-  return post(url, params);
+  const url = "/playground/crd/resource";
+  return request.post(url, params).then((res) => res.data);
 }
 
 /**
@@ -41,6 +41,6 @@ export function createCrdResouse(params) {
  * @returns
  */
 export function queryCrdResouse() {
-  const url = "/plauground/crd/resource";
-  return get(url);
+  const url = "/playground/crd/resource";
+  return request.get(url).then((res) => res.data);
 }

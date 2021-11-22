@@ -28,6 +28,9 @@ defineExpose({
   <div class="o-dialog" :class="{ show: isShow }">
     <div class="dialog-mask"></div>
     <div class="dialog-main">
+      <div class="close-btn" @click="toggle(false)">
+        <svg-icon name="x"></svg-icon>
+      </div>
       <div class="dialog-head">
         <slot name="head"></slot>
       </div>
@@ -52,6 +55,7 @@ defineExpose({
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 100;
   &.show {
     opacity: 1;
     visibility: visible;
@@ -63,7 +67,7 @@ defineExpose({
     top: 0;
     bottom: 0;
     z-index: 0;
-    background-color: rgba($color: #000000, $alpha: 0.3);
+    background-color: rgba($color: #000000, $alpha: 0.6);
   }
   .dialog-main {
     position: relative;
@@ -74,6 +78,21 @@ defineExpose({
   }
   .dialog-body {
     padding: 24px 40px;
+  }
+  .dialog-head {
+    padding: 16px 24px;
+    text-align: center;
+  }
+  .close-btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 8px;
+    cursor: pointer;
+    z-index: 1;
+    &:hover {
+      color: #002fa7;
+    }
   }
 }
 </style>

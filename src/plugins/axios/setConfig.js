@@ -1,4 +1,3 @@
-import { merge } from "axios/lib/utils";
 /**
  * @param {axios} axios实例
  * @param {config} 自定义配置对象，可覆盖掉默认的自定义配置

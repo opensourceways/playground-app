@@ -9,6 +9,7 @@
   "dependencies": {
     "axios": "^0.24.0",
     "libapps": "github:yudai/libapps#release-hterm-1.70",
+    "mitt": "^3.0.0",
     "vue": "^3.2.16",
     "vue-router": "4",
     "xterm": "^4.15.0",

@@ -38,7 +38,6 @@ const requestInterceptorId = request.interceptors.request.use(
         ? cancelFn(`${config.url}请求重复`)
         : pendingPool.set(config.url, { cancelFn, global: config.global });
     });
-    console.log(config);
     return config;
   },
   (err) => {

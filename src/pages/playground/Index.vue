@@ -1,9 +1,11 @@
 <script setup>
 import TerminalGroup from "@/components/TerminalGroup.vue";
+import OButton from "@/components/OButton.vue";
 import ODialog from "@/components/ODialog.vue";
 import { ref, watch } from "vue";
 import { isBegin } from "./shared";
-import { queryLinks } from "@/service/api";
+import { isLogined, showLogin, goAuthorize, LOGIN_KEYS } from "@/shared/login";
+import mitt from "@/shared/mitt";
 
 const loginDialog = ref(null);
 
@@ -16,19 +18,31 @@ const terminals = ref(null);
 
 watch(isBegin, (val) => {
   console.log(val);
-  startTry();
-  // loginDialog.value.show();
+  if (!isLogined()) {
+    showLogin();
+  } else {
+    startTry();
+  }
+});
+
+mitt.on(LOGIN_KEYS.SHOW_LOGIN, () => {
+  loginDialog.value.show();
 });
 
 const loginDlgSet = {
   title: "登录提示",
   content:
     "体验openEuler playground需要Gitee开发者身份权限，请您允许授权登录Gitee验证用户信息",
+  button: {
+    label: "Gitee授权登录",
+    primary: true,
+    click() {
+      console.log("开始授权");
+      goAuthorize();
+    },
+  },
+  loginTip: ["登录即表示同意", "隐私条款"],
 };
-
-queryLinks().then((res) => {
-  console.log(res);
-});
 </script>
 
 <template>
@@ -51,10 +65,19 @@ queryLinks().then((res) => {
       </div>
       <Teleport to="body">
         <ODialog ref="loginDialog" class="login-dialog">
-          <template #head>
-            <h3>{{ loginDlgSet.title }}</h3>
-          </template>
+          <h3 class="title">{{ loginDlgSet.title }}</h3>
           <div class="dlg-content">{{ loginDlgSet.content }}</div>
+          <div class="login-actions">
+            <o-button
+              :primary="loginDlgSet.button.primary"
+              @click="loginDlgSet.button.click(btn)"
+              >{{ loginDlgSet.button.label }}</o-button
+            >
+            <div class="auth-tip">
+              {{ loginDlgSet.loginTip[0] }}
+              <a href="http://" class="o-link">{{ loginDlgSet.loginTip[1] }}</a>
+            </div>
+          </div>
         </ODialog>
       </Teleport>
     </div>
@@ -118,10 +141,35 @@ queryLinks().then((res) => {
     animation: bling 0.8s ease-in-out infinite;
   }
 }
-
+</style>
+<style lang="scss">
 .login-dialog {
+  .dialog-head {
+    display: none;
+  }
+  .title {
+    text-align: center;
+  }
   .dlg-content {
-    line-height: 36px;
+    margin-top: 24px;
+    line-height: 32px;
+  }
+  .login-actions {
+    text-align: center;
+    margin-top: 24px;
+  }
+
+  .auth-tip {
+    color: #c7cad0;
+    font-size: 12px;
+    margin-top: 8px;
+  }
+  .o-link {
+    color: #002fa7;
+    &:hover {
+      color: #083fca;
+      text-decoration: underline;
+    }
   }
 }
 </style>

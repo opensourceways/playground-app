@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self';style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-eval' 'unsafe-inline';"
+    />
+    <title>test auth</title>
+  </head>
+  <body>
+    <script>
+      function getQueryParams(url) {
+        if (!url) {
+          url = window.location.href;
+        }
+        const idx = url.indexOf("?");
+        let search = "";
+        if (idx > -1) {
+          search = url.slice(idx + 1);
+        }
+        const pattern = /([^&=]+)=([^&=]*)/g;
+        const params = {};
+        let q;
+        while ((q = pattern.exec(search))) {
+          params[decodeURIComponent(q[1])] = decodeURIComponent(q[2]);
+        }
+
+        return params;
+      }
+
+      const params = getQueryParams();
+
+      if (!params.code) {
+        const idx = window.location.href.indexOf("redicrec=");
+        if (idx > -1) {
+          const redirectUrl = window.location.href.replace(/.*redicrec=/, "");
+          window.location.href = decodeURIComponent(redirectUrl);
+        }
+      } else if (params.redirect) {
+        const searchArr = [];
+        for (const i in params) {
+          if (i !== "redirect") {
+            searchArr.push(
+              `${encodeURIComponent(i)}=${encodeURIComponent(params[i])}`
+            );
+          }
+        }
+
+        const redirectUrl = decodeURIComponent(params.redirect);
+        const url = `${redirectUrl}?${searchArr.join("&")}`;
+        window.location.href = url;
+      }
+    </script>
+  </body>
+</html>

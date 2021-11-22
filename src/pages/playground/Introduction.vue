@@ -19,7 +19,7 @@ const contents = [
   [
     "3.执行：",
     { value: "sudo nginx > /dev/null 2>&1 &", type: "code" },
-    "以后台方式启动niginx",
+    "以后台方式启动nginx",
   ],
   ["4.执行：", { value: "curl 127.0.0.1:80", type: "code" }, "访问nginx页面"],
 ];

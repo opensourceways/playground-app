@@ -1,7 +1,13 @@
 import { ref } from "vue";
+import { isLogined, showLogin } from "@/shared/login";
 
-export const isBegin = ref(true);
+// 是否开始体验的标志位
+export const isBegin = ref(false);
 
 export function beginToTry() {
-  isBegin.value = true;
+  if (!isLogined()) {
+    showLogin();
+  } else {
+    isBegin.value = true;
+  }
 }
