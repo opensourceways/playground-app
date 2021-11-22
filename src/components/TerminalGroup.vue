@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, reactive, onBeforeUpdate, nextTick } from "vue";
+import { ref, computed, reactive, onBeforeUpdate, nextTick } from "vue";
 import Terminal from "./Terminal.vue";
 
 defineProps({
@@ -10,6 +10,8 @@ defineProps({
 });
 
 const terminalList = reactive([]);
+const activeTerminalList = computed(() => terminalList.filter((item) => item));
+
 let terminalId = 0;
 const currentId = ref(0);
 const isFullscreen = ref(false);
@@ -29,13 +31,22 @@ function addTerminal(params) {
 
 function closeTerminal(params) {
   const index = terminalList.findIndex((item) => {
+    if (!item) {
+      return false;
+    }
     if (params.id) {
       return item.id === params.id;
     } else if (params.name) {
       return item.name === params.name;
     }
   });
-  terminalList.splice(index, 1);
+  // terminalList.splice(index, 1);
+  terminalList[index] = null;
+}
+
+function closeAllTerminal() {
+  terminalList.length = 0;
+  // terminalList.forEach((item) => closeTerminal(item));
 }
 
 function selectTerminal(id) {
@@ -56,6 +67,7 @@ function fullscreen(full = true) {
 defineExpose({
   addTerminal,
   closeTerminal,
+  closeAllTerminal,
   selectTerminal,
   fullscreen,
 });
@@ -75,7 +87,7 @@ onBeforeUpdate(() => {
 });
 
 // TODO
-add();
+// add();
 </script>
 
 <template>
@@ -84,7 +96,7 @@ add();
       <div class="head-navs-wrap">
         <div class="head-navs">
           <div
-            v-for="ter in terminalList"
+            v-for="ter in activeTerminalList"
             :key="ter.id"
             class="nav-item"
             :class="{ active: currentId === ter.id }"
@@ -96,7 +108,7 @@ add();
             ></span>
           </div>
           <div
-            v-if="max > terminalList.length"
+            v-if="max > activeTerminalList.length"
             class="btn-plus"
             @click.stop="add"
           >
@@ -123,7 +135,7 @@ add();
     </div>
     <div class="terminal-list">
       <Terminal
-        v-for="ter in terminalList"
+        v-for="ter in activeTerminalList"
         :key="ter.id"
         :ref="setItemRef"
       ></Terminal>

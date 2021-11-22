@@ -122,7 +122,7 @@ export async function requestUserInfo() {
 }
 
 function afterLogined(userInfo) {
-  if (!userInfo) {
+  if (!userInfo || !userInfo.userId) {
     return;
   }
   console.log(userInfo);

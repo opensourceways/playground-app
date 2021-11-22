@@ -6,13 +6,18 @@ import { ref, watch } from "vue";
 import { isBegin } from "./shared";
 import { isLogined, showLogin, goAuthorize, LOGIN_KEYS } from "@/shared/login";
 import mitt from "@/shared/mitt";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const loginDialog = ref(null);
 
 const title = "体验openEuler";
 
 function startTry() {
   terminals.value.addTerminal();
+  router.push({
+    name: "introduction",
+  });
 }
 const terminals = ref(null);
 
@@ -27,6 +32,13 @@ watch(isBegin, (val) => {
 
 mitt.on(LOGIN_KEYS.SHOW_LOGIN, () => {
   loginDialog.value.show();
+});
+
+mitt.on(LOGIN_KEYS.LOGOUT, () => {
+  router.push({
+    name: "welcome",
+  });
+  terminals.value.closeAllTerminal();
 });
 
 const loginDlgSet = {
@@ -131,6 +143,7 @@ const loginDlgSet = {
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 1;
   .text {
     font-size: 36px;
     line-height: 48px;
