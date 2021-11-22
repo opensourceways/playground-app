@@ -103,6 +103,8 @@ export function getUserAuth() {
 }
 // 退出
 export function logout() {
+  logined = false;
+  userInfo = null;
   saveUserAuth();
   mitt.emit(LOGIN_KEYS.LOGOUT);
 }
