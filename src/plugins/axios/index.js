@@ -3,15 +3,6 @@ import handleResponse from "./handleResponse";
 import handleError from "./handleError";
 import setConfig from "./setConfig";
 
-const showTip = (tip) => {
-  // Message({
-  //     type: 'warning',
-  //     message: tip || '请求出错啦',
-  //     duration: 1500
-  // })
-  console.error(tip);
-};
-
 /**
  * intactRequest是只在axios基础上更改了请求配置。
  * 而request是基于axios创建的实例，实例只有常见的数据请求方法，没有axios.isCancel/ axios.CancelToken等方法，
@@ -32,7 +23,6 @@ const requestInterceptorId = request.interceptors.request.use(
     // 对于异常的响应也需要在pendingPool中将其删除，但响应拦截器中的异常响应有些获取不到请求信息，这里将其保存在实例上
     request.config = Object.assign({}, config);
     // 在发送请求之前做些什么
-    // config.headers.common['cookie-id'] = cookieId
     config.cancelToken = new axios.CancelToken((cancelFn) => {
       pendingPool.has(config.url)
         ? cancelFn(`${config.url}请求重复`)
@@ -41,11 +31,11 @@ const requestInterceptorId = request.interceptors.request.use(
     return config;
   },
   (err) => {
-    console.log("请求拦截err:", err);
     // 对请求错误做些什么
     Promise.reject(err);
   }
 );
+
 /**
  * 响应拦截
  */
@@ -82,7 +72,6 @@ const responseInterceptorId = request.interceptors.response.use(
         err.message = "连接服务器失败!";
       }
     }
-    showTip(err.message);
     return Promise.reject(err);
   }
 );

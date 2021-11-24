@@ -16,9 +16,6 @@ const title = "体验openEuler";
 
 function startTry() {
   terminals.value.addTerminal();
-  router.push({
-    name: "introduction",
-  });
 }
 
 const terminals = ref(null);
@@ -39,6 +36,12 @@ mitt.on(LOGIN_KEYS.LOGOUT, () => {
   });
   terminals.value.closeAllTerminal();
 });
+
+function onFirstLoadTerminal() {
+  router.push({
+    name: "introduction",
+  });
+}
 
 const loginDlgSet = {
   title: "登录提示",
@@ -77,7 +80,11 @@ const loginDlgSet = {
             <div>LET'S PLAY <span class="bling">_</span></div>
           </div>
         </div>
-        <TerminalGroup ref="terminals" :max="5"></TerminalGroup>
+        <TerminalGroup
+          ref="terminals"
+          :max="5"
+          @terminal-first-loaded="onFirstLoadTerminal"
+        ></TerminalGroup>
       </div>
       <Teleport to="body">
         <ODialog ref="loginDialog" class="login-dialog">

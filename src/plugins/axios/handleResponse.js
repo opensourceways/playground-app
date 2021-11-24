@@ -18,7 +18,6 @@ export default (response) => {
       case 4001:
         if (process.server) return;
         message = message || "登录设备数量超出限制";
-        // store.commit('savehttpResult', { res: response.data })
         break;
       case 403:
         message = message || "未登录";
@@ -30,7 +29,6 @@ export default (response) => {
         message = message || "未找到有效session";
         break;
       default:
-        // message = message || err.response.data.msg
         break;
     }
     return {

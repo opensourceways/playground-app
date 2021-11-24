@@ -9,8 +9,10 @@ defineProps({
     default: 20,
   },
 });
+const emit = defineEmits(["terminal-first-loaded"]);
 
 const terminalList = reactive([]);
+let isFirstLoadTerminal = true;
 const activeTerminalList = computed(() => terminalList.filter((item) => item));
 
 let terminalId = 0;
@@ -18,12 +20,10 @@ const currentId = ref(0);
 const isFullscreen = ref(false);
 let terminalRefs = [];
 
-async function addTerminal(params) {
+async function addTerminal() {
   terminalId += 1;
   terminalList.push({
     id: terminalId,
-    name: "创建中..." || (params && params.name),
-    // name: (params && params.name) || rlt.name || "终端" + terminalId,
   });
 
   currentId.value = terminalId;
@@ -64,14 +64,6 @@ function fullscreen(full = true) {
   });
 }
 
-defineExpose({
-  addTerminal,
-  closeTerminal,
-  closeAllTerminal,
-  selectTerminal,
-  fullscreen,
-});
-
 function add() {
   addTerminal();
 }
@@ -87,15 +79,30 @@ onBeforeUpdate(() => {
   terminalRefs = [];
 });
 
-function onResourceCreated(data, id, idx) {
-  console.log(data);
-  updateRemainTime(data.remainSecond);
-  activeTerminalList.value[idx].name = data.name;
-  // const curr = activeTerminalList.value.find((item) => item.id === id);
-  // if (curr) {
-  //   curr.name = data.name;
-  // }
+function onCreateResource(data, idx) {
+  const { status } = data;
+  if (status === 2) {
+    activeTerminalList.value[idx].name = "创建失败";
+  } else if (status === 1) {
+    updateRemainTime(data.remainSecond);
+    activeTerminalList.value[idx].name = data.name;
+
+    if (isFirstLoadTerminal) {
+      emit("terminal-first-loaded");
+      isFirstLoadTerminal = false;
+    }
+  } else {
+    activeTerminalList.value[idx].name = "创建中...";
+  }
 }
+
+defineExpose({
+  addTerminal,
+  closeTerminal,
+  closeAllTerminal,
+  selectTerminal,
+  fullscreen,
+});
 </script>
 
 <template>
@@ -149,7 +156,7 @@ function onResourceCreated(data, id, idx) {
         :key="ter.id"
         :ref="setItemRef"
         class="terminal-item"
-        @resource-created="(e) => onResourceCreated(e, ter.id, idx)"
+        @create-resource="(e) => onCreateResource(e, idx)"
       ></Terminal>
     </div>
   </div>
@@ -208,6 +215,7 @@ function onResourceCreated(data, id, idx) {
     text-align: center;
     cursor: default;
     position: relative;
+    min-width: 120px;
     &::after {
       content: "";
       border-right: 1px solid #444;

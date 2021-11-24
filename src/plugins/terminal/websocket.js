@@ -38,7 +38,7 @@ export class Connection {
 
   onOpen(callback) {
     this.bare.onopen = (event) => {
-      callback();
+      callback(event);
     };
   }
 
@@ -50,7 +50,13 @@ export class Connection {
 
   onClose(callback) {
     this.bare.onclose = (event) => {
-      callback();
+      callback(event);
+    };
+  }
+
+  onError(callback) {
+    this.bare.onerror = (event) => {
+      callback(event);
     };
   }
 }
