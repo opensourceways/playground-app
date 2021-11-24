@@ -52,10 +52,10 @@ function ensureResourceReady(resId) {
 
       if (cnt >= RESOURCE_CREATE_TIMEOUT) {
         clearInterval(handler);
-        console.error("创建资源超时");
+        console.error("创建资源超时", RESOURCE_CREATE_TIMEOUT + "s");
         resolve(null);
       }
-      cnt += 1;
+      cnt += QUERY_INTERVAL;
     }, QUERY_INTERVAL * 1000);
   });
 }

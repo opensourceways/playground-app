@@ -40,7 +40,7 @@ export class Xterm {
     document.title = title;
   }
 
-  setPreferences(value) {}
+  setPreferences() {}
 
   onInput(callback) {
     this.term.onData((data) => {
