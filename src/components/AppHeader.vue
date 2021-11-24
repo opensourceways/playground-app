@@ -7,14 +7,15 @@ let userInfo = reactive({});
 
 mitt.on(LOGIN_KEYS.LOGINED, (data) => {
   userInfo.userId = data.userId;
-  userInfo.name = data.name;
+  userInfo.name = data.name || "--";
+  userInfo.avatar = data.avatarUrl;
 });
 mitt.on(LOGIN_KEYS.LOGOUT, () => {
   userInfo.userId = "";
   userInfo.name = "";
 });
 
-const logoutLabel = "退出";
+const logoutLabel = "注销";
 function doLogout() {
   logout();
 }
@@ -29,7 +30,10 @@ function doLogout() {
       </div>
       <div class="header-tools">
         <div v-if="userInfo.userId" class="tool-item user">
-          <div class="user-info">{{ userInfo.name }}</div>
+          <div v-if="userInfo.avatar" class="user-avatar">
+            <img :src="userInfo.avatar" />
+          </div>
+          <div v-else class="user-info">{{ userInfo.name }}</div>
           <div class="drop-menus">
             <div class="menu-item" @click="doLogout">{{ logoutLabel }}</div>
           </div>
@@ -79,6 +83,16 @@ function doLogout() {
   display: flex;
   align-items: center;
   cursor: pointer;
+}
+.user-avatar {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+  }
 }
 .drop-menus {
   display: none;
