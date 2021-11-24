@@ -27,7 +27,7 @@ function handleTime(second) {
   remainTime.second = paddLeft(s);
 }
 
-export function refreshRemainTime(resId) {
+export async function refreshRemainTime(resId) {
   const { token } = getUserAuth();
   if (!token) {
     return;
@@ -37,17 +37,15 @@ export function refreshRemainTime(resId) {
     clearTime();
   }
 
-  handler = setInterval(async () => {
-    const res = await queryCrdResouse({
-      userResId: resId,
-      token,
-    });
+  const res = await queryCrdResouse({
+    userResId: resId,
+    token,
+  });
 
-    if (res.code === 200) {
-      seconds = res.instanceInfo.remainSecond;
-      handleTime(seconds);
-    }
-  }, 1000 * 60);
+  if (res.code === 200) {
+    seconds = res.instanceInfo.remainSecond;
+    updateRemainTime(seconds);
+  }
 }
 
 function clearTime() {
@@ -56,13 +54,19 @@ function clearTime() {
   }
 }
 
-export function updateRemainTime() {
+export function updateRemainTime(sec) {
+  if (typeof sec !== undefined) {
+    seconds = sec;
+  }
+  if (handler) {
+    clearTime();
+  }
   handler = setInterval(() => {
     seconds -= 1;
     if (seconds > 0) {
       handleTime(seconds);
     } else {
-      mitt(EVENT_TIMEOUT);
+      mitt.emit(EVENT_TIMEOUT);
     }
   }, 1000);
 }

@@ -7,7 +7,7 @@ import { PLAY_KEYS } from "./shared";
 import { goAuthorize, LOGIN_KEYS } from "@/shared/login";
 import mitt from "@/shared/mitt";
 import { useRouter } from "vue-router";
-import { remainTime, updateRemainTime } from "./remainTime";
+import { remainTime } from "./remainTime";
 
 const router = useRouter();
 const loginDialog = ref(null);
@@ -19,8 +19,6 @@ function startTry() {
   router.push({
     name: "introduction",
   });
-
-  updateRemainTime();
 }
 
 const terminals = ref(null);
@@ -116,6 +114,7 @@ const loginDlgSet = {
   background: #f5f7fb;
 }
 .ground-head {
+  max-width: 1440px;
   margin: 0 auto;
   padding: 25px 12px;
   line-height: 30px;

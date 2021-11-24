@@ -44,7 +44,7 @@ export async function doSignUp() {
       if (res.code === 200) {
         afterLogined(res.userInfo);
       } else {
-        throw new Error(res.message);
+        throw new Error(res.code + res.message);
       }
     } catch (error) {
       console.error("授权获取用户信息失败", error);
@@ -56,12 +56,12 @@ export async function doSignUp() {
 // 去码云授权
 export async function goAuthorize() {
   try {
-    const data = await queryAuthParams();
+    const res = await queryAuthParams();
     if (res.code !== 200) {
-      throw new Error(res.message);
+      throw new Error(res.code + res.message);
       return;
     }
-    const { callbackUrl, clientId } = data.callbackInfo;
+    const { callbackUrl, clientId } = res.callbackInfo;
     const url = `https://gitee.com/oauth/authorize?client_id=${clientId}&redirect_uri=${callbackUrl}&response_type=code`;
     console.log(url);
     // window.location.href = url;
@@ -105,7 +105,9 @@ export function getUserAuth() {
   if (token === "undefined" || userId === "undefined") {
     saveUserAuth();
     token = "";
-    userId = "";
+    userId = -1;
+  } else {
+    userId = parseInt(userId);
   }
   return {
     userId,
@@ -131,9 +133,10 @@ export async function requestUserInfo() {
       if (res.code === 200) {
         afterLogined(res.userInfo);
       } else {
-        throw new Error(res.message);
+        throw new Error(res.code + res.message);
       }
     } catch (err) {
+      saveUserAuth();
       console.error("获取用户信息失败", err);
     }
   }

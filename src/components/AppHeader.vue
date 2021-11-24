@@ -9,7 +9,7 @@ mitt.on(LOGIN_KEYS.LOGINED, (data) => {
   userInfo.userId = data.userId;
   userInfo.name = data.name;
 });
-mitt.on(LOGIN_KEYS.LOGOUT, (data) => {
+mitt.on(LOGIN_KEYS.LOGOUT, () => {
   userInfo.userId = "";
   userInfo.name = "";
 });
@@ -31,7 +31,7 @@ function doLogout() {
         <div v-if="userInfo.userId" class="tool-item user">
           <div class="user-info">{{ userInfo.name }}</div>
           <div class="drop-menus">
-            <div class="menu-item" @click="logout">{{ logoutLabel }}</div>
+            <div class="menu-item" @click="doLogout">{{ logoutLabel }}</div>
           </div>
         </div>
       </div>
@@ -45,7 +45,7 @@ function doLogout() {
   box-shadow: 0px 1px 3px 0px rgba(178, 178, 178, 0.5);
 }
 .header-wrap {
-  // width: 1440px;
+  max-width: 1440px;
   margin: 0 auto;
   padding: 12px;
   display: flex;

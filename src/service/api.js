@@ -40,7 +40,7 @@ export function createCrdResouse(params) {
  * 轮询资源状态
  * @returns
  */
-export function queryCrdResouse() {
+export function queryCrdResouse(params) {
   const url = "/playground/crd/resource";
-  return request.get(url).then((res) => res.data);
+  return request.get(url, { params }).then((res) => res.data);
 }

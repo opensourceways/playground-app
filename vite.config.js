@@ -21,6 +21,7 @@ export default defineConfig({
     proxy: {
       "/playground": {
         target: "https://test.playground.osinfra.cn/",
+        // target: "http://159.138.2.2:8080",
         changeOrigin: true,
       },
     },

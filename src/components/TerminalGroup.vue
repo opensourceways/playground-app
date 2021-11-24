@@ -1,8 +1,7 @@
 <script setup>
-import { createCrdResouse } from "@/service/api";
-import { getUserAuth } from "@/shared/login";
 import { ref, computed, reactive, onBeforeUpdate, nextTick } from "vue";
 import Terminal from "./Terminal.vue";
+import { updateRemainTime } from "@/pages/playground/remainTime";
 
 defineProps({
   max: {
@@ -20,16 +19,11 @@ const isFullscreen = ref(false);
 let terminalRefs = [];
 
 async function addTerminal(params) {
-  const rlt = await createRes();
-  if (!rlt) {
-    return;
-  }
-
   terminalId += 1;
   terminalList.push({
     id: terminalId,
-    name: (params && params.name) || "终端" + terminalId,
-    instanceInfo: rlt,
+    name: "创建中..." || (params && params.name),
+    // name: (params && params.name) || rlt.name || "终端" + terminalId,
   });
 
   currentId.value = terminalId;
@@ -48,13 +42,11 @@ function closeTerminal(params) {
       return item.name === params.name;
     }
   });
-  // terminalList.splice(index, 1);
   terminalList[index] = null;
 }
 
 function closeAllTerminal() {
   terminalList.length = 0;
-  // terminalList.forEach((item) => closeTerminal(item));
 }
 
 function selectTerminal(id) {
@@ -95,28 +87,14 @@ onBeforeUpdate(() => {
   terminalRefs = [];
 });
 
-async function createRes() {
-  const { userId, token } = getUserAuth();
-  if (!userId) {
-    return;
-  }
-  try {
-    const res = await createCrdResouse({
-      token,
-      userId,
-      contactEmail: "contact@openeuler.io",
-      templatePath: "openeuler-20.03-lts-sp1/container/x86.tmpl",
-      resourceId: "1",
-    });
-    if (res.code !== 200) {
-      console.warn(res.message);
-      return null;
-    }
-    return res.instanceInfo;
-  } catch (error) {
-    console.error("创建资源失败");
-    return null;
-  }
+function onResourceCreated(data, id, idx) {
+  console.log(data);
+  updateRemainTime(data.remainSecond);
+  activeTerminalList.value[idx].name = data.name;
+  // const curr = activeTerminalList.value.find((item) => item.id === id);
+  // if (curr) {
+  //   curr.name = data.name;
+  // }
 }
 </script>
 
@@ -130,6 +108,7 @@ async function createRes() {
             :key="ter.id"
             class="nav-item"
             :class="{ active: currentId === ter.id }"
+            :title="ter.name"
             @click="selectTerminal(ter.id)"
           >
             <span class="label">{{ ter.name }}</span>
@@ -165,10 +144,12 @@ async function createRes() {
     </div>
     <div class="terminal-list">
       <Terminal
-        v-for="ter in activeTerminalList"
+        v-for="(ter, idx) in activeTerminalList"
+        v-show="currentId === ter.id"
         :key="ter.id"
         :ref="setItemRef"
-        :instance="ter.instanceInfo"
+        class="terminal-item"
+        @resource-created="(e) => onResourceCreated(e, ter.id, idx)"
       ></Terminal>
     </div>
   </div>
@@ -217,11 +198,13 @@ async function createRes() {
     align-items: center;
   }
   .nav-item {
-    line-height: var(--nav-height);
+    height: var(--nav-height);
+    display: flex;
+    align-items: center;
+    padding: 0 32px 0 16px;
     font-size: 18px;
     color: #fff;
     min-width: 116px;
-    padding: 0 24px;
     text-align: center;
     cursor: default;
     position: relative;
@@ -258,6 +241,10 @@ async function createRes() {
     .label {
       position: relative;
       z-index: 2;
+
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
   .btn-plus {
@@ -299,6 +286,14 @@ async function createRes() {
   }
   .terminal-list {
     height: calc(100% - var(--nav-height));
+    position: relative;
+  }
+  .terminal-item {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
   }
 }
 </style>
