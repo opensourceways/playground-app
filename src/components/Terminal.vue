@@ -24,6 +24,7 @@ const connectFailLabel = "资源链接失败，";
 const retryLabel = "请重试";
 const RESOURCE_CREATE_TIMEOUT = 15; //资源创建超时时间(秒)
 const QUERY_INTERVAL = 3; // 创建中的资源轮询间隔(秒)
+let webTTYInstance;
 /**
  * 轮询资源状态，直到返回成功或者失败
  */
@@ -104,7 +105,7 @@ async function createInstance() {
         throw new Error("创建失败");
       }
     }
-    throw new Error(res.code + res.message);
+    throw new Error(res.code + ", " + res.message);
   } catch (error) {
     resStatus.value = 2;
 
@@ -123,7 +124,7 @@ function initConnection(term, instance) {
   const factory = new ConnectionFactory(url, protocols);
   console.log(factory);
   let isConneted = false;
-  const wt = new WebTTY(term, factory, args, gotty_auth_token, {
+  webTTYInstance = new WebTTY(term, factory, args, gotty_auth_token, {
     onError() {
       console.log("ws onError");
 
@@ -131,18 +132,22 @@ function initConnection(term, instance) {
       resStatus.value = 3;
     },
     onReceive(data) {
-      console.log("connected", data);
       if (!isConneted) {
+        console.log("[received]", data);
         isConneted = true;
         resStatus.value = 1;
         emit("create-resource", instance);
+      } else {
+        console.log("[received]", data && atob(data));
       }
     },
     onClose() {
+      console.log("webtty closed");
       isConneted = false;
+      closeConnection();
     },
   });
-  terminalCloser = wt.open();
+  terminalCloser = webTTYInstance.open();
 
   window.addEventListener("unload", () => {
     closeConnection();
@@ -151,7 +156,7 @@ function initConnection(term, instance) {
 
 function closeConnection() {
   terminalCloser && terminalCloser();
-  terminal.close();
+  terminal && terminal.close();
 }
 
 async function createResource() {
@@ -175,6 +180,12 @@ function fit() {
   }
 }
 
+function enter(commmond) {
+  if (webTTYInstance && commmond) {
+    webTTYInstance.input(commmond.endsWith("\n") ? commmond : commmond + "\n");
+  }
+}
+
 onMounted(async () => {
   createResource();
 });
@@ -184,8 +195,9 @@ onUnmounted(() => {
 });
 
 defineExpose({
-  fit,
   createResource,
+  enter,
+  fit,
 });
 </script>
 

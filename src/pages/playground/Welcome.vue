@@ -15,7 +15,7 @@ const contents = [
         label: "START",
         icon: "arrow-right",
         primary: true,
-        click(btn) {
+        click() {
           beginToTry();
         },
       },

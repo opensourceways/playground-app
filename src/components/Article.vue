@@ -1,6 +1,9 @@
 <script setup>
 import OButton from "@/components/OButton.vue";
 import { computed } from "vue";
+
+const emit = defineEmits(["item-click"]);
+
 const props = defineProps({
   contents: {
     type: Array,
@@ -27,6 +30,10 @@ function normalize(texts) {
 const articles = computed(() => {
   return normalize(props.contents);
 });
+
+function click(item) {
+  emit("item-click", item);
+}
 </script>
 
 <template>
@@ -44,9 +51,13 @@ const articles = computed(() => {
       </div>
       <div v-else-if="item.type" :class="item.type">{{ item.value }}</div>
       <div v-else-if="Array.isArray(item)">
-        <span v-for="sub in item" :key="sub.value" :class="sub.type">{{
-          sub.value
-        }}</span>
+        <span
+          v-for="sub in item"
+          :key="sub.value"
+          :class="sub.type"
+          @click="click(sub)"
+          >{{ sub.value }}</span
+        >
       </div>
     </div>
   </div>

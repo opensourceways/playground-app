@@ -106,12 +106,24 @@ function onCreateResource(data, idx) {
   }
 }
 
+function enterCommond(commond) {
+  if (!currentId.value) {
+    return;
+  }
+  const index = activeTerminalList.value.findIndex(
+    (item) => item.id === currentId.value
+  );
+
+  terminalRefs[index].enter(commond);
+}
+
 defineExpose({
   addTerminal,
   closeTerminal,
   closeAllTerminal,
   selectTerminal,
   fullscreen,
+  enterCommond,
 });
 </script>
 

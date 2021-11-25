@@ -1,14 +1,19 @@
 import { isLogined, showLogin } from "@/shared/login";
 import mitt from "@/shared/mitt";
 
-export const PLAY_KEYS = {
+export const PLAYGROUND_KEYS = {
   STAERT: "start-to-try",
+  ENTER: "enter-terminal",
 };
 
 export function beginToTry() {
   if (!isLogined()) {
     showLogin();
   } else {
-    mitt.emit(PLAY_KEYS.STAERT);
+    mitt.emit(PLAYGROUND_KEYS.STAERT);
   }
+}
+
+export function enterCommond(cmd) {
+  mitt.emit(PLAYGROUND_KEYS.ENTER, { commond: cmd });
 }

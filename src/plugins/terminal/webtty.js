@@ -33,6 +33,7 @@ export class WebTTY {
 
   open() {
     let connection = this.connectionFactory.create();
+    this.connection = connection;
     let pingTimer;
     let reconnectTimeout;
     const setup = () => {
@@ -70,9 +71,9 @@ export class WebTTY {
       });
 
       connection.onReceive((data) => {
-        this.onReceive && this.onReceive(data);
-
         const payload = data.slice(1);
+
+        this.onReceive && this.onReceive(payload);
         switch (data[0]) {
           case msgOutput:
             this.term.output(atob(payload));
@@ -102,6 +103,7 @@ export class WebTTY {
         if (this.reconnect > 0) {
           reconnectTimeout = setTimeout(() => {
             connection = this.connectionFactory.create();
+            this.connection = connection;
             this.term.reset();
             setup();
           }, this.reconnect * 1000);
@@ -120,5 +122,9 @@ export class WebTTY {
       clearTimeout(reconnectTimeout);
       connection.close();
     };
+  }
+
+  input(input) {
+    this.connection.send(msgInput + input);
   }
 }

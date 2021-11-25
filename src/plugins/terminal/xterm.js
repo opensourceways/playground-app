@@ -22,10 +22,6 @@ export class Xterm {
     window.addEventListener("resize", () => {
       this.fitResize();
     });
-
-    // TODO
-    window.term = this.term;
-    window.fitAddon = fitAddon;
   }
 
   info() {

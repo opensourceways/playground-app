@@ -3,7 +3,7 @@ import TerminalGroup from "@/components/TerminalGroup.vue";
 import OButton from "@/components/OButton.vue";
 import ODialog from "@/components/ODialog.vue";
 import { ref } from "vue";
-import { PLAY_KEYS } from "./shared";
+import { PLAYGROUND_KEYS } from "./shared";
 import { goAuthorize, LOGIN_KEYS } from "@/shared/login";
 import mitt from "@/shared/mitt";
 import { useRouter } from "vue-router";
@@ -21,7 +21,7 @@ function startTry() {
 const terminals = ref(null);
 const isBegin = ref(false);
 
-mitt.on(PLAY_KEYS.STAERT, () => {
+mitt.on(PLAYGROUND_KEYS.STAERT, () => {
   isBegin.value = true;
   startTry();
 });
@@ -35,6 +35,10 @@ mitt.on(LOGIN_KEYS.LOGOUT, () => {
     name: "welcome",
   });
   terminals.value.closeAllTerminal();
+});
+
+mitt.on(PLAYGROUND_KEYS.ENTER, (data) => {
+  terminals.value.enterCommond(data.commond);
 });
 
 function onFirstLoadTerminal() {
