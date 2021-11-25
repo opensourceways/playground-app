@@ -13,13 +13,14 @@ import { getUserAuth } from "@/shared/login";
 const emit = defineEmits(["create-resource"]);
 
 const terminalEl = ref(null);
-// 0: 创建中； 1：创建成功 2：创建失败；
+// 0: 创建中； 1：创建成功 2：创建失败； 3: 连接失败
 const resStatus = ref(0);
 let instance = null;
 let terminal; // xterm实例
 let terminalCloser = null; // websoket关闭函数
 const loadingLabel = "正在为您准备环境，请耐心等待...";
-const failedLabel = "创建失败，";
+const failedLabel = "资源创建失败，";
+const connectFailLabel = "资源链接失败，";
 const retryLabel = "请重试";
 const RESOURCE_CREATE_TIMEOUT = 15; //资源创建超时时间(秒)
 const QUERY_INTERVAL = 3; // 创建中的资源轮询间隔(秒)
@@ -30,7 +31,10 @@ function ensureResourceReady(resId) {
   const { token } = getUserAuth();
   return new Promise((resolve) => {
     let cnt = 0;
-    const handler = setInterval(async () => {
+    let handler;
+
+    // 轮询状态
+    const query = async function () {
       const res = await queryCrdResouse({
         userResId: resId,
         token,
@@ -55,8 +59,17 @@ function ensureResourceReady(resId) {
         console.error("创建资源超时", RESOURCE_CREATE_TIMEOUT + "s");
         resolve(null);
       }
-      cnt += QUERY_INTERVAL;
-    }, QUERY_INTERVAL * 1000);
+    };
+    setTimeout(async () => {
+      cnt += 2;
+      await query();
+
+      handler = setInterval(async () => {
+        await query();
+        cnt += QUERY_INTERVAL;
+        console.log(cnt);
+      }, QUERY_INTERVAL * 1000);
+    }, 2000);
   });
 }
 
@@ -109,9 +122,25 @@ function initConnection(term, instance) {
   console.log(url);
   const factory = new ConnectionFactory(url, protocols);
   console.log(factory);
-  const wt = new WebTTY(term, factory, args, gotty_auth_token, () => {
-    emit("create-resource", { status: 2 });
-    resStatus.value = 2;
+  let isConneted = false;
+  const wt = new WebTTY(term, factory, args, gotty_auth_token, {
+    onError() {
+      console.log("ws onError");
+
+      emit("create-resource", { status: 3 });
+      resStatus.value = 3;
+    },
+    onReceive(data) {
+      console.log("connected", data);
+      if (!isConneted) {
+        isConneted = true;
+        resStatus.value = 1;
+        emit("create-resource", instance);
+      }
+    },
+    onClose() {
+      isConneted = false;
+    },
   });
   terminalCloser = wt.open();
 
@@ -138,8 +167,6 @@ async function createResource() {
 
   terminal = new Xterm(terminalEl.value);
   initConnection(terminal, instance);
-  resStatus.value = 1;
-  emit("create-resource", instance);
 }
 
 function fit() {
@@ -169,8 +196,8 @@ defineExpose({
         <div v-if="resStatus === 0" class="dlg-creating">
           <div class="label">{{ loadingLabel }}</div>
         </div>
-        <div v-show="resStatus === 2" class="dlg-failed">
-          <span>{{ failedLabel }}</span>
+        <div v-show="resStatus >= 2" class="dlg-failed">
+          <span>{{ resStatus === 3 ? connectFailLabel : failedLabel }}</span>
           <span class="link" @click="createResource">{{ retryLabel }}</span>
         </div>
       </div>
@@ -188,6 +215,8 @@ defineExpose({
     width: 100%;
     height: 100%;
     padding-left: 8px;
+    position: relative;
+    z-index: 0;
   }
   .res-dlg-wrap {
     position: absolute;

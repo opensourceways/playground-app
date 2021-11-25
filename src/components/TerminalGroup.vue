@@ -32,7 +32,7 @@ async function addTerminal() {
 }
 
 function closeTerminal(params) {
-  const index = terminalList.findIndex((item) => {
+  let index = terminalList.findIndex((item) => {
     if (!item) {
       return false;
     }
@@ -43,6 +43,16 @@ function closeTerminal(params) {
     }
   });
   terminalList[index] = null;
+  if (currentId.value === params.id && index - 1 > -1) {
+    while (index !== -1) {
+      if (terminalList[index - 1]) {
+        currentId.value = terminalList[index - 1].id;
+        index = -1;
+      } else {
+        index -= 1;
+      }
+    }
+  }
 }
 
 function closeAllTerminal() {
@@ -81,7 +91,7 @@ onBeforeUpdate(() => {
 
 function onCreateResource(data, idx) {
   const { status } = data;
-  if (status === 2) {
+  if (status >= 2) {
     activeTerminalList.value[idx].name = "创建失败";
   } else if (status === 1) {
     updateRemainTime(data.remainSecond);

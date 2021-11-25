@@ -64,6 +64,6 @@ export class Xterm {
 
   close() {
     window.removeEventListener("resize", this.fitResize);
-    this.term.destroy();
+    this.term.dispose();
   }
 }

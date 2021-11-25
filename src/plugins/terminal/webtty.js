@@ -13,12 +13,21 @@ export const msgSetPreferences = "4";
 export const msgSetReconnect = "5";
 
 export class WebTTY {
-  constructor(term, connectionFactory, args, authToken, onError) {
+  constructor(
+    term,
+    connectionFactory,
+    args,
+    authToken,
+    { onError, onReceive, onClose, onOpen } = {}
+  ) {
     this.term = term;
     this.connectionFactory = connectionFactory;
     this.args = args;
     this.authToken = authToken;
     this.reconnect = -1;
+    this.onOpen = onOpen;
+    this.onReceive = onReceive;
+    this.onClose = onClose;
     this.onError = onError;
   }
 
@@ -26,10 +35,10 @@ export class WebTTY {
     let connection = this.connectionFactory.create();
     let pingTimer;
     let reconnectTimeout;
-
     const setup = () => {
       connection.onOpen(() => {
-        console.log("ws onOpen");
+        this.onOpen && this.onOpen();
+
         const termInfo = this.term.info();
         connection.send(
           JSON.stringify({
@@ -61,7 +70,8 @@ export class WebTTY {
       });
 
       connection.onReceive((data) => {
-        console.log("ws onReceive");
+        this.onReceive && this.onReceive(data);
+
         const payload = data.slice(1);
         switch (data[0]) {
           case msgOutput:
@@ -85,7 +95,8 @@ export class WebTTY {
       });
 
       connection.onClose(() => {
-        console.log("ws onClose");
+        this.onClose && this.onClose();
+
         clearInterval(pingTimer);
         this.term.deactivate();
         if (this.reconnect > 0) {
@@ -98,9 +109,7 @@ export class WebTTY {
       });
 
       connection.onError(() => {
-        console.log("ws onError");
         this.onError && this.onError();
-        clearInterval(pingTimer);
       });
 
       connection.open();
