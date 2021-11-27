@@ -3,7 +3,9 @@ import { getUserAuth } from "@/shared/login";
 import mitt from "@/shared/mitt";
 import { reactive } from "vue";
 
-export const EVENT_TIMEOUT = "reamintime-timeout";
+export const TIME_KEYS = {
+  TIMEOUT: "reamintime-timeout",
+};
 
 export const remainTime = reactive({
   hour: "00",
@@ -66,7 +68,8 @@ export function updateRemainTime(sec) {
     if (seconds >= 0) {
       handleTime(seconds);
     } else {
-      mitt.emit(EVENT_TIMEOUT);
+      clearTime();
+      mitt.emit(TIME_KEYS.TIMEOUT);
     }
   }, 1000);
 }

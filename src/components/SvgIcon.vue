@@ -21,7 +21,7 @@ const props = defineProps({
 const symbolId = computed(() => `#${props.prefix}-${props.name}`);
 </script>
 <template>
-  <svg aria-hidden="true" :class="size" class="icon-svg">
+  <svg aria-hidden="true" class="icon-svg" :class="[size, name]">
     <use :xlink:href="symbolId" />
   </svg>
 </template>

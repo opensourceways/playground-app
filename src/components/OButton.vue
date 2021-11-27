@@ -5,6 +5,10 @@ defineProps({
     type: Boolean,
     default: false,
   },
+  isText: {
+    type: Boolean,
+    default: false,
+  },
   icon: {
     type: String,
     default: "",
@@ -18,7 +22,11 @@ function onClick(e) {
 }
 </script>
 <template>
-  <button class="o-button" :class="{ primary: primary }" @click="onClick">
+  <button
+    class="o-button"
+    :class="{ primary: primary, 'is-text': isText }"
+    @click="onClick"
+  >
     <div class="wrap">
       <slot></slot>
       <svg-icon v-if="icon" class="icon" :name="icon"></svg-icon>
@@ -36,10 +44,16 @@ function onClick(e) {
   cursor: pointer;
   &:hover {
     border-color: #0c41c9;
+    color: #0c41c9;
   }
   &:active {
     border-color: #032783;
   }
+
+  &.is-text {
+    border-color: transparent;
+  }
+
   &.primary {
     color: #fff;
     border-color: #002fa7;
@@ -53,6 +67,7 @@ function onClick(e) {
       background-color: #032783;
     }
   }
+
   .wrap {
     width: 100%;
     display: flex;

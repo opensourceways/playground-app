@@ -10,6 +10,7 @@ import {
 import { createCrdResouse, queryCrdResouse } from "@/service/api";
 import { getUserAuth } from "@/shared/login";
 import OButton from "@/components/OButton.vue";
+import GearLoading from "./GearLoading.vue";
 
 const emit = defineEmits(["create-resource"]);
 
@@ -141,7 +142,7 @@ function initConnection(term, instance) {
       if (!isConneted) {
         console.log("[received]", data);
         isConneted = true;
-        // resStatus.value = 1;
+        resStatus.value = 1;
         emit("create-resource", instance);
       } else {
         console.log("[received]", data && atob(data));
@@ -212,9 +213,11 @@ defineExpose({
     <div class="res-dlg-wrap" :class="{ hide: resStatus === 1 }">
       <div class="res-dlg">
         <div v-if="resStatus === 0" class="dlg-creating">
+          <GearLoading class="icon-loading"></GearLoading>
           <div class="label">{{ loadingLabel }}</div>
         </div>
         <div v-show="resStatus >= 2" class="dlg-failed">
+          <svg-icon name="alert-circle"></svg-icon>
           <span>{{ resStatus === 3 ? connectFailLabel : failedLabel }}</span>
           <span class="link" @click="createResource">{{ retryLabel }}</span>
         </div>
@@ -254,8 +257,6 @@ defineExpose({
     align-items: center;
     justify-content: center;
     display: flex;
-    color: #4d4d4d;
-    font-size: 14px;
 
     &.hide {
       display: none;
@@ -267,9 +268,6 @@ defineExpose({
       margin-bottom: 16px;
     }
 
-    .label {
-      color: #333;
-    }
     .actions {
       margin-top: 32px;
       display: flex;
@@ -277,16 +275,34 @@ defineExpose({
     }
   }
   .res-dlg {
-    background-color: #fff;
-    padding: 32px 40px;
-    min-width: 320px;
-    box-shadow: 0px 12px 32px 0px rgba(190, 196, 204, 0.2);
+    color: #eee;
+    font-size: 14px;
   }
   .link {
-    color: #002fa7;
+    color: #3a7fff;
     cursor: pointer;
     &:hover {
       text-decoration: underline;
+    }
+  }
+  .icon-loading {
+    font-size: 32px;
+    color: #eee;
+    .inner {
+      background-color: black;
+    }
+  }
+  .dlg-creating {
+    display: flex;
+    align-items: center;
+  }
+  .dlg-failed {
+    display: flex;
+    align-items: center;
+    .alert-circle {
+      color: red;
+      font-size: 24px;
+      margin-right: 8px;
     }
   }
 }

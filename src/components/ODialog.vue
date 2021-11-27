@@ -1,6 +1,10 @@
 <script setup>
 import { useAttrs } from "vue";
 defineProps({
+  close: {
+    type: Boolean,
+    default: true,
+  },
   show: {
     type: Boolean,
     default: false,
@@ -19,7 +23,7 @@ function onCloseClick() {
     <div class="o-dialog" :class="{ show: show, hide: !show }" v-bind="attrs">
       <div class="dialog-mask"></div>
       <div class="dialog-wrap">
-        <div class="close-btn" @click="onCloseClick">
+        <div v-if="close" class="close-btn" @click="onCloseClick">
           <svg-icon name="x"></svg-icon>
         </div>
         <div class="dialog-head">
@@ -98,7 +102,7 @@ function onCloseClick() {
     padding: 24px 36px;
   }
   .dialog-head {
-    padding: 16px 36px;
+    padding: 24px 36px 16px;
     font-size: 24px;
     color: #000;
     text-align: left;

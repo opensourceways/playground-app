@@ -191,7 +191,7 @@ defineExpose({
   --nav-height: 42px;
 
   height: 100%;
-  background-color: #141414;
+  background-color: #383737;
 
   &.fullscreen {
     position: fixed;
@@ -248,19 +248,18 @@ defineExpose({
       bottom: 0;
       left: -1px;
       right: 0;
-      background-color: #383733;
+      background-color: #222;
       opacity: 0;
       transition: opacity 0.3s;
       z-index: 1;
     }
     &:hover {
-      // background-color: #383733;
       &::before {
         opacity: 1;
       }
     }
     &.active {
-      background-color: #4e71cb;
+      background-color: #000;
       &::before {
         opacity: 0;
       }
