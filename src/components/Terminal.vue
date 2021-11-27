@@ -17,11 +17,24 @@ const props = defineProps({
     default: false,
   },
 });
-const emit = defineEmits(["create-resource"]);
 
-const terminalEl = ref(null);
+const RETRY_TIMES = 2; // 重试次数
+const RETRY_INTERVAL = 2; // 重试间隔(秒)
+const RESOURCE_CREATE_TIMEOUT = 15; //资源创建超时时间(秒)
+const QUERY_INTERVAL = 3; // 创建中的资源轮询间隔(秒)
 // 0: 创建中； 1：创建成功 2：创建失败； 3: 连接失败
-const resStatus = ref(0);
+const RES_STATUS = {
+  DONE: 1,
+  CREATING: 0,
+  CREATE_FAILED: 2,
+  CONNECT_FAILED: 3,
+};
+
+const resStatus = ref(RES_STATUS.CREATING);
+function setResStatus(val) {
+  resStatus.value = val;
+}
+
 let instance = null;
 let terminal; // xterm实例
 let terminalCloser = null; // websoket关闭函数
@@ -29,9 +42,10 @@ const loadingLabel = "正在为您准备环境，请耐心等待...";
 const failedLabel = "资源创建失败，";
 const connectFailLabel = "资源连接失败，";
 const retryLabel = "请重试";
-const RESOURCE_CREATE_TIMEOUT = 15; //资源创建超时时间(秒)
-const QUERY_INTERVAL = 3; // 创建中的资源轮询间隔(秒)
 let webTTYInstance;
+const terminalEl = ref(null);
+const emit = defineEmits(["create-resource"]);
+
 /**
  * 轮询资源状态，直到返回成功或者失败
  */
@@ -52,20 +66,20 @@ function ensureResourceReady(resId) {
         if (instanceInfo.status === 1) {
           clearInterval(handler);
           resolve(instanceInfo);
-          console.log("创建成功", cnt + "s");
+          console.log("资源创建成功，耗时", cnt + "s");
         } else if (instanceInfo.status === 2) {
           clearInterval(handler);
           resolve(null);
         }
       } else {
         clearInterval(handler);
-        console.error("创建资源失败", res.code, res.message);
+        console.error("资源创建失败", res.code, res.message);
         resolve(null);
       }
 
       if (cnt >= RESOURCE_CREATE_TIMEOUT) {
         clearInterval(handler);
-        console.error("创建资源超时", RESOURCE_CREATE_TIMEOUT + "s");
+        console.error("资源创建超时", RESOURCE_CREATE_TIMEOUT + "s");
         resolve(null);
       }
     };
@@ -112,46 +126,59 @@ async function createInstance(isNew) {
     }
     throw new Error(res.code + ", " + res.message);
   } catch (error) {
-    resStatus.value = 2;
+    setResStatus(RES_STATUS.CREATE_FAILED);
 
     console.error("创建资源失败", error);
     return null;
   }
 }
 
+function openWebTTY() {
+  terminalCloser && terminalCloser();
+  terminalCloser = webTTYInstance.open();
+  return terminalCloser;
+}
 function initConnection(term, instance) {
   let url = instance.endPoint;
 
   const gotty_auth_token = instance.authInfo;
   const args = window.location.search;
 
-  console.log(url);
+  console.log("建立连接", url);
+
+  let reConnect = 0;
   const factory = new ConnectionFactory(url, protocols);
   let isConneted = false;
   webTTYInstance = new WebTTY(term, factory, args, gotty_auth_token, {
     onError() {
-      console.log("ws onError");
-
-      emit("create-resource", { status: 3 });
-      resStatus.value = 3;
+      if (reConnect < RETRY_TIMES) {
+        setTimeout(() => {
+          reConnect++;
+          console.log(`第${reConnect}次尝试重新连接`);
+          openWebTTY();
+        }, RETRY_INTERVAL * 1000);
+      } else {
+        emit("create-resource", { status: 3 });
+        setResStatus(RES_STATUS.CONNECT_FAILED);
+      }
     },
     onReceive(data) {
       if (!isConneted) {
-        console.log("[received]", data);
+        console.log("资源连接成功", data);
         isConneted = true;
-        resStatus.value = 1;
+        setResStatus(RES_STATUS.DONE);
         emit("create-resource", instance);
-      } else {
-        console.log("[received]", data && atob(data));
       }
     },
     onClose() {
-      console.log("webtty closed");
-      isConneted = false;
-      closeConnection();
+      if (reConnect >= RETRY_TIMES) {
+        isConneted = false;
+        closeConnection();
+        console.log("资源及连接已销毁");
+      }
     },
   });
-  terminalCloser = webTTYInstance.open();
+  openWebTTY();
 
   window.addEventListener("unload", () => {
     closeConnection();
@@ -164,7 +191,7 @@ function closeConnection() {
 }
 
 async function createResource(isNew) {
-  resStatus.value = 0;
+  setResStatus(RES_STATUS.CREATING);
 
   emit("create-resource", { status: 0 });
 
@@ -209,13 +236,24 @@ defineExpose({
   <div class="open-terminal">
     <div class="res-dlg-wrap" :class="{ hide: resStatus === 1 }">
       <div class="res-dlg">
-        <div v-if="resStatus === 0" class="dlg-creating">
+        <div v-if="resStatus === RES_STATUS.CREATING" class="dlg-creating">
           <GearLoading class="icon-loading"></GearLoading>
           <div class="label">{{ loadingLabel }}</div>
         </div>
-        <div v-show="resStatus >= 2" class="dlg-failed">
+        <div
+          v-show="
+            [RES_STATUS.CREATE_FAILED, RES_STATUS.CONNECT_FAILED].includes(
+              resStatus
+            )
+          "
+          class="dlg-failed"
+        >
           <svg-icon name="alert-circle"></svg-icon>
-          <span>{{ resStatus === 3 ? connectFailLabel : failedLabel }}</span>
+          <span>{{
+            resStatus === RES_STATUS.CONNECT_FAILED
+              ? connectFailLabel
+              : failedLabel
+          }}</span>
           <span class="link" @click="createResource(false)">{{
             retryLabel
           }}</span>

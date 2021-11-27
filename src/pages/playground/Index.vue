@@ -45,7 +45,6 @@ const timeoutDlgSet = {
       label: "重新开始",
       primary: true,
       click() {
-        console.log("重新开始");
         toggleTimeoutDlg(false);
 
         isBegin.value = true;
@@ -270,7 +269,7 @@ function onTimeout() {
 .dialog-timeout {
   .login-actions {
     .o-button {
-      margin-right: 16px;
+      margin-right: 24px;
     }
   }
 }

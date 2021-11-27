@@ -175,7 +175,6 @@ function afterLogined(userInfo) {
   if (!userInfo || !userInfo.userId) {
     return;
   }
-  console.log(userInfo);
   saveUserAuth(userInfo.userId, userInfo.userToken);
 
   setStatus(LOGIN_STATUS.DONE);
