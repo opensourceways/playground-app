@@ -20,11 +20,12 @@ const currentId = ref(0);
 const isFullscreen = ref(false);
 let terminalRefs = [];
 
-async function addTerminal() {
+async function addTerminal(isNew) {
   terminalId += 1;
   terminalList.push({
     id: terminalId,
     name: `Terminal${terminalId}`,
+    isNew,
   });
 
   currentId.value = terminalId;
@@ -179,6 +180,7 @@ defineExpose({
         v-show="currentId === ter.id"
         :key="ter.id"
         :ref="setItemRef"
+        :is-new="ter.isNew"
         class="terminal-item"
         @create-resource="(e) => onCreateResource(e, idx)"
       ></Terminal>
@@ -191,7 +193,7 @@ defineExpose({
   --nav-height: 42px;
 
   height: 100%;
-  background-color: #383737;
+  background-color: #000;
 
   &.fullscreen {
     position: fixed;
@@ -204,6 +206,7 @@ defineExpose({
   .terminal-head {
     display: flex;
     justify-content: space-between;
+    background-color: #383737;
     .tools {
       display: flex;
       color: #ccc;
@@ -273,8 +276,8 @@ defineExpose({
       text-overflow: ellipsis;
     }
     .status-dot {
-      width: 8px;
-      height: 8px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
       position: absolute;
       left: 4px;

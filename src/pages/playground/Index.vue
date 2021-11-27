@@ -59,7 +59,10 @@ const timeoutDlgSet = {
         toggleTimeoutDlg(false);
 
         isBegin.value = true;
-        startTry();
+
+        terminals.value.closeAllTerminal();
+
+        startTry(true);
       },
     },
     {
@@ -70,7 +73,9 @@ const timeoutDlgSet = {
       click() {
         console.log("重新开始");
         toggleTimeoutDlg(false);
-        backToHome;
+        isBegin.value = false;
+
+        backToHome();
       },
     },
   ],
@@ -79,11 +84,12 @@ const timeoutDlgSet = {
 const title = "体验openEuler";
 const remainTimeLabel = "剩余体验时间：";
 
-function startTry() {
-  terminals.value.addTerminal();
+// 创建terminal，开始体验
+function startTry(isNew) {
+  terminals.value.addTerminal(isNew);
 }
 
-mitt.on(PLAYGROUND_KEYS.STAERT, () => {
+mitt.on(PLAYGROUND_KEYS.START, () => {
   isBegin.value = true;
   startTry();
 });

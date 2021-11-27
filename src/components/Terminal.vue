@@ -9,9 +9,14 @@ import {
 } from "@/plugins/terminal";
 import { createCrdResouse, queryCrdResouse } from "@/service/api";
 import { getUserAuth } from "@/shared/login";
-import OButton from "@/components/OButton.vue";
 import GearLoading from "./GearLoading.vue";
 
+const props = defineProps({
+  isNew: {
+    type: Boolean,
+    default: false,
+  },
+});
 const emit = defineEmits(["create-resource"]);
 
 const terminalEl = ref(null);
@@ -24,10 +29,6 @@ const loadingLabel = "正在为您准备环境，请耐心等待...";
 const failedLabel = "资源创建失败，";
 const connectFailLabel = "资源连接失败，";
 const retryLabel = "请重试";
-const timeoutTitle = "时间到";
-const timeoutLabel = "您本次的体验时间已到，请重新开始~";
-const restartLabel = "重新开始";
-const returnHome = "返回主页";
 const RESOURCE_CREATE_TIMEOUT = 15; //资源创建超时时间(秒)
 const QUERY_INTERVAL = 3; // 创建中的资源轮询间隔(秒)
 let webTTYInstance;
@@ -67,17 +68,12 @@ function ensureResourceReady(resId) {
         resolve(null);
       }
     };
-    setTimeout(async () => {
-      cnt += 2;
-      await query();
-      console.log(cnt);
 
-      handler = setInterval(async () => {
-        await query();
-        cnt += QUERY_INTERVAL;
-        console.log(cnt);
-      }, QUERY_INTERVAL * 1000);
-    }, 2000);
+    handler = setInterval(async () => {
+      await query();
+      cnt += QUERY_INTERVAL;
+      console.log(cnt);
+    }, QUERY_INTERVAL * 1000);
   });
 }
 
@@ -97,6 +93,7 @@ async function createInstance() {
       templatePath: "openeuler-20.03-lts-sp1/container/x86.tmpl",
       // templatePath: "openeuler-20.03-lts-sp1/lxd/x86.tmpl",
       resourceId: "1",
+      forceDelete: props.isNew ? 2 : 1,
     });
     if (res.code >= 200 && res.code < 400) {
       const { instanceInfo } = res;
@@ -221,14 +218,6 @@ defineExpose({
           <span>{{ resStatus === 3 ? connectFailLabel : failedLabel }}</span>
           <span class="link" @click="createResource">{{ retryLabel }}</span>
         </div>
-        <!-- <div class="dlg-timeout">
-          <div class="title">{{ timeoutTitle }}</div>
-          <div class="txt">{{ timeoutLabel }}</div>
-          <div class="actions">
-            <o-button :primary="true">{{ restartLabel }}</o-button>
-            <div class="link-btn">{{ returnHome }}</div>
-          </div>
-        </div> -->
       </div>
     </div>
     <div ref="terminalEl" class="terminal-el"></div>
