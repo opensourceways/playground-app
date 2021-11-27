@@ -31,16 +31,25 @@ function onClick(e) {
   line-height: 32px;
   font-size: 16px;
   background-color: transparent;
-  border: none;
+  border: 1px solid #c3cedf;
   outline: none;
   cursor: pointer;
+  &:hover {
+    border-color: #0c41c9;
+  }
+  &:active {
+    border-color: #032783;
+  }
   &.primary {
     color: #fff;
+    border-color: #002fa7;
     background-color: #002fa7;
     &:hover {
+      border-color: #0c41c9;
       background-color: #0c41c9;
     }
     &:active {
+      border-color: #032783;
       background-color: #032783;
     }
   }

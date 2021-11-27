@@ -24,6 +24,7 @@ async function addTerminal() {
   terminalId += 1;
   terminalList.push({
     id: terminalId,
+    name: `Terminal${terminalId}`,
   });
 
   currentId.value = terminalId;
@@ -91,18 +92,15 @@ onBeforeUpdate(() => {
 
 function onCreateResource(data, idx) {
   const { status } = data;
-  if (status >= 2) {
-    activeTerminalList.value[idx].name = "创建失败";
-  } else if (status === 1) {
+  activeTerminalList.value[idx].status = status;
+
+  if (status === 1) {
     updateRemainTime(data.remainSecond);
-    activeTerminalList.value[idx].name = data.name;
 
     if (isFirstLoadTerminal) {
       emit("terminal-first-loaded");
       isFirstLoadTerminal = false;
     }
-  } else {
-    activeTerminalList.value[idx].name = "创建中...";
   }
 }
 
@@ -136,11 +134,15 @@ defineExpose({
             v-for="ter in activeTerminalList"
             :key="ter.id"
             class="nav-item"
-            :class="{ active: currentId === ter.id }"
+            :class="[
+              currentId === ter.id ? 'active' : '',
+              `status-${ter.status}`,
+            ]"
             :title="ter.name"
             @click="selectTerminal(ter.id)"
           >
             <span class="label">{{ ter.name }}</span>
+            <i class="status-dot"></i>
             <span class="btn-close" @click.stop="remove(ter)"
               ><svg-icon name="x"></svg-icon
             ></span>
@@ -231,22 +233,14 @@ defineExpose({
     display: flex;
     align-items: center;
     padding: 0 32px 0 16px;
-    font-size: 18px;
+    font-size: 16px;
     color: #fff;
     min-width: 116px;
     text-align: center;
     cursor: default;
     position: relative;
     min-width: 120px;
-    &::after {
-      content: "";
-      border-right: 1px solid #444;
-      position: absolute;
-      top: 8px;
-      bottom: 8px;
-      right: 0;
-      z-index: 0;
-    }
+
     &::before {
       content: "";
       position: absolute;
@@ -266,7 +260,10 @@ defineExpose({
       }
     }
     &.active {
-      background-color: #464643;
+      background-color: #4e71cb;
+      &::before {
+        opacity: 0;
+      }
     }
     .label {
       position: relative;
@@ -275,6 +272,33 @@ defineExpose({
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      z-index: 10;
+      background-color: currentColor;
+      color: #03ef03;
+    }
+    &.status-0 {
+      .status-dot {
+        color: #03ef03;
+      }
+    }
+    &.status-1 {
+      .status-dot {
+        display: none;
+      }
+    }
+    &.status-2,
+    &.status-3 {
+      .status-dot {
+        color: red;
+      }
     }
   }
   .btn-plus {

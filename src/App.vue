@@ -9,6 +9,7 @@ doSignUp();
   <div class="app-body">
     <router-view></router-view>
   </div>
+  <div class="app-dialogs"></div>
 </template>
 
 <style lang="scss" scoped>
@@ -17,5 +18,9 @@ doSignUp();
 }
 .app-body {
   height: calc(100vh - 80px);
+}
+.app-dialogs {
+  position: relative;
+  z-index: 100;
 }
 </style>

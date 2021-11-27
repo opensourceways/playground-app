@@ -1,7 +1,9 @@
 <script setup>
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 import { LOGIN_KEYS, logout } from "@/shared/login";
 import mitt from "@/shared/mitt";
+import ODialog from "./ODialog.vue";
+import OButton from "./OButton.vue";
 
 let userInfo = reactive({});
 
@@ -16,7 +18,23 @@ mitt.on(LOGIN_KEYS.LOGOUT, () => {
 });
 
 const logoutLabel = "注销";
+
+const logoutLabels = {
+  title: "退出Gitee账号",
+  detail: "退出Gitee账号",
+  btnLabel: "注销登录",
+};
+const showLogout = ref(false);
+
+function toggleLogoutDlg(flag) {
+  if (flag === undefined) {
+    showLogout.value = !showLogout.value;
+  } else {
+    showLogout.value = flag;
+  }
+}
 function doLogout() {
+  toggleLogoutDlg(false);
   logout();
 }
 </script>
@@ -30,16 +48,36 @@ function doLogout() {
       </div>
       <div class="header-tools">
         <div v-if="userInfo.userId" class="tool-item user">
-          <div v-if="userInfo.avatar" class="user-avatar">
-            <img :src="userInfo.avatar" />
+          <div class="user-info">
+            <img
+              v-if="userInfo.avatar"
+              class="user-avatar"
+              :src="userInfo.avatar"
+            />
+            <div class="user-name">{{ userInfo.name }}</div>
           </div>
-          <div v-else class="user-info">{{ userInfo.name }}</div>
+
           <div class="drop-menus">
-            <div class="menu-item" @click="doLogout">{{ logoutLabel }}</div>
+            <div class="menu-item" @click="toggleLogoutDlg">
+              {{ logoutLabel }}
+            </div>
           </div>
         </div>
       </div>
     </div>
+    <o-dialog :show="showLogout" @close-click="toggleLogoutDlg(false)">
+      <template #head>
+        <div class="dlg-title">{{ logoutLabels.title }}</div>
+      </template>
+      <div class="dlg-body">{{ logoutLabels.detail }}</div>
+      <template #foot>
+        <div class="dlg-actions">
+          <o-button :primary="true" @click="doLogout">{{
+            logoutLabels.btnLabel
+          }}</o-button>
+        </div>
+      </template>
+    </o-dialog>
   </div>
 </template>
 
@@ -83,17 +121,19 @@ function doLogout() {
   display: flex;
   align-items: center;
   cursor: pointer;
-}
-.user-avatar {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  img {
-    width: 48px;
-    height: 48px;
+  .user-avatar {
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
+    + .user-name {
+      margin-left: 8px;
+    }
+  }
+  .user-name {
+    margin-left: 8px;
   }
 }
+
 .drop-menus {
   display: none;
   position: absolute;
@@ -105,7 +145,7 @@ function doLogout() {
     padding: 8px 24px;
     white-space: nowrap;
     cursor: pointer;
-    min-width: 100px;
+    min-width: 110px;
     &:hover {
       color: #002fa7;
     }

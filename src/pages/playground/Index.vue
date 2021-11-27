@@ -8,11 +8,32 @@ import { goAuthorize, LOGIN_KEYS } from "@/shared/login";
 import mitt from "@/shared/mitt";
 import { useRouter } from "vue-router";
 import { remainTime } from "./remainTime";
+import { beginToTry } from "./shared";
 
 const router = useRouter();
-const loginDialog = ref(null);
+const showLoginDlg = ref(false);
+
+const loginDlgSet = {
+  title: "登录提示",
+  content:
+    "体验openEuler playground需要Gitee开发者身份权限，请您允许授权登录Gitee验证用户信息",
+  button: {
+    label: "Gitee授权登录",
+    primary: true,
+    click() {
+      console.log("开始授权");
+      goAuthorize();
+    },
+  },
+  loginTip: ["登录即表示同意", "隐私条款"],
+};
+
+function toggleLoginDlg(show) {
+  showLoginDlg.value = show;
+}
 
 const title = "体验openEuler";
+const remainTimeLabel = "剩余体验时间：";
 
 function startTry() {
   terminals.value.addTerminal();
@@ -27,7 +48,7 @@ mitt.on(PLAYGROUND_KEYS.STAERT, () => {
 });
 
 mitt.on(LOGIN_KEYS.SHOW_LOGIN, () => {
-  loginDialog.value.show();
+  toggleLoginDlg(true);
 });
 
 mitt.on(LOGIN_KEYS.LOGOUT, () => {
@@ -47,19 +68,13 @@ function onFirstLoadTerminal() {
   });
 }
 
-const loginDlgSet = {
-  title: "登录提示",
-  content:
-    "体验openEuler playground需要Gitee开发者身份权限，请您允许授权登录Gitee验证用户信息",
-  button: {
-    label: "Gitee授权登录",
-    primary: true,
-    click() {
-      console.log("开始授权");
-      goAuthorize();
-    },
+const startBtn = {
+  label: "START",
+  icon: "arrow-right",
+  primary: true,
+  click() {
+    beginToTry();
   },
-  loginTip: ["登录即表示同意", "隐私条款"],
 };
 </script>
 
@@ -67,10 +82,13 @@ const loginDlgSet = {
   <div class="playground-app">
     <div class="ground-head">
       <h3 class="title">{{ title }}</h3>
-      <div class="remain-time">
-        <span class="time-item">{{ remainTime.hour }}</span
-        >:<span class="time-item">{{ remainTime.minute }}</span
-        >:<span class="time-item">{{ remainTime.second }}</span>
+      <div class="time-tip">
+        <div class="time-label">{{ remainTimeLabel }}</div>
+        <div class="remain-time">
+          <span class="time-item">{{ remainTime.hour }}</span
+          >:<span class="time-item">{{ remainTime.minute }}</span
+          >:<span class="time-item">{{ remainTime.second }}</span>
+        </div>
       </div>
     </div>
     <div class="ground-body">
@@ -79,9 +97,19 @@ const loginDlgSet = {
       </div>
       <div class="ground-terminal">
         <div v-if="!isBegin" class="terminal-mask">
-          <div class="text">
-            <div>Welcome</div>
-            <div>LET'S PLAY <span class="bling">_</span></div>
+          <div class="terminal-mask-main">
+            <div class="text">
+              <div>Welcome</div>
+              <div>LET'S PLAY <span class="bling">_</span></div>
+            </div>
+            <div class="actions">
+              <o-button
+                :primary="true"
+                :icon="startBtn.icon"
+                @click="startBtn.click"
+                >{{ startBtn.label }}</o-button
+              >
+            </div>
           </div>
         </div>
         <TerminalGroup
@@ -90,10 +118,16 @@ const loginDlgSet = {
           @terminal-first-loaded="onFirstLoadTerminal"
         ></TerminalGroup>
       </div>
-      <Teleport to="body">
-        <ODialog ref="loginDialog" class="login-dialog">
+      <ODialog
+        class="login-dialog"
+        :show="showLoginDlg"
+        @close-click="toggleLoginDlg(false)"
+      >
+        <template #head>
           <h3 class="title">{{ loginDlgSet.title }}</h3>
-          <div class="dlg-content">{{ loginDlgSet.content }}</div>
+        </template>
+        <div class="dlg-content">{{ loginDlgSet.content }}</div>
+        <template #foot>
           <div class="login-actions">
             <o-button
               :primary="loginDlgSet.button.primary"
@@ -102,11 +136,13 @@ const loginDlgSet = {
             >
             <div class="auth-tip">
               {{ loginDlgSet.loginTip[0] }}
-              <a href="http://" class="o-link">{{ loginDlgSet.loginTip[1] }}</a>
+              <a href="http://" class="o-link" target="__blank">{{
+                loginDlgSet.loginTip[1]
+              }}</a>
             </div>
           </div>
-        </ODialog>
-      </Teleport>
+        </template>
+      </ODialog>
     </div>
   </div>
 </template>
@@ -166,29 +202,18 @@ const loginDlgSet = {
     line-height: 48px;
     text-align: center;
     font-family: monospace;
+    margin-bottom: 24px;
   }
   .bling {
     animation: bling 0.8s ease-in-out infinite;
   }
 }
+.terminal-mask-main {
+  text-align: center;
+}
 </style>
 <style lang="scss">
 .login-dialog {
-  .dialog-head {
-    display: none;
-  }
-  .title {
-    text-align: center;
-  }
-  .dlg-content {
-    margin-top: 24px;
-    line-height: 32px;
-  }
-  .login-actions {
-    text-align: center;
-    margin-top: 24px;
-  }
-
   .auth-tip {
     color: #c7cad0;
     font-size: 12px;
@@ -201,8 +226,14 @@ const loginDlgSet = {
       text-decoration: underline;
     }
   }
+  .login-actions {
+    text-align: center;
+  }
 }
-
+.time-tip {
+  display: flex;
+  align-items: flex-end;
+}
 .remain-time {
   font-size: 18px;
   color: #002fa7;

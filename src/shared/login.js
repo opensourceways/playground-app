@@ -64,7 +64,7 @@ export async function goAuthorize() {
     const { callbackUrl, clientId } = res.callbackInfo;
     const url = `https://gitee.com/oauth/authorize?client_id=${clientId}&redirect_uri=${callbackUrl}&response_type=code`;
     console.log(url);
-    // window.location.href = url;
+    window.location.href = url;
   } catch (error) {
     console.error("获取认证参数失败");
   }

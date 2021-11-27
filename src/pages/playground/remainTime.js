@@ -63,7 +63,7 @@ export function updateRemainTime(sec) {
   }
   handler = setInterval(() => {
     seconds -= 1;
-    if (seconds > 0) {
+    if (seconds >= 0) {
       handleTime(seconds);
     } else {
       mitt.emit(EVENT_TIMEOUT);

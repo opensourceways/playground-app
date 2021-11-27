@@ -86,6 +86,10 @@ function click(item) {
     padding-right: 4px;
     cursor: pointer;
     margin: 0 4px;
+    transition: background-color 0.3s;
+    &:hover {
+      background-color: #b4c9f1;
+    }
   }
 }
 .o-button {

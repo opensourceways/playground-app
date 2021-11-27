@@ -9,6 +9,7 @@ import {
 } from "@/plugins/terminal";
 import { createCrdResouse, queryCrdResouse } from "@/service/api";
 import { getUserAuth } from "@/shared/login";
+import OButton from "@/components/OButton.vue";
 
 const emit = defineEmits(["create-resource"]);
 
@@ -20,8 +21,12 @@ let terminal; // xterm实例
 let terminalCloser = null; // websoket关闭函数
 const loadingLabel = "正在为您准备环境，请耐心等待...";
 const failedLabel = "资源创建失败，";
-const connectFailLabel = "资源链接失败，";
+const connectFailLabel = "资源连接失败，";
 const retryLabel = "请重试";
+const timeoutTitle = "时间到";
+const timeoutLabel = "您本次的体验时间已到，请重新开始~";
+const restartLabel = "重新开始";
+const returnHome = "返回主页";
 const RESOURCE_CREATE_TIMEOUT = 15; //资源创建超时时间(秒)
 const QUERY_INTERVAL = 3; // 创建中的资源轮询间隔(秒)
 let webTTYInstance;
@@ -64,6 +69,7 @@ function ensureResourceReady(resId) {
     setTimeout(async () => {
       cnt += 2;
       await query();
+      console.log(cnt);
 
       handler = setInterval(async () => {
         await query();
@@ -88,6 +94,7 @@ async function createInstance() {
       userId,
       contactEmail: "contact@openeuler.io",
       templatePath: "openeuler-20.03-lts-sp1/container/x86.tmpl",
+      // templatePath: "openeuler-20.03-lts-sp1/lxd/x86.tmpl",
       resourceId: "1",
     });
     if (res.code >= 200 && res.code < 400) {
@@ -122,7 +129,6 @@ function initConnection(term, instance) {
 
   console.log(url);
   const factory = new ConnectionFactory(url, protocols);
-  console.log(factory);
   let isConneted = false;
   webTTYInstance = new WebTTY(term, factory, args, gotty_auth_token, {
     onError() {
@@ -135,7 +141,7 @@ function initConnection(term, instance) {
       if (!isConneted) {
         console.log("[received]", data);
         isConneted = true;
-        resStatus.value = 1;
+        // resStatus.value = 1;
         emit("create-resource", instance);
       } else {
         console.log("[received]", data && atob(data));
@@ -212,6 +218,14 @@ defineExpose({
           <span>{{ resStatus === 3 ? connectFailLabel : failedLabel }}</span>
           <span class="link" @click="createResource">{{ retryLabel }}</span>
         </div>
+        <!-- <div class="dlg-timeout">
+          <div class="title">{{ timeoutTitle }}</div>
+          <div class="txt">{{ timeoutLabel }}</div>
+          <div class="actions">
+            <o-button :primary="true">{{ restartLabel }}</o-button>
+            <div class="link-btn">{{ returnHome }}</div>
+          </div>
+        </div> -->
       </div>
     </div>
     <div ref="terminalEl" class="terminal-el"></div>
@@ -240,9 +254,26 @@ defineExpose({
     align-items: center;
     justify-content: center;
     display: flex;
+    color: #4d4d4d;
+    font-size: 14px;
 
     &.hide {
       display: none;
+    }
+
+    .title {
+      font-size: 24px;
+      color: #000;
+      margin-bottom: 16px;
+    }
+
+    .label {
+      color: #333;
+    }
+    .actions {
+      margin-top: 32px;
+      display: flex;
+      align-items: center;
     }
   }
   .res-dlg {

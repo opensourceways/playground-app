@@ -32,8 +32,8 @@ export class Xterm {
     this.term.write(this.decoder.decode(data));
   }
 
-  setWindowTitle(title) {
-    document.title = title;
+  setWindowTitle() {
+    // document.title = title;
   }
 
   setPreferences() {}
