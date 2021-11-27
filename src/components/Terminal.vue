@@ -52,6 +52,7 @@ function ensureResourceReady(resId) {
         if (instanceInfo.status === 1) {
           clearInterval(handler);
           resolve(instanceInfo);
+          console.log("创建成功", cnt + "s");
         } else if (instanceInfo.status === 2) {
           clearInterval(handler);
           resolve(null);
@@ -70,9 +71,8 @@ function ensureResourceReady(resId) {
     };
 
     handler = setInterval(async () => {
-      await query();
       cnt += QUERY_INTERVAL;
-      console.log(cnt);
+      await query();
     }, QUERY_INTERVAL * 1000);
   });
 }

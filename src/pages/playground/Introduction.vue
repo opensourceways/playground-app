@@ -1,6 +1,7 @@
 <script setup>
 import AppArticle from "@/components/Article.vue";
 import { enterCommond } from "./shared";
+import WarmTips from "./WarmTips.vue";
 const contents = [
   "openEuler支持 yum 及 dnf 等RPM包管理工具对软件包进行管理，下面通过安装一个简单的示例展示如何在openEuler上安装软件包。",
   [
@@ -57,9 +58,9 @@ function itemClick(item) {
 </script>
 
 <template>
-  <div class="terminal-app">
-    <app-article :contents="contents" @item-click="itemClick"></app-article>
-  </div>
+  <app-article :contents="contents" @item-click="itemClick">
+    <template #foot><warm-tips></warm-tips></template>
+  </app-article>
 </template>
 
 <style lang="scss" scoped></style>

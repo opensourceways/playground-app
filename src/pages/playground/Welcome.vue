@@ -15,6 +15,7 @@ const contents = [
   //       label: "START",
   //       icon: "arrow-right",
   //       primary: true,
+  //       disabled: true,
   //       click() {
   //         beginToTry();
   //       },
@@ -25,9 +26,7 @@ const contents = [
 </script>
 
 <template>
-  <div class="terminal-app">
-    <app-article :contents="contents"></app-article>
-  </div>
+  <app-article :contents="contents"> </app-article>
 </template>
 
 <style lang="scss" scoped></style>
