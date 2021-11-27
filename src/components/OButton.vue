@@ -1,6 +1,6 @@
 <script setup>
 import {} from "vue";
-defineProps({
+const props = defineProps({
   primary: {
     type: Boolean,
     default: false,
@@ -13,18 +13,25 @@ defineProps({
     type: String,
     default: "",
   },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const emit = defineEmits(["click"]);
 
 function onClick(e) {
+  if (props.disabled) {
+    return;
+  }
   emit("click", e);
 }
 </script>
 <template>
   <button
     class="o-button"
-    :class="{ primary: primary, 'is-text': isText }"
+    :class="{ primary: primary, 'is-text': isText, 'is-disabled': disabled }"
     @click="onClick"
   >
     <div class="wrap">
@@ -39,9 +46,11 @@ function onClick(e) {
   line-height: 32px;
   font-size: 16px;
   background-color: transparent;
-  border: 1px solid #c3cedf;
+  border: 1px solid #333;
   outline: none;
   cursor: pointer;
+  color: #333;
+  transition: color 0.2s, background-color 0.3s, border-color 0.3s;
   &:hover {
     border-color: #0c41c9;
     color: #0c41c9;
@@ -66,6 +75,18 @@ function onClick(e) {
       border-color: #032783;
       background-color: #032783;
     }
+    &.is-disabled,
+    &.is-disabled:hover {
+      background-color: #b8d9ff;
+      border-color: #b8d9ff;
+      color: #eee;
+    }
+  }
+  &.is-disabled,
+  &.is-disabled:hover {
+    color: #999;
+    border-color: #999;
+    cursor: not-allowed;
   }
 
   .wrap {

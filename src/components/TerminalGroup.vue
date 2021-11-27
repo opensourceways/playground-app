@@ -127,7 +127,7 @@ defineExpose({
 </script>
 
 <template>
-  <div class="oe-terminal-group" :class="{ fullscreen: isFullscreen }">
+  <div class="open-terminal-group" :class="{ fullscreen: isFullscreen }">
     <div class="terminal-head">
       <div class="head-navs-wrap">
         <div class="head-navs">
@@ -189,7 +189,7 @@ defineExpose({
 </template>
 
 <style lang="scss">
-.oe-terminal-group {
+.open-terminal-group {
   --nav-height: 42px;
 
   height: 100%;

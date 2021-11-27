@@ -1,24 +1,29 @@
 <script setup>
 import { reactive, ref } from "vue";
-import { LOGIN_KEYS, logout } from "@/shared/login";
+import { LOGIN_EVENTS, logout } from "@/shared/login";
 import mitt from "@/shared/mitt";
 import ODialog from "./ODialog.vue";
 import OButton from "./OButton.vue";
-import LoadingDot from "./LoadingDot.vue";
+import LoadingDot from "./LoadingArc.vue";
+
+import { doSignUp, isLoggingIn } from "@/shared/login";
 
 let userInfo = reactive({});
 
-mitt.on(LOGIN_KEYS.LOGINED, (data) => {
+mitt.on(LOGIN_EVENTS.LOGINED, (data) => {
   userInfo.userId = data.userId;
   userInfo.name = data.name || "--";
   userInfo.avatar = data.avatarUrl;
 });
-mitt.on(LOGIN_KEYS.LOGOUT, () => {
+mitt.on(LOGIN_EVENTS.LOGOUT, () => {
   userInfo.userId = "";
   userInfo.name = "";
 });
 
+doSignUp();
+
 const logoutLabel = "注销";
+const loginLabel = "登录";
 
 const logoutLabels = {
   title: "退出Gitee账号",
@@ -41,7 +46,7 @@ function doLogout() {
 </script>
 
 <template>
-  <div class="oe-header">
+  <div class="open-header">
     <div class="header-wrap">
       <div class="header-logo">
         <img src="@/assets/openeuler-logo.png" alt="" srcset="" />
@@ -49,14 +54,17 @@ function doLogout() {
       </div>
       <div class="header-tools">
         <div class="tool-item user">
-          <loading-dot class="loading"></loading-dot>
-          <div v-if="userInfo.userId" class="user-info">
+          <loading-dot v-if="isLoggingIn" class="loading"></loading-dot>
+          <div v-else class="user-info">
+            <div v-if="!userInfo.userId">{{ loginLabel }}</div>
             <img
               v-if="userInfo.avatar"
               class="user-avatar"
               :src="userInfo.avatar"
             />
-            <div class="user-name">{{ userInfo.name }}</div>
+            <div v-if="userInfo.name" class="user-name">
+              {{ userInfo.name }}
+            </div>
           </div>
 
           <div class="drop-menus">
@@ -84,7 +92,7 @@ function doLogout() {
 </template>
 
 <style lang="scss">
-.oe-header {
+.open-header {
   background: #ffffff;
   box-shadow: 0px 1px 3px 0px rgba(178, 178, 178, 0.5);
 }
@@ -145,6 +153,7 @@ function doLogout() {
   display: none;
   position: absolute;
   right: 0;
+  top: 100%;
   background-color: #fff;
   box-shadow: 1px 2px 8px rgba($color: #000000, $alpha: 0.1);
   padding: 8px 0;
@@ -159,13 +168,16 @@ function doLogout() {
   }
 }
 .tool-item.user {
+  display: flex;
+  align-items: center;
   &:hover {
     .drop-menus {
       display: block;
     }
   }
   .loading {
-    font-size: 32px;
+    font-size: 24px;
+    color: red;
   }
 }
 </style>

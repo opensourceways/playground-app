@@ -4,11 +4,12 @@ import OButton from "@/components/OButton.vue";
 import ODialog from "@/components/ODialog.vue";
 import { ref } from "vue";
 import { PLAYGROUND_KEYS } from "./shared";
-import { goAuthorize, LOGIN_KEYS } from "@/shared/login";
+import { goAuthorize, LOGIN_EVENTS } from "@/shared/login";
 import mitt from "@/shared/mitt";
 import { useRouter } from "vue-router";
 import { remainTime, TIME_KEYS } from "./remainTime";
 import { beginToTry } from "./shared";
+import { isLoggingIn } from "@/shared/login";
 
 const router = useRouter();
 
@@ -21,6 +22,15 @@ function backToHome() {
   });
   terminals.value.closeAllTerminal();
 }
+
+const startBtn = {
+  label: "START",
+  icon: "arrow-right",
+  primary: true,
+  click() {
+    beginToTry();
+  },
+};
 
 const showLoginDlg = ref(false);
 function toggleLoginDlg(show) {
@@ -94,11 +104,11 @@ mitt.on(PLAYGROUND_KEYS.START, () => {
   startTry();
 });
 
-mitt.on(LOGIN_KEYS.SHOW_LOGIN, () => {
+mitt.on(LOGIN_EVENTS.SHOW_LOGIN, () => {
   toggleLoginDlg(true);
 });
 
-mitt.on(LOGIN_KEYS.LOGOUT, () => {
+mitt.on(LOGIN_EVENTS.LOGOUT, () => {
   router.push({
     name: "welcome",
   });
@@ -110,6 +120,7 @@ mitt.on(PLAYGROUND_KEYS.ENTER, (data) => {
 });
 
 mitt.on(TIME_KEYS.TIMEOUT, () => {
+  terminals.value.closeAllTerminal();
   toggleTimeoutDlg(true);
 });
 
@@ -118,15 +129,6 @@ function onFirstLoadTerminal() {
     name: "introduction",
   });
 }
-
-const startBtn = {
-  label: "START",
-  icon: "arrow-right",
-  primary: true,
-  click() {
-    beginToTry();
-  },
-};
 </script>
 
 <template>
@@ -155,8 +157,9 @@ const startBtn = {
             </div>
             <div class="actions">
               <o-button
-                :primary="true"
+                :primary="!isLoggingIn"
                 :icon="startBtn.icon"
+                :disabled="isLoggingIn"
                 @click="startBtn.click"
                 >{{ startBtn.label }}</o-button
               >

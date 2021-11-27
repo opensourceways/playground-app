@@ -1,7 +1,5 @@
 <script setup>
 import AppHeader from "@/components/AppHeader.vue";
-import { doSignUp } from "@/shared/login";
-doSignUp();
 </script>
 
 <template>

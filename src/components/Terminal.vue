@@ -206,7 +206,7 @@ defineExpose({
 </script>
 
 <template>
-  <div class="oe-terminal">
+  <div class="open-terminal">
     <div class="res-dlg-wrap" :class="{ hide: resStatus === 1 }">
       <div class="res-dlg">
         <div v-if="resStatus === 0" class="dlg-creating">
@@ -227,13 +227,13 @@ defineExpose({
 </template>
 
 <style lang="scss">
-.oe-terminal {
+.open-terminal {
   height: 100%;
   background-color: black;
 
   .terminal-el {
     width: 100%;
-    height: 100%;
+    height: calc(100% - 8px); // 底部预留位置，解决太靠底问题
     padding-left: 8px;
     position: relative;
     z-index: 0;
