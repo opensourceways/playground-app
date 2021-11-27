@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, ref } from "vue";
-import { LOGIN_EVENTS, logout } from "@/shared/login";
+import { LOGIN_EVENTS, logout, goAuthorize } from "@/shared/login";
 import mitt from "@/shared/mitt";
 import ODialog from "./ODialog.vue";
 import OButton from "./OButton.vue";
@@ -43,6 +43,31 @@ function doLogout() {
   toggleLogoutDlg(false);
   logout();
 }
+
+const showLoginDlg = ref(false);
+function toggleLoginDlg(show) {
+  showLoginDlg.value = show;
+}
+const loginDlgSet = {
+  title: "登录提示",
+  content:
+    "体验openEuler playground需要Gitee开发者身份权限，请您允许授权登录Gitee验证用户信息",
+  button: {
+    label: "Gitee授权登录",
+    primary: true,
+    click() {
+      console.log("开始授权");
+      toggleLoginDlg(false);
+      goAuthorize();
+    },
+  },
+  loginTip: ["登录即表示同意", "隐私条款"],
+  privacyLink: "https://www.openeuler.org",
+};
+
+mitt.on(LOGIN_EVENTS.SHOW_LOGIN, () => {
+  toggleLoginDlg(true);
+});
 </script>
 
 <template>
@@ -56,7 +81,9 @@ function doLogout() {
         <div class="tool-item user">
           <loading-dot v-if="isLoggingIn" class="loading"></loading-dot>
           <div v-else class="user-info">
-            <div v-if="!userInfo.userId">{{ loginLabel }}</div>
+            <div v-if="!userInfo.userId" @click="toggleLoginDlg(true)">
+              {{ loginLabel }}
+            </div>
             <img
               v-if="userInfo.avatar"
               class="user-avatar"
@@ -67,7 +94,7 @@ function doLogout() {
             </div>
           </div>
 
-          <div class="drop-menus">
+          <div v-if="userInfo.userId" class="drop-menus">
             <div class="menu-item" @click="toggleLogoutDlg">
               {{ logoutLabel }}
             </div>
@@ -85,6 +112,34 @@ function doLogout() {
           <o-button :primary="true" @click="doLogout">{{
             logoutLabels.btnLabel
           }}</o-button>
+        </div>
+      </template>
+    </o-dialog>
+    <o-dialog
+      class="dialog-login"
+      :show="showLoginDlg"
+      @close-click="toggleLoginDlg(false)"
+    >
+      <template #head>
+        <h3 class="title">{{ loginDlgSet.title }}</h3>
+      </template>
+      <div class="dlg-content">{{ loginDlgSet.content }}</div>
+      <template #foot>
+        <div class="login-actions">
+          <o-button
+            :primary="loginDlgSet.button.primary"
+            @click="loginDlgSet.button.click(btn)"
+            >{{ loginDlgSet.button.label }}</o-button
+          >
+          <div class="auth-tip">
+            {{ loginDlgSet.loginTip[0] }}
+            <a
+              :href="loginDlgSet.privacyLink"
+              class="o-link"
+              target="__blank"
+              >{{ loginDlgSet.loginTip[1] }}</a
+            >
+          </div>
         </div>
       </template>
     </o-dialog>
@@ -177,7 +232,7 @@ function doLogout() {
   }
   .loading {
     font-size: 24px;
-    color: red;
+    color: #002fa7;
   }
 }
 </style>

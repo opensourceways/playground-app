@@ -4,7 +4,7 @@ import OButton from "@/components/OButton.vue";
 import ODialog from "@/components/ODialog.vue";
 import { ref } from "vue";
 import { PLAYGROUND_KEYS } from "./shared";
-import { goAuthorize, LOGIN_EVENTS } from "@/shared/login";
+import { LOGIN_EVENTS } from "@/shared/login";
 import mitt from "@/shared/mitt";
 import { useRouter } from "vue-router";
 import { remainTime, TIME_KEYS } from "./remainTime";
@@ -30,26 +30,6 @@ const startBtn = {
   click() {
     beginToTry();
   },
-};
-
-const showLoginDlg = ref(false);
-function toggleLoginDlg(show) {
-  showLoginDlg.value = show;
-}
-const loginDlgSet = {
-  title: "登录提示",
-  content:
-    "体验openEuler playground需要Gitee开发者身份权限，请您允许授权登录Gitee验证用户信息",
-  button: {
-    label: "Gitee授权登录",
-    primary: true,
-    click() {
-      console.log("开始授权");
-      toggleLoginDlg(false);
-      goAuthorize();
-    },
-  },
-  loginTip: ["登录即表示同意", "隐私条款"],
 };
 
 const showTimeoutDlg = ref(false);
@@ -104,10 +84,7 @@ mitt.on(PLAYGROUND_KEYS.START, () => {
   startTry();
 });
 
-mitt.on(LOGIN_EVENTS.SHOW_LOGIN, () => {
-  toggleLoginDlg(true);
-});
-
+// 注销登录时，应关闭所有连接
 mitt.on(LOGIN_EVENTS.LOGOUT, () => {
   router.push({
     name: "welcome",
@@ -172,31 +149,7 @@ function onFirstLoadTerminal() {
           @terminal-first-loaded="onFirstLoadTerminal"
         ></TerminalGroup>
       </div>
-      <ODialog
-        class="dialog-login"
-        :show="showLoginDlg"
-        @close-click="toggleLoginDlg(false)"
-      >
-        <template #head>
-          <h3 class="title">{{ loginDlgSet.title }}</h3>
-        </template>
-        <div class="dlg-content">{{ loginDlgSet.content }}</div>
-        <template #foot>
-          <div class="login-actions">
-            <o-button
-              :primary="loginDlgSet.button.primary"
-              @click="loginDlgSet.button.click(btn)"
-              >{{ loginDlgSet.button.label }}</o-button
-            >
-            <div class="auth-tip">
-              {{ loginDlgSet.loginTip[0] }}
-              <a href="http://" class="o-link" target="__blank">{{
-                loginDlgSet.loginTip[1]
-              }}</a>
-            </div>
-          </div>
-        </template>
-      </ODialog>
+
       <ODialog
         class="dialog-timeout"
         :show="showTimeoutDlg"
@@ -253,7 +206,6 @@ function onFirstLoadTerminal() {
 }
 .ground-article {
   width: 382px;
-  overflow: auto;
   height: 100%;
   flex-shrink: 0;
 }
