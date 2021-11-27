@@ -1,17 +1,19 @@
+<script setup>
 import { queryCrdResouse } from "@/service/api";
 import { getUserAuth } from "@/shared/login";
-import mitt from "@/shared/mitt";
 import { reactive } from "vue";
 
-export const TIME_KEYS = {
-  TIMEOUT: "reamintime-timeout",
-};
+const emit = defineEmits(["timeout"]);
 
-export const remainTime = reactive({
+const WARNING_THRESHOLD = 1 * 60; // 告警阈值
+
+const remainTime = reactive({
   hour: "00",
   minute: "00",
   second: "00",
+  warning: false,
 });
+
 let handler = null;
 let seconds = 60 * 10;
 
@@ -27,9 +29,14 @@ function handleTime(second) {
   remainTime.hour = paddLeft(h);
   remainTime.minute = paddLeft(m);
   remainTime.second = paddLeft(s);
+
+  remainTime.warning = second > 0 && second <= WARNING_THRESHOLD;
 }
 
-export async function refreshRemainTime(resId) {
+/**
+ * 从后台获取剩余时间
+ */
+async function refreshTime(resId) {
   const { token } = getUserAuth();
   if (!token) {
     return;
@@ -56,7 +63,10 @@ function clearTime() {
   }
 }
 
-export function updateRemainTime(sec) {
+/**
+ * 更新显示的剩余时间
+ */
+function updateTime(sec) {
   if (typeof sec !== undefined) {
     seconds = sec;
   }
@@ -69,7 +79,42 @@ export function updateRemainTime(sec) {
       handleTime(seconds);
     } else {
       clearTime();
-      mitt.emit(TIME_KEYS.TIMEOUT);
+      emit("timeout");
     }
   }, 1000);
 }
+
+defineExpose({
+  refreshTime,
+  updateTime,
+});
+</script>
+
+<template>
+  <div class="remain-time" :class="{ warning: remainTime.warning }">
+    <span class="time-item">{{ remainTime.hour }}</span
+    >:<span class="time-item">{{ remainTime.minute }}</span
+    >:<span class="time-item">{{ remainTime.second }}</span>
+  </div>
+</template>
+
+<style lang="scss">
+.remain-time {
+  font-size: 18px;
+  color: #002fa7;
+  display: flex;
+  .time-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 32px;
+    width: 32px;
+    background-color: #fff;
+    margin: 0 4px;
+    box-shadow: 0px 12px 32px 0px rgba(190, 196, 204, 0.2);
+  }
+  &.warning {
+    color: red;
+  }
+}
+</style>

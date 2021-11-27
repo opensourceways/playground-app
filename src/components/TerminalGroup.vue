@@ -1,7 +1,6 @@
 <script setup>
 import { ref, computed, reactive, onBeforeUpdate, nextTick } from "vue";
 import Terminal from "./Terminal.vue";
-import { updateRemainTime } from "@/pages/playground/remainTime";
 
 defineProps({
   max: {
@@ -9,7 +8,7 @@ defineProps({
     default: 20,
   },
 });
-const emit = defineEmits(["terminal-first-loaded"]);
+const emit = defineEmits(["terminal-loaded"]);
 
 const terminalList = reactive([]);
 let isFirstLoadTerminal = true;
@@ -96,10 +95,9 @@ function onCreateResource(data, idx) {
   activeTerminalList.value[idx].status = status;
 
   if (status === 1) {
-    updateRemainTime(data.remainSecond);
+    emit("terminal-loaded", { isFirst: isFirstLoadTerminal, terminal: data });
 
     if (isFirstLoadTerminal) {
-      emit("terminal-first-loaded");
       isFirstLoadTerminal = false;
     }
   }

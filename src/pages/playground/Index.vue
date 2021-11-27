@@ -7,9 +7,9 @@ import { PLAYGROUND_KEYS } from "./shared";
 import { LOGIN_EVENTS } from "@/shared/login";
 import mitt from "@/shared/mitt";
 import { useRouter } from "vue-router";
-import { remainTime, TIME_KEYS } from "./remainTime";
 import { beginToTry } from "./shared";
 import { isLoggingIn } from "@/shared/login";
+import RemainTime from "./RemainTime.vue";
 
 const router = useRouter();
 
@@ -73,6 +73,7 @@ const timeoutDlgSet = {
 
 const title = "体验openEuler";
 const remainTimeLabel = "剩余体验时间：";
+const remainTimeIns = ref(null);
 
 // 创建terminal，开始体验
 function startTry(isNew) {
@@ -96,15 +97,18 @@ mitt.on(PLAYGROUND_KEYS.ENTER, (data) => {
   terminals.value.enterCommond(data.commond);
 });
 
-mitt.on(TIME_KEYS.TIMEOUT, () => {
+function onTerminalLoaded(data) {
+  if (data.isFirst) {
+    router.push({
+      name: "introduction",
+    });
+    remainTimeIns.value.updateTime(data.terminal.remainSecond);
+  }
+}
+
+function onTimeout() {
   terminals.value.closeAllTerminal();
   toggleTimeoutDlg(true);
-});
-
-function onFirstLoadTerminal() {
-  router.push({
-    name: "introduction",
-  });
 }
 </script>
 
@@ -114,11 +118,7 @@ function onFirstLoadTerminal() {
       <h3 class="title">{{ title }}</h3>
       <div class="time-tip">
         <div class="time-label">{{ remainTimeLabel }}</div>
-        <div class="remain-time">
-          <span class="time-item">{{ remainTime.hour }}</span
-          >:<span class="time-item">{{ remainTime.minute }}</span
-          >:<span class="time-item">{{ remainTime.second }}</span>
-        </div>
+        <RemainTime ref="remainTimeIns" @timeout="onTimeout"></RemainTime>
       </div>
     </div>
     <div class="ground-body">
@@ -146,7 +146,7 @@ function onFirstLoadTerminal() {
         <TerminalGroup
           ref="terminals"
           :max="5"
-          @terminal-first-loaded="onFirstLoadTerminal"
+          @terminal-loaded="onTerminalLoaded"
         ></TerminalGroup>
       </div>
 
@@ -237,6 +237,9 @@ function onFirstLoadTerminal() {
   .bling {
     animation: bling 0.8s ease-in-out infinite;
   }
+  .o-button {
+    min-width: 140px;
+  }
 }
 .terminal-mask-main {
   text-align: center;
@@ -263,21 +266,6 @@ function onFirstLoadTerminal() {
 .time-tip {
   display: flex;
   align-items: flex-end;
-}
-.remain-time {
-  font-size: 18px;
-  color: #002fa7;
-  display: flex;
-  .time-item {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    line-height: 32px;
-    width: 32px;
-    background-color: #fff;
-    margin: 0 4px;
-    box-shadow: 0px 12px 32px 0px rgba(190, 196, 204, 0.2);
-  }
 }
 .dialog-timeout {
   .login-actions {

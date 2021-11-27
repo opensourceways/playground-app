@@ -50,6 +50,7 @@ function onClick(e) {
   outline: none;
   cursor: pointer;
   color: #333;
+  min-width: 120px;
   transition: color 0.2s, background-color 0.3s, border-color 0.3s;
   &:hover {
     border-color: #0c41c9;
@@ -61,6 +62,8 @@ function onClick(e) {
 
   &.is-text {
     border-color: transparent;
+    min-width: auto;
+    padding: 0;
   }
 
   &.primary {
