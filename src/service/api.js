@@ -5,7 +5,7 @@ import { request } from "@/plugins/axios";
  * @returns
  */
 export function queryAuthParams() {
-  const url = "/playground/oauth2/callback/links";
+  const url = "/api/playground/oauth2/callback/links";
   return request.get(url).then((res) => res.data);
 }
 
@@ -14,7 +14,7 @@ export function queryAuthParams() {
  * @returns
  */
 export function queryAuthentication(params) {
-  const url = "/playground/oauth2/authentication";
+  const url = "/api/playground/oauth2/authentication";
   return request.post(url, params).then((res) => res.data);
 }
 
@@ -23,7 +23,7 @@ export function queryAuthentication(params) {
  * @returns
  */
 export function queryUserInfo(params) {
-  const url = "/playground/user/information";
+  const url = "/api/playground/user/information";
   return request.get(url, { params }).then((res) => res.data);
 }
 
@@ -32,7 +32,7 @@ export function queryUserInfo(params) {
  * @returns
  */
 export function createCrdResouse(params) {
-  const url = "/playground/crd/resource";
+  const url = "/api/playground/crd/resource";
   return request.post(url, params).then((res) => res.data);
 }
 
@@ -41,6 +41,6 @@ export function createCrdResouse(params) {
  * @returns
  */
 export function queryCrdResouse(params) {
-  const url = "/playground/crd/resource";
+  const url = "/api/playground/crd/resource";
   return request.get(url, { params }).then((res) => res.data);
 }
