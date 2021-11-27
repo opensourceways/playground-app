@@ -13,7 +13,7 @@
   </div>
 </template>
 <style>
-@keyframes loading-gear {
+@keyframes ani-loading-gear {
   0% {
     transform: rotate(0deg);
   }
@@ -32,7 +32,7 @@
 }
 .loading-wrap > div {
   transform-origin: 0.5em 0.5em;
-  animation: loading-gear 0.2s infinite linear;
+  animation: ani-loading-gear 0.2s infinite linear;
 }
 .loading-wrap > div div {
   position: absolute;

@@ -9,7 +9,7 @@ import {
 } from "@/plugins/terminal";
 import { createCrdResouse, queryCrdResouse } from "@/service/api";
 import { getUserAuth } from "@/shared/login";
-import GearLoading from "./GearLoading.vue";
+import GearLoading from "./LoadingGear.vue";
 
 const props = defineProps({
   isNew: {
@@ -80,7 +80,7 @@ function ensureResourceReady(resId) {
 /**
  * 创建资源实例
  */
-async function createInstance() {
+async function createInstance(isNew) {
   const { userId, token } = getUserAuth();
   if (!userId) {
     return;
@@ -93,7 +93,7 @@ async function createInstance() {
       templatePath: "openeuler-20.03-lts-sp1/container/x86.tmpl",
       // templatePath: "openeuler-20.03-lts-sp1/lxd/x86.tmpl",
       resourceId: "1",
-      forceDelete: props.isNew ? 2 : 1,
+      forceDelete: isNew ? 2 : 1,
     });
     if (res.code >= 200 && res.code < 400) {
       const { instanceInfo } = res;
@@ -163,12 +163,12 @@ function closeConnection() {
   terminal && terminal.close();
 }
 
-async function createResource() {
+async function createResource(isNew) {
   resStatus.value = 0;
 
   emit("create-resource", { status: 0 });
 
-  instance = await createInstance();
+  instance = await createInstance(isNew);
   if (!instance) {
     emit("create-resource", { status: 2 });
     return;
@@ -191,7 +191,7 @@ function enter(commmond) {
 }
 
 onMounted(async () => {
-  createResource();
+  createResource(props.isNew);
 });
 
 onUnmounted(() => {
@@ -216,7 +216,9 @@ defineExpose({
         <div v-show="resStatus >= 2" class="dlg-failed">
           <svg-icon name="alert-circle"></svg-icon>
           <span>{{ resStatus === 3 ? connectFailLabel : failedLabel }}</span>
-          <span class="link" @click="createResource">{{ retryLabel }}</span>
+          <span class="link" @click="createResource(false)">{{
+            retryLabel
+          }}</span>
         </div>
       </div>
     </div>

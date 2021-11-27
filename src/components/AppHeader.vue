@@ -4,6 +4,7 @@ import { LOGIN_KEYS, logout } from "@/shared/login";
 import mitt from "@/shared/mitt";
 import ODialog from "./ODialog.vue";
 import OButton from "./OButton.vue";
+import LoadingDot from "./LoadingDot.vue";
 
 let userInfo = reactive({});
 
@@ -47,8 +48,9 @@ function doLogout() {
         <span class="label">playground</span>
       </div>
       <div class="header-tools">
-        <div v-if="userInfo.userId" class="tool-item user">
-          <div class="user-info">
+        <div class="tool-item user">
+          <loading-dot class="loading"></loading-dot>
+          <div v-if="userInfo.userId" class="user-info">
             <img
               v-if="userInfo.avatar"
               class="user-avatar"
@@ -131,6 +133,11 @@ function doLogout() {
   }
   .user-name {
     margin-left: 8px;
+    font-size: 14px;
+    max-width: 80px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 
@@ -156,6 +163,9 @@ function doLogout() {
     .drop-menus {
       display: block;
     }
+  }
+  .loading {
+    font-size: 32px;
   }
 }
 </style>
