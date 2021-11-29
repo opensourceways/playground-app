@@ -58,6 +58,7 @@ function closeTerminal(params) {
 
 function closeAllTerminal() {
   terminalList.length = 0;
+  isFirstLoadTerminal = true;
 }
 
 function selectTerminal(id) {
