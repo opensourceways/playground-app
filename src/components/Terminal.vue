@@ -63,11 +63,11 @@ function ensureResourceReady(resId) {
       });
       if (res.code === 200) {
         const { instanceInfo } = res;
-        if (instanceInfo.status === 1) {
+        if (instanceInfo.status === RES_STATUS.DONE) {
           clearInterval(handler);
           resolve(instanceInfo);
           console.log("资源创建成功，耗时", cnt + "s");
-        } else if (instanceInfo.status === 2) {
+        } else if (instanceInfo.status === RES_STATUS.CREATE_FAILED) {
           clearInterval(handler);
           resolve(null);
         }
@@ -118,7 +118,7 @@ async function createInstance(isNew) {
           return info;
         }
         throw new Error("创建失败");
-      } else if (status === 1) {
+      } else if (status === RES_STATUS.DONE) {
         return instanceInfo;
       } else {
         throw new Error("创建失败");
@@ -158,7 +158,7 @@ function initConnection(term, instance) {
           openWebTTY();
         }, RETRY_INTERVAL * 1000);
       } else {
-        emit("create-resource", { status: 3 });
+        emit("create-resource", { status: RES_STATUS.CONNECT_FAILED });
         setResStatus(RES_STATUS.CONNECT_FAILED);
       }
     },
@@ -174,7 +174,7 @@ function initConnection(term, instance) {
       if (reConnect === 0 || reConnect >= RETRY_TIMES) {
         isConneted = false;
         terminal.output(
-          "\r\n=========================\r\nresource disconnected!\r\n"
+          "\x1B[0;33m \r\n=========================\r\nresource disconnected!\r\n"
         );
         console.log("资源及连接已销毁");
       }
@@ -188,6 +188,7 @@ function initConnection(term, instance) {
 }
 
 function disconnect() {
+  emit("create-resource", { status: RES_STATUS.CONNECT_FAILED });
   terminalCloser && terminalCloser();
 }
 
@@ -199,11 +200,11 @@ function destroyTerminal() {
 async function createResource(isNew) {
   setResStatus(RES_STATUS.CREATING);
 
-  emit("create-resource", { status: 0 });
+  emit("create-resource", { status: RES_STATUS.CREATING });
 
   instance = await createInstance(isNew);
   if (!instance) {
-    emit("create-resource", { status: 2 });
+    emit("create-resource", { status: RES_STATUS.CREATE_FAILED });
     return;
   }
 

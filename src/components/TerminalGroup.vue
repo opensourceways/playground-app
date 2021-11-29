@@ -104,6 +104,10 @@ onBeforeUpdate(() => {
 });
 
 function onCreateResource(data, idx) {
+  if (!activeTerminalList.value[idx]) {
+    return;
+  }
+
   const { status } = data;
   activeTerminalList.value[idx].status = status;
 
@@ -312,7 +316,7 @@ defineExpose({
     &.status-2,
     &.status-3 {
       .status-dot {
-        color: red;
+        color: #ffed00;
       }
     }
   }
