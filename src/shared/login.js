@@ -143,7 +143,7 @@ export async function requestUserInfo() {
       if (res.code === 200) {
         afterLogined(res.userInfo);
       } else {
-        throw new Error(res.code + res.message);
+        throw new Error(res.code + " " + res.message);
       }
     } catch (err) {
       setStatus(LOGIN_STATUS.FAILED);

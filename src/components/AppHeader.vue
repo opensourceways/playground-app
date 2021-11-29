@@ -85,17 +85,17 @@ mitt.on(LOGIN_EVENTS.SHOW_LOGIN, () => {
               {{ loginLabel }}
             </div>
             <img
-              v-if="userInfo.avatar"
+              v-if="userInfo.userId"
               class="user-avatar"
               :src="userInfo.avatar"
             />
-            <div v-if="userInfo.name" class="user-name">
+            <div v-if="userInfo.userId" class="user-name">
               {{ userInfo.name }}
             </div>
           </div>
 
           <div v-if="userInfo.userId" class="drop-menus">
-            <div class="menu-item" @click="toggleLogoutDlg">
+            <div class="menu-item" @click="toggleLogoutDlg(true)">
               {{ logoutLabel }}
             </div>
           </div>

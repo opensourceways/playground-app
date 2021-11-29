@@ -15,6 +15,7 @@ const router = useRouter();
 
 const terminals = ref(null);
 const isBegin = ref(false);
+const showRemainTime = ref(false);
 
 function backToHome() {
   router.push({
@@ -63,6 +64,7 @@ const timeoutDlgSet = {
         console.log("重新开始");
         toggleTimeoutDlg(false);
         isBegin.value = false;
+        showRemainTime.value = false;
 
         backToHome();
       },
@@ -89,7 +91,10 @@ mitt.on(LOGIN_EVENTS.LOGOUT, () => {
   router.push({
     name: "welcome",
   });
+  isBegin.value = false;
+  showRemainTime.value = false;
   terminals.value.closeAllTerminal();
+  remainTimeIns.value.reset();
 });
 
 mitt.on(PLAYGROUND_KEYS.ENTER, (data) => {
@@ -101,6 +106,7 @@ function onTerminalLoaded(data) {
     router.push({
       name: "introduction",
     });
+    showRemainTime.value = true;
     remainTimeIns.value.updateTime(data.terminal.remainSecond);
   }
 }
@@ -115,7 +121,7 @@ function onTimeout() {
   <div class="playground-app">
     <div class="ground-head">
       <h3 class="title">{{ title }}</h3>
-      <div v-if="isBegin" class="time-tip">
+      <div v-show="showRemainTime" class="time-tip">
         <div class="time-label">{{ remainTimeLabel }}</div>
         <RemainTime ref="remainTimeIns" @timeout="onTimeout"></RemainTime>
       </div>

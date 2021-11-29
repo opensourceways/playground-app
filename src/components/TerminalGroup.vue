@@ -41,6 +41,7 @@ function disconnectTerminal(params) {
   }
 }
 function disconnectAllTerminal() {
+  isFirstLoadTerminal = true;
   terminalRefs.forEach((item) => item.disconnect());
 }
 

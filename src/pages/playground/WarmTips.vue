@@ -1,10 +1,10 @@
 <script setup>
 const title = "温馨提示";
 const contents = [
-  { label: "复制", value: "ctrl + insert" },
+  { label: "复制", value: "ctrl + c" },
   {
     label: "粘贴",
-    value: "shift + insert",
+    value: "ctrl + v",
   },
 ];
 </script>

@@ -84,9 +84,15 @@ function updateTime(sec) {
   }, 1000);
 }
 
+function reset() {
+  handleTime(0);
+  clearTime();
+}
+
 defineExpose({
   refreshTime,
   updateTime,
+  reset,
 });
 </script>
 
