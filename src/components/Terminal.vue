@@ -173,7 +173,9 @@ function initConnection(term, instance) {
     onClose() {
       if (reConnect === 0 || reConnect >= RETRY_TIMES) {
         isConneted = false;
-        terminal.output("\rresource disconnected!");
+        terminal.output(
+          "\r\n=========================\r\nresource disconnected!\r\n"
+        );
         console.log("资源及连接已销毁");
       }
     },
