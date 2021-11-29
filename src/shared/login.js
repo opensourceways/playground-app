@@ -95,19 +95,7 @@ export async function goAuthorize() {
     console.error("获取认证参数失败");
   }
 }
-// 获取授权码
-function getCodeByUrl(url = window.location.href) {
-  let code = "";
-  const mt = url.match(/code=([^&=]+)/);
-  if (mt && mt[1]) {
-    code = mt[1];
-    // 去掉url中的code
-    let newUrl = url.replace(/(\?|&)?code=[^&=]+/g, "");
-    console.log(newUrl);
-    window.history.replaceState({}, "", newUrl);
-  }
-  return code;
-}
+
 // 存储用户id及token，用于下次登录
 export function saveUserAuth(id, code) {
   if (!id && !code) {
