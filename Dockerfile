@@ -6,9 +6,9 @@ RUN mkdir -p /home/openeuler-playground/web
 WORKDIR /home/openeuler-playground/web
 COPY . /home/openeuler-playground/web
 
-RUN npm install
+RUN pnpm install
 
-RUN npm run build
+RUN pnpm build
 
 FROM nginx:1.20.0
 
