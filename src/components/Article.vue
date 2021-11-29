@@ -5,7 +5,7 @@ import { computed } from "vue";
 const emit = defineEmits(["item-click"]);
 
 const props = defineProps({
-  contents: {
+  content: {
     type: Array,
     default() {
       return [];
@@ -28,7 +28,7 @@ function normalize(texts) {
 }
 
 const articles = computed(() => {
-  return normalize(props.contents);
+  return normalize(props.content);
 });
 
 function click(item) {
