@@ -106,7 +106,7 @@ function onTerminalLoaded(data) {
 }
 
 function onTimeout() {
-  terminals.value.closeAllTerminal();
+  terminals.value.disconnectAllTerminal();
   toggleTimeoutDlg(true);
 }
 </script>
@@ -115,7 +115,7 @@ function onTimeout() {
   <div class="playground-app">
     <div class="ground-head">
       <h3 class="title">{{ title }}</h3>
-      <div class="time-tip">
+      <div v-if="isBegin" class="time-tip">
         <div class="time-label">{{ remainTimeLabel }}</div>
         <RemainTime ref="remainTimeIns" @timeout="onTimeout"></RemainTime>
       </div>
@@ -152,8 +152,7 @@ function onTimeout() {
       <ODialog
         class="dialog-timeout"
         :show="showTimeoutDlg"
-        :close="false"
-        @close-click="toggleLoginDlg(false)"
+        @close-click="toggleTimeoutDlg(false)"
       >
         <template #head>
           <h3 class="title">{{ timeoutDlgSet.title }}</h3>

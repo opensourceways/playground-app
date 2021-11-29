@@ -32,6 +32,18 @@ async function addTerminal(isNew) {
   return terminalId;
 }
 
+function disconnectTerminal(params) {
+  const index = activeTerminalList.value.findIndex(
+    (item) => item.id === params.id
+  );
+  if (index > -1) {
+    terminalRefs[index].disconnect();
+  }
+}
+function disconnectAllTerminal() {
+  terminalRefs.forEach((item) => item.disconnect());
+}
+
 function closeTerminal(params) {
   let index = terminalList.findIndex((item) => {
     if (!item) {
@@ -122,6 +134,8 @@ defineExpose({
   selectTerminal,
   fullscreen,
   enterCommond,
+  disconnectTerminal,
+  disconnectAllTerminal,
 });
 </script>
 

@@ -152,8 +152,8 @@ function initConnection(term, instance) {
   webTTYInstance = new WebTTY(term, factory, args, gotty_auth_token, {
     onError() {
       if (reConnect < RETRY_TIMES) {
+        reConnect++;
         setTimeout(() => {
-          reConnect++;
           console.log(`第${reConnect}次尝试重新连接`);
           openWebTTY();
         }, RETRY_INTERVAL * 1000);
@@ -171,9 +171,9 @@ function initConnection(term, instance) {
       }
     },
     onClose() {
-      if (reConnect >= RETRY_TIMES) {
+      if (reConnect === 0 || reConnect >= RETRY_TIMES) {
         isConneted = false;
-        closeConnection();
+        terminal.output("\rresource disconnected!");
         console.log("资源及连接已销毁");
       }
     },
@@ -181,12 +181,16 @@ function initConnection(term, instance) {
   openWebTTY();
 
   window.addEventListener("unload", () => {
-    closeConnection();
+    destroyTerminal();
   });
 }
 
-function closeConnection() {
+function disconnect() {
   terminalCloser && terminalCloser();
+}
+
+function destroyTerminal() {
+  disconnect();
   terminal && terminal.close();
 }
 
@@ -202,6 +206,7 @@ async function createResource(isNew) {
   }
 
   terminal = new Xterm(terminalEl.value);
+  window.terminal = terminal;
   initConnection(terminal, instance);
 }
 
@@ -222,13 +227,15 @@ onMounted(async () => {
 });
 
 onUnmounted(() => {
-  closeConnection();
+  destroyTerminal();
 });
 
 defineExpose({
   createResource,
   enter,
   fit,
+  destroyTerminal,
+  disconnect,
 });
 </script>
 
