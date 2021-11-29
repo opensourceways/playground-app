@@ -5,6 +5,7 @@ import {
   queryAuthentication,
   queryUserInfo,
 } from "@/service/api";
+import { getAuthCode } from "./login-code";
 
 export const LOGIN_EVENTS = {
   SHOW_LOGIN: "show-login",
@@ -55,7 +56,7 @@ export function showLogin() {
 
 // 注册
 export async function doSignUp() {
-  const code = getCodeByUrl();
+  const code = getAuthCode();
   if (code) {
     try {
       setStatus(LOGIN_STATUS.DOING);
@@ -103,13 +104,7 @@ function getCodeByUrl(url = window.location.href) {
     // 去掉url中的code
     let newUrl = url.replace(/(\?|&)?code=[^&=]+/g, "");
     console.log(newUrl);
-    window.history.replaceState(
-      {
-        path: newUrl,
-      },
-      "",
-      newUrl
-    );
+    window.history.replaceState({}, "", newUrl);
   }
   return code;
 }
