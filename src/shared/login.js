@@ -6,7 +6,7 @@ import {
   queryUserInfo,
 } from "@/service/api";
 import { getAuthCode } from "./login-code";
-import { isTextEnv } from "./utils";
+import { getRedirectUri } from "./utils";
 
 export const LOGIN_EVENTS = {
   SHOW_LOGIN: "show-login",
@@ -61,15 +61,17 @@ export async function doSignUp() {
   if (code) {
     try {
       setStatus(LOGIN_STATUS.DOING);
+      const redirectUri = getRedirectUri();
 
       const res = await queryAuthentication({
         code,
+        redirectUri,
       });
 
       if (res.code === 200) {
         afterLogined(res.userInfo);
       } else {
-        throw new Error(res.code + res.message);
+        throw new Error(res.code + " " + res.message);
       }
     } catch (error) {
       setStatus(LOGIN_STATUS.FAILED);
@@ -91,9 +93,7 @@ export async function goAuthorize() {
     const { callbackUrl, clientId } = res.callbackInfo;
 
     // 现网环境使用当前页面地址
-    const rUrl = isTextEnv()
-      ? callbackUrl + "?redicrec=" + encodeURIComponent(window.location.href)
-      : window.location.href;
+    const rUrl = getRedirectUri(callbackUrl);
 
     const url = `https://gitee.com/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(
       rUrl
@@ -101,7 +101,7 @@ export async function goAuthorize() {
     console.log(url);
     window.location.href = url;
   } catch (error) {
-    console.error("获取认证参数失败");
+    console.error("获取认证参数失败", error);
   }
 }
 
