@@ -6,6 +6,7 @@ import {
   queryUserInfo,
 } from "@/service/api";
 import { getAuthCode } from "./login-code";
+import { isTextEnv } from "./utils";
 
 export const LOGIN_EVENTS = {
   SHOW_LOGIN: "show-login",
@@ -88,7 +89,15 @@ export async function goAuthorize() {
       return;
     }
     const { callbackUrl, clientId } = res.callbackInfo;
-    const url = `https://gitee.com/oauth/authorize?client_id=${clientId}&redirect_uri=${callbackUrl}&response_type=code`;
+
+    // 现网环境使用当前页面地址
+    const rUrl = isTextEnv()
+      ? callbackUrl + "?redicrec=" + encodeURIComponent(window.location.href)
+      : window.location.href;
+
+    const url = `https://gitee.com/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(
+      rUrl
+    )}&response_type=code`;
     console.log(url);
     window.location.href = url;
   } catch (error) {
