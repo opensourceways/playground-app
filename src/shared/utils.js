@@ -12,7 +12,7 @@ export function isTextEnv() {
 
 export function getRedirectUri() {
   return isTextEnv()
-    ? "https://test.playground.osinfra.cn/playground/test-login.html?redicrec=" +
+    ? "https://test.playground.osinfra.cn/playground/test-login.html?redirect=" +
         encodeURIComponent(window.location.href)
     : window.location.href;
 }
