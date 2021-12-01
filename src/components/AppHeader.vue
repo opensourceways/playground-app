@@ -152,7 +152,7 @@ mitt.on(LOGIN_EVENTS.SHOW_LOGIN, () => {
   box-shadow: 0px 1px 3px 0px rgba(178, 178, 178, 0.5);
 }
 .header-wrap {
-  max-width: 1440px;
+  max-width: 1920px;
   margin: 0 auto;
   padding: 12px;
   display: flex;

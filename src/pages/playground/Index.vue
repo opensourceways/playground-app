@@ -196,7 +196,7 @@ function onTimeout() {
   background: #f5f7fb;
 }
 .ground-head {
-  max-width: 1440px;
+  max-width: 1920px;
   margin: 0 auto;
   padding: 25px 12px;
   line-height: 30px;
