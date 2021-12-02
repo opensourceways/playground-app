@@ -32,7 +32,16 @@ const RES_STATUS = {
   CREATING: 0,
   CREATE_FAILED: 2,
   CONNECT_FAILED: 3,
+  AUTH_FAILED: 4,
 };
+
+function isResourceFailed(status) {
+  return [
+    RES_STATUS.CREATE_FAILED,
+    RES_STATUS.CONNECT_FAILED,
+    RES_STATUS.AUTH_FAILED,
+  ].includes(status);
+}
 
 const resStatus = ref(RES_STATUS.CREATING);
 function setResStatus(val) {
@@ -43,9 +52,31 @@ let instance = null;
 let terminal; // xterm实例
 let terminalCloser = null; // websoket关闭函数
 const loadingLabel = "正在为您准备环境，请耐心等待...";
-const failedLabel = "资源创建失败，";
-const connectFailLabel = "资源连接失败，";
-const retryLabel = "请重试";
+
+const failedLabels = {
+  [RES_STATUS.CREATE_FAILED]: {
+    label: "资源创建失败，",
+    btnLabel: "请重试",
+    btnClick() {
+      createResource(false);
+    },
+  },
+  [RES_STATUS.CONNECT_FAILED]: {
+    label: "资源连接失败，",
+    btnLabel: "请重试",
+    btnClick() {
+      createResource(false);
+    },
+  },
+  [RES_STATUS.AUTH_FAILED]: {
+    label: "授权验证失败，",
+    btnLabel: "请重新登录",
+    btnClick() {
+      createResource(false);
+    },
+  },
+};
+
 let webTTYInstance;
 const terminalEl = ref(null);
 const emit = defineEmits(["create-resource"]);
@@ -126,8 +157,11 @@ async function createInstance(isNew) {
       } else {
         throw new Error("创建失败");
       }
+    } else if (res.code === "403") {
+      setResStatus(RES_STATUS.AUTH_FAILED);
+    } else {
+      throw new Error(res.code + ", " + res.message);
     }
-    throw new Error(res.code + ", " + res.message);
   } catch (error) {
     setResStatus(RES_STATUS.CREATE_FAILED);
 
@@ -253,22 +287,11 @@ defineExpose({
           <GearLoading class="icon-loading"></GearLoading>
           <div class="label">{{ loadingLabel }}</div>
         </div>
-        <div
-          v-show="
-            [RES_STATUS.CREATE_FAILED, RES_STATUS.CONNECT_FAILED].includes(
-              resStatus
-            )
-          "
-          class="dlg-failed"
-        >
+        <div v-if="isResourceFailed(resStatus)" class="dlg-failed">
           <svg-icon name="alert-circle"></svg-icon>
-          <span>{{
-            resStatus === RES_STATUS.CONNECT_FAILED
-              ? connectFailLabel
-              : failedLabel
-          }}</span>
-          <span class="link" @click="createResource(false)">{{
-            retryLabel
+          <span>{{ failedLabels[resStatus].label }}</span>
+          <span class="link" @click="failedLabels[resStatus].btnClick">{{
+            failedLabels[resStatus].btnLabel
           }}</span>
         </div>
       </div>

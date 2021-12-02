@@ -167,7 +167,7 @@ export async function requestUserInfo() {
         token,
         userId,
       });
-      if (res.code === 200) {
+      if (res.code === 200 && res.userInfo.userId) {
         afterLogined(res.userInfo);
       } else {
         throw new Error(res.code + " " + res.message);
