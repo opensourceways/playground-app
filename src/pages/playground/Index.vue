@@ -154,7 +154,7 @@ function onTimeout() {
         <TerminalGroup
           ref="terminals"
           :max="5"
-          :course="courseData"
+          :resource="courseData.resource"
           @terminal-loaded="onTerminalLoaded"
         ></TerminalGroup>
       </div>

@@ -100,7 +100,7 @@ function ensureResourceReady(resId) {
  */
 async function createInstance(isNew) {
   const { userId, token } = getUserAuth();
-  if (!userId || !props.config) {
+  if (!userId || !props.resourceConfig) {
     return;
   }
   try {
