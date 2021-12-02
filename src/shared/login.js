@@ -6,7 +6,7 @@ import {
   queryUserInfo,
 } from "@/service/api";
 import { getAuthCode } from "./login-code";
-import { getRedirectUri } from "./utils";
+import { isTextEnv } from "./utils";
 
 export const LOGIN_EVENTS = {
   SHOW_LOGIN: "show-login",
@@ -48,6 +48,23 @@ export function getUserInfo() {
   } else {
     return null;
   }
+}
+
+/**
+ * 获取授权回调地址
+ * @param {*} callbackUrl 测试环境时，设置指定的html，用于授权后跳转回之前的地址
+ * @returns 回调地址，用于url中的参数部分，需要encodeURIComponent处理
+ */
+export function getRedirectUri(callbackUrl) {
+  const testUrl =
+    callbackUrl ||
+    "https://test.playground.osinfra.cn/playground/test-login.html";
+
+  const uri = isTextEnv()
+    ? `${testUrl}?redirect=${encodeURIComponent(window.location.href)}`
+    : window.location.href;
+
+  return encodeURIComponent(uri);
 }
 
 // 登录
@@ -95,9 +112,7 @@ export async function goAuthorize() {
     // 现网环境使用当前页面地址
     const rUrl = getRedirectUri(callbackUrl);
 
-    const url = `https://gitee.com/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(
-      rUrl
-    )}&response_type=code`;
+    const url = `https://gitee.com/oauth/authorize?client_id=${clientId}&redirect_uri=${rUrl}&response_type=code`;
     console.log(url);
     window.location.href = url;
   } catch (error) {

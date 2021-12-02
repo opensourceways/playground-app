@@ -9,8 +9,6 @@ import { router } from "./router";
 import App from "./App.vue";
 import SvgIcon from "@/components/SvgIcon.vue";
 
-// getCodeByUrl();
-
 const app = createApp(App);
 
 app.component("SvgIcon", SvgIcon);

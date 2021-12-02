@@ -9,10 +9,3 @@ export function isTextEnv() {
     href.startsWith("http://localhost:3000")
   );
 }
-
-export function getRedirectUri() {
-  return isTextEnv()
-    ? "https://test.playground.osinfra.cn/playground/test-login.html?redirect=" +
-        encodeURIComponent(window.location.href)
-    : window.location.href;
-}

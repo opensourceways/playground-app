@@ -23,6 +23,3 @@ export function getCodeByUrl(url = window.location.href) {
 export function getAuthCode() {
   return authCode;
 }
-
-// 获取code
-getCodeByUrl();
