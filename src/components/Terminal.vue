@@ -16,7 +16,7 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  resourceConfig: {
+  config: {
     type: Object,
     default: null,
   },
@@ -24,8 +24,8 @@ const props = defineProps({
 
 const RETRY_TIMES = 2; // 重试次数
 const RETRY_INTERVAL = 2; // 重试间隔(秒)
-const RESOURCE_CREATE_TIMEOUT = 15; //资源创建超时时间(秒)
-const QUERY_INTERVAL = 3; // 创建中的资源轮询间隔(秒)
+const DEF_TIMEOUT = 15; //资源创建超时时间(秒)
+const DEF_INTERVAL = 3; // 创建中的资源轮询间隔(秒)
 // 0: 创建中； 1：创建成功 2：创建失败； 3: 连接失败
 const RES_STATUS = {
   DONE: 1,
@@ -86,6 +86,8 @@ const emit = defineEmits(["create-resource"]);
  */
 function ensureResourceReady(resId) {
   const { token } = getUserAuth();
+  const timeout = props.config.timeout || DEF_TIMEOUT;
+  const interval = props.config.query_interval || DEF_INTERVAL;
   return new Promise((resolve) => {
     let cnt = 0;
     let handler;
@@ -99,30 +101,28 @@ function ensureResourceReady(resId) {
       if (res.code === 200) {
         const { instanceInfo } = res;
         if (instanceInfo.status === RES_STATUS.DONE) {
+          console.log("资源创建成功，耗时", cnt + "s");
           clearInterval(handler);
           resolve(instanceInfo);
-          console.log("资源创建成功，耗时", cnt + "s");
         } else if (instanceInfo.status === RES_STATUS.CREATE_FAILED) {
+          clearInterval(handler);
+          resolve(null);
+        } else if (cnt >= timeout) {
+          console.error("资源创建超时", timeout + "s");
           clearInterval(handler);
           resolve(null);
         }
       } else {
-        clearInterval(handler);
         console.error("资源创建失败", res.code, res.message);
-        resolve(null);
-      }
-
-      if (cnt >= RESOURCE_CREATE_TIMEOUT) {
         clearInterval(handler);
-        console.error("资源创建超时", RESOURCE_CREATE_TIMEOUT + "s");
         resolve(null);
       }
     };
 
     handler = setInterval(async () => {
-      cnt += QUERY_INTERVAL;
+      cnt += interval;
       await query();
-    }, QUERY_INTERVAL * 1000);
+    }, interval * 1000);
   });
 }
 
@@ -131,16 +131,16 @@ function ensureResourceReady(resId) {
  */
 async function createInstance(isNew) {
   const { userId, token } = getUserAuth();
-  if (!userId || !props.resourceConfig) {
+  if (!userId || !props.config) {
     return;
   }
   try {
     const res = await createCrdResouse({
       token,
       userId,
-      contactEmail: props.resourceConfig.email,
-      templatePath: props.resourceConfig.template,
-      resourceId: props.resourceConfig.id,
+      contactEmail: props.config.email,
+      templatePath: props.config.template,
+      resourceId: props.config.id,
       forceDelete: isNew ? 2 : 1,
     });
     if (res.code >= 200 && res.code < 400) {
