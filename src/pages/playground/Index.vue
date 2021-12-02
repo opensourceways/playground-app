@@ -10,12 +10,15 @@ import { useRouter } from "vue-router";
 import { beginToTry } from "./shared";
 import { isLoggingIn } from "@/shared/login";
 import RemainTime from "./RemainTime.vue";
+import Courses from "@/configs/courses";
 
 const router = useRouter();
 
 const terminals = ref(null);
 const isBegin = ref(false);
 const showRemainTime = ref(false);
+
+const courseData = Courses.experience;
 
 function backToHome() {
   router.push({
@@ -151,6 +154,7 @@ function onTimeout() {
         <TerminalGroup
           ref="terminals"
           :max="5"
+          :course="courseData"
           @terminal-loaded="onTerminalLoaded"
         ></TerminalGroup>
       </div>

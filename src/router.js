@@ -27,7 +27,7 @@ export const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from) => {
+router.beforeEach((to) => {
   if (!["welcome"].includes(to.name) && !isLogined()) {
     return { name: "welcome" };
   }

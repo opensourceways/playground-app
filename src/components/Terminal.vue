@@ -16,6 +16,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  resourceConfig: {
+    type: Object,
+    default: null,
+  },
 });
 
 const RETRY_TIMES = 2; // 重试次数
@@ -96,17 +100,16 @@ function ensureResourceReady(resId) {
  */
 async function createInstance(isNew) {
   const { userId, token } = getUserAuth();
-  if (!userId) {
+  if (!userId || !props.config) {
     return;
   }
   try {
     const res = await createCrdResouse({
       token,
       userId,
-      contactEmail: "contact@openeuler.io",
-      templatePath: "openeuler-20.03-lts-sp1/container/x86.tmpl",
-      // templatePath: "openeuler-20.03-lts-sp1/lxd/x86.tmpl",
-      resourceId: "1",
+      contactEmail: props.resourceConfig.email,
+      templatePath: props.resourceConfig.template,
+      resourceId: props.resourceConfig.id,
       forceDelete: isNew ? 2 : 1,
     });
     if (res.code >= 200 && res.code < 400) {

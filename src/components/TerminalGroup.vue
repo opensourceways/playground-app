@@ -2,12 +2,19 @@
 import { ref, computed, reactive, onBeforeUpdate, nextTick } from "vue";
 import Terminal from "./Terminal.vue";
 
-defineProps({
+const props = defineProps({
   max: {
     type: Number,
     default: 20,
   },
+  resource: {
+    type: Object,
+    default() {
+      return null;
+    },
+  },
 });
+
 const emit = defineEmits(["terminal-loaded"]);
 
 const terminalList = reactive([]);
@@ -25,6 +32,7 @@ async function addTerminal(isNew) {
     id: terminalId,
     name: `Terminal${terminalId}`,
     isNew,
+    config: props.resource,
   });
 
   currentId.value = terminalId;
@@ -199,6 +207,7 @@ defineExpose({
         :key="ter.id"
         :ref="setItemRef"
         :is-new="ter.isNew"
+        :resource-config="ter.config"
         class="terminal-item"
         @create-resource="(e) => onCreateResource(e, idx)"
       ></Terminal>

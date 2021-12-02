@@ -1,6 +1,6 @@
 <script setup>
 import AppArticle from "@/components/Article.vue";
-import content from "@/courses/Welcome";
+import content from "@/courses/experience/Welcome";
 </script>
 
 <template>

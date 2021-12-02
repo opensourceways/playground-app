@@ -2,7 +2,7 @@
 import AppArticle from "@/components/Article.vue";
 import { enterCommond } from "./shared";
 import WarmTips from "./WarmTips.vue";
-import content from "@/courses/Introduction";
+import content from "@/courses/experience/Introduction";
 
 function itemClick(item) {
   if (item.type === "code" && item.commond) {
