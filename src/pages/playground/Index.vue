@@ -202,8 +202,8 @@ function onTimeout() {
 .ground-head {
   max-width: 1920px;
   margin: 0 auto;
-  padding: 25px 12px;
-  line-height: 30px;
+  padding: 24px;
+  line-height: 32px;
   display: flex;
   justify-content: space-between;
 }
@@ -213,13 +213,14 @@ function onTimeout() {
   background: #fff;
 }
 .ground-article {
-  width: 382px;
+  width: 20%;
+  min-width: 383px;
   height: 100%;
   flex-shrink: 0;
 }
 .ground-terminal {
   height: 100%;
-  width: calc(100% - 382px);
+  width: 80%;
   background: #141414;
   position: relative;
 }

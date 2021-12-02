@@ -1,7 +1,7 @@
 <script setup>
 import AppArticle from "@/components/Article.vue";
 import { enterCommond } from "./shared";
-import WarmTips from "./WarmTips.vue";
+// import WarmTips from "./WarmTips.vue";
 import content from "@/courses/experience/Introduction";
 
 function itemClick(item) {
@@ -13,7 +13,7 @@ function itemClick(item) {
 
 <template>
   <app-article :content="content" @item-click="itemClick">
-    <template #foot><warm-tips></warm-tips></template>
+    <!-- <template #foot><warm-tips></warm-tips></template> -->
   </app-article>
 </template>
 
