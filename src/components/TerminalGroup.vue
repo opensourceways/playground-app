@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, reactive, onBeforeUpdate, nextTick } from "vue";
-import Terminal from "./Terminal.vue";
+import Terminal, { RES_STATUS } from "./Terminal.vue";
 
 const props = defineProps({
   max: {
@@ -15,7 +15,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["terminal-loaded"]);
+const emit = defineEmits(["terminal-loaded", "terminal-disconnect"]);
 
 const terminalList = reactive([]);
 let isFirstLoadTerminal = true;
@@ -112,7 +112,7 @@ onBeforeUpdate(() => {
   terminalRefs = [];
 });
 
-function onCreateResource(data, idx) {
+function onResourceStatus(data, idx) {
   if (!activeTerminalList.value[idx]) {
     return;
   }
@@ -120,12 +120,14 @@ function onCreateResource(data, idx) {
   const { status } = data;
   activeTerminalList.value[idx].status = status;
 
-  if (status === 1) {
+  if (status === RES_STATUS.DONE) {
     emit("terminal-loaded", { isFirst: isFirstLoadTerminal, terminal: data });
 
     if (isFirstLoadTerminal) {
       isFirstLoadTerminal = false;
     }
+  } else if (status === RES_STATUS.CONNECT_FAILED) {
+    emit("terminal-disconnect");
   }
 }
 
@@ -207,9 +209,9 @@ defineExpose({
         :key="ter.id"
         :ref="setItemRef"
         :is-new="ter.isNew"
-        :resource-config="ter.config"
+        :config="ter.config"
         class="terminal-item"
-        @create-resource="(e) => onCreateResource(e, idx)"
+        @resource-status="(e) => onResourceStatus(e, idx)"
       ></Terminal>
     </div>
   </div>

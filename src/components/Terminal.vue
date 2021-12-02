@@ -1,3 +1,13 @@
+<script>
+export const RES_STATUS = {
+  DONE: 1,
+  CREATING: 0,
+  CREATE_FAILED: 2,
+  CONNECT_FAILED: 3,
+  AUTH_FAILED: 4,
+};
+</script>
+
 <script setup>
 import "xterm/css/xterm.css";
 import { ref, onMounted, onUnmounted } from "vue";
@@ -27,13 +37,6 @@ const RETRY_INTERVAL = 2; // 重试间隔(秒)
 const DEF_TIMEOUT = 15; //资源创建超时时间(秒)
 const DEF_INTERVAL = 3; // 创建中的资源轮询间隔(秒)
 // 0: 创建中； 1：创建成功 2：创建失败； 3: 连接失败
-const RES_STATUS = {
-  DONE: 1,
-  CREATING: 0,
-  CREATE_FAILED: 2,
-  CONNECT_FAILED: 3,
-  AUTH_FAILED: 4,
-};
 
 function isResourceFailed(status) {
   return [
@@ -79,7 +82,8 @@ const failedLabels = {
 
 let webTTYInstance;
 const terminalEl = ref(null);
-const emit = defineEmits(["create-resource"]);
+const emit = defineEmits(["resource-status"]);
+let isManualDisconnect = false;
 
 /**
  * 轮询资源状态，直到返回成功或者失败
@@ -195,7 +199,7 @@ function initConnection(term, instance) {
           openWebTTY();
         }, RETRY_INTERVAL * 1000);
       } else {
-        emit("create-resource", { status: RES_STATUS.CONNECT_FAILED });
+        emit("resource-status", { status: RES_STATUS.CONNECT_FAILED });
         setResStatus(RES_STATUS.CONNECT_FAILED);
       }
     },
@@ -204,16 +208,23 @@ function initConnection(term, instance) {
         console.log("资源连接成功", data);
         isConneted = true;
         setResStatus(RES_STATUS.DONE);
-        emit("create-resource", instance);
+        emit("resource-status", instance);
       }
     },
     onClose() {
-      if (reConnect === 0 || reConnect >= RETRY_TIMES) {
+      if (isConneted && (reConnect === 0 || reConnect >= RETRY_TIMES)) {
         isConneted = false;
         terminal.output(
           "\x1B[0;33m \r\n=========================\r\nresource disconnected!\r\n"
         );
         console.log("资源及连接已销毁");
+
+        // 判断是否主动断连
+        if (!isManualDisconnect) {
+          emit("resource-status", { status: RES_STATUS.CONNECT_FAILED });
+        } else {
+          isManualDisconnect = false;
+        }
       }
     },
   });
@@ -224,24 +235,28 @@ function initConnection(term, instance) {
   });
 }
 
+// 主动断连，需要上报断连事件，用于展示terminal状态
 function disconnect() {
-  emit("create-resource", { status: RES_STATUS.CONNECT_FAILED });
+  isManualDisconnect = true;
+  emit("resource-status", { status: RES_STATUS.CONNECT_FAILED });
   terminalCloser && terminalCloser();
 }
 
+// 销毁terminal 不需要上报断连事件
 function destroyTerminal() {
-  disconnect();
+  isManualDisconnect = true;
+  terminalCloser && terminalCloser();
   terminal && terminal.close();
 }
 
 async function createResource(isNew) {
   setResStatus(RES_STATUS.CREATING);
 
-  emit("create-resource", { status: RES_STATUS.CREATING });
+  emit("resource-status", { status: RES_STATUS.CREATING });
 
   instance = await createInstance(isNew);
   if (!instance) {
-    emit("create-resource", { status: RES_STATUS.CREATE_FAILED });
+    emit("resource-status", { status: RES_STATUS.CREATE_FAILED });
     return;
   }
 

@@ -114,6 +114,10 @@ function onTerminalLoaded(data) {
   }
 }
 
+function onTerminalDisconnect() {
+  remainTimeIns.value.reset();
+}
+
 function onTimeout() {
   terminals.value.disconnectAllTerminal();
   toggleTimeoutDlg(true);
@@ -156,6 +160,7 @@ function onTimeout() {
           :max="5"
           :resource="courseData.resource"
           @terminal-loaded="onTerminalLoaded"
+          @terminal-disconnect="onTerminalDisconnect"
         ></TerminalGroup>
       </div>
 
