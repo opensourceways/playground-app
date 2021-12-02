@@ -22,7 +22,7 @@ mitt.on(LOGIN_EVENTS.LOGOUT, () => {
 
 doSignUp();
 
-const logoutLabel = "注销";
+const logoutLabel = "退出";
 const loginLabel = "登录";
 
 const logoutLabels = {

@@ -8,7 +8,7 @@ import {
   ConnectionFactory,
 } from "@/plugins/terminal";
 import { createCrdResouse, queryCrdResouse } from "@/service/api";
-import { getUserAuth } from "@/shared/login";
+import { getUserAuth, reLogin } from "@/shared/login";
 import GearLoading from "./LoadingGear.vue";
 
 const props = defineProps({
@@ -72,7 +72,7 @@ const failedLabels = {
     label: "授权验证失败，",
     btnLabel: "请重新登录",
     btnClick() {
-      createResource(false);
+      reLogin();
     },
   },
 };
@@ -157,10 +157,10 @@ async function createInstance(isNew) {
       } else {
         throw new Error("创建失败");
       }
-    } else if (res.code === "403") {
+    } else if (res.code === 403) {
       setResStatus(RES_STATUS.AUTH_FAILED);
     } else {
-      throw new Error(res.code + ", " + res.message);
+      throw new Error(res.code ? res.code + ", " + res.message : "");
     }
   } catch (error) {
     setResStatus(RES_STATUS.CREATE_FAILED);

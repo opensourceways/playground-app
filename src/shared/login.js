@@ -191,3 +191,8 @@ function afterLogined(userInfo) {
 
   mitt.emit(LOGIN_EVENTS.LOGINED, userInfo);
 }
+
+export function reLogin() {
+  logout();
+  showLogin();
+}
