@@ -76,10 +76,7 @@ export async function doSignUp() {
     try {
       setStatus(LOGIN_STATUS.DOING);
       // 从上次授权存储中获取
-      const callbackUrl = sessionStorage.getItem(
-        LOGIN_KEYS.REDIRECT_URI,
-        callbackUrl
-      );
+      const callbackUrl = sessionStorage.getItem(LOGIN_KEYS.REDIRECT_URI);
       sessionStorage.removeItem(LOGIN_KEYS.REDIRECT_URI);
 
       const redirectUri = getRedirectUri(callbackUrl);
