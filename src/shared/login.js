@@ -6,7 +6,7 @@ import {
   queryUserInfo,
 } from "@/service/api";
 import { getAuthCode } from "./login-code";
-import { isTextEnv } from "./utils";
+import { isTestEnv } from "./utils";
 
 export const LOGIN_EVENTS = {
   SHOW_LOGIN: "show-login",
@@ -25,6 +25,7 @@ export const LOGIN_STATUS = {
 const LOGIN_KEYS = {
   USER_TOKEN: "_U_T_",
   USER_ID: "_U_I_",
+  REDIRECT_URI: "_R_I_",
 };
 
 export let loginStatus = ref(LOGIN_STATUS.NOT);
@@ -52,16 +53,12 @@ export function getUserInfo() {
 
 /**
  * 获取授权回调地址
- * @param {*} callbackUrl 测试环境时，设置指定的html，用于授权后跳转回之前的地址
+ * @param {*} callbackUrl 测试环境时，设置指定的html，用于授权后跳转回之前的地址；现网直接使用当前地址
  * @returns 回调地址，用于url中的参数部分，需要encodeURIComponent处理
  */
 export function getRedirectUri(callbackUrl) {
-  const testUrl =
-    callbackUrl ||
-    "https://test.playground.osinfra.cn/playground/test-login.html";
-
-  const uri = isTextEnv()
-    ? `${testUrl}?redirect=${encodeURIComponent(window.location.href)}`
+  const uri = isTestEnv()
+    ? `${callbackUrl}?redirect=${encodeURIComponent(window.location.href)}`
     : window.location.href;
 
   return encodeURIComponent(uri);
@@ -78,7 +75,14 @@ export async function doSignUp() {
   if (code) {
     try {
       setStatus(LOGIN_STATUS.DOING);
-      const redirectUri = getRedirectUri();
+      // 从上次授权存储中获取
+      const callbackUrl = sessionStorage.getItem(
+        LOGIN_KEYS.REDIRECT_URI,
+        callbackUrl
+      );
+      sessionStorage.removeItem(LOGIN_KEYS.REDIRECT_URI);
+
+      const redirectUri = getRedirectUri(callbackUrl);
 
       const res = await queryAuthentication({
         code,
@@ -108,12 +112,14 @@ export async function goAuthorize() {
       return;
     }
     const { callbackUrl, clientId } = res.callbackInfo;
+    // 存储回调地址，用于跳回后的授权接口使用，减少一次请求
+    sessionStorage.setItem(LOGIN_KEYS.REDIRECT_URI, callbackUrl);
 
     // 现网环境使用当前页面地址
     const rUrl = getRedirectUri(callbackUrl);
 
     const url = `https://gitee.com/oauth/authorize?client_id=${clientId}&redirect_uri=${rUrl}&response_type=code`;
-    console.log(url);
+
     window.location.href = url;
   } catch (error) {
     console.error("获取认证参数失败", error);

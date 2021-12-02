@@ -2,7 +2,7 @@ export function getEnv() {
   return "test";
 }
 
-export function isTextEnv() {
+export function isTestEnv() {
   const { href } = window.location;
   return (
     href.startsWith("https://test.playground.osinfra.cn") ||
