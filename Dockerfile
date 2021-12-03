@@ -1,16 +1,12 @@
 FROM node:alpine as Builder
 
-MAINTAINER devin<caowendong@huawei.com>
-
 RUN mkdir -p /home/openeuler-playground/web
 WORKDIR /home/openeuler-playground/web
 COPY . /home/openeuler-playground/web
 
-RUN npm install -g pnpm
+RUN npm run install
 
-RUN pnpm install
-
-RUN pnpm build
+RUN npm run build
 
 FROM nginx:1.20.0
 
