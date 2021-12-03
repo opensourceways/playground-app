@@ -301,6 +301,11 @@ defineExpose({
       &::before {
         opacity: 0;
       }
+      .btn-close {
+        &:hover {
+          background-color: #444;
+        }
+      }
     }
     .label {
       position: relative;
@@ -371,7 +376,7 @@ defineExpose({
     justify-content: center;
     font-size: 16px;
     &:hover {
-      background-color: #111;
+      background-color: #000;
       border-radius: 50%;
     }
   }
