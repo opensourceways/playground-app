@@ -83,7 +83,6 @@ const failedLabels = {
 let webTTYInstance;
 const terminalEl = ref(null);
 const emit = defineEmits(["resource-status"]);
-let isManualDisconnect = false;
 
 /**
  * 轮询资源状态，直到返回成功或者失败
@@ -218,13 +217,6 @@ function initConnection(term, instance) {
           "\x1B[0;33m \r\n=========================\r\nresource disconnected!\r\n"
         );
         console.log("资源及连接已销毁");
-
-        // 判断是否主动断连
-        if (!isManualDisconnect) {
-          emit("resource-status", { status: RES_STATUS.CONNECT_FAILED });
-        } else {
-          isManualDisconnect = false;
-        }
       }
     },
   });
@@ -237,14 +229,12 @@ function initConnection(term, instance) {
 
 // 主动断连，需要上报断连事件，用于展示terminal状态
 function disconnect() {
-  isManualDisconnect = true;
   emit("resource-status", { status: RES_STATUS.CONNECT_FAILED });
   terminalCloser && terminalCloser();
 }
 
 // 销毁terminal 不需要上报断连事件
 function destroyTerminal() {
-  isManualDisconnect = true;
   terminalCloser && terminalCloser();
   terminal && terminal.close();
 }

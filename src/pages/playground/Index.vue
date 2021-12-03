@@ -109,9 +109,9 @@ function onTerminalLoaded(data) {
     router.push({
       name: "introduction",
     });
-    showRemainTime.value = true;
-    remainTimeIns.value.updateTime(data.terminal.remainSecond);
   }
+  showRemainTime.value = true;
+  remainTimeIns.value.updateTime(data.terminal.remainSecond);
 }
 
 function onTerminalDisconnect() {
