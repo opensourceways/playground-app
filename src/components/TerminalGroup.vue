@@ -240,6 +240,7 @@ defineExpose({
     display: flex;
     justify-content: space-between;
     background-color: #383737;
+
     .tools {
       display: flex;
       color: #ccc;
@@ -263,9 +264,10 @@ defineExpose({
   .head-navs {
     display: flex;
     align-items: center;
+    height: var(--nav-height);
   }
   .nav-item {
-    height: var(--nav-height);
+    height: 100%;
     display: flex;
     align-items: center;
     padding: 0 32px 0 16px;
