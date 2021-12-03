@@ -64,17 +64,21 @@ function closeTerminal(params) {
       return item.name === params.name;
     }
   });
-  terminalList[index] = null;
-  if (currentId.value === params.id && index - 1 > -1) {
-    while (index !== -1) {
-      if (terminalList[index - 1]) {
-        currentId.value = terminalList[index - 1].id;
-        index = -1;
-      } else {
-        index -= 1;
-      }
+  // 激活后一个tab，如果已经在最后一个，就激活前一个tab
+  const aIndex = activeTerminalList.value.findIndex(
+    (item) => item.id === params.id
+  );
+  if (aIndex === activeTerminalList.value.length - 1) {
+    if (aIndex - 1 < 0) {
+      // 删除唯一的tab
+      currentId.value = "";
+    } else {
+      currentId.value = activeTerminalList.value[aIndex - 1].id;
     }
+  } else {
+    currentId.value = activeTerminalList.value[aIndex + 1].id;
   }
+  terminalList[index] = null;
 }
 
 function closeAllTerminal() {
