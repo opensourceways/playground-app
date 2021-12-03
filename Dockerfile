@@ -4,7 +4,7 @@ RUN mkdir -p /home/openeuler-playground/web
 WORKDIR /home/openeuler-playground/web
 COPY . /home/openeuler-playground/web
 
-RUN npm run install
+RUN npm install
 
 RUN npm run build
 
