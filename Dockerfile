@@ -4,7 +4,7 @@ RUN mkdir -p /home/openeuler-playground/web
 WORKDIR /home/openeuler-playground/web
 COPY . /home/openeuler-playground/web
 
-RUN npm install -g pnpm
+# RUN npm install -g pnpm
 
 RUN pnpm install
 
