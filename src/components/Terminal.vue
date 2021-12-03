@@ -10,7 +10,7 @@ export const RES_STATUS = {
 
 <script setup>
 import "xterm/css/xterm.css";
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, nextTick } from "vue";
 import {
   Xterm,
   WebTTY,
@@ -251,20 +251,29 @@ async function createResource(isNew) {
   }
 
   terminal = new Xterm(terminalEl.value);
-  window.terminal = terminal;
   initConnection(terminal, instance);
+  focus();
 }
 
+// 适配尺寸
 function fit() {
   if (terminal) {
     terminal.fitResize();
   }
 }
 
+// 输入命令
 function enter(commmond) {
   if (webTTYInstance && commmond) {
     webTTYInstance.input(commmond.endsWith("\n") ? commmond : commmond + "\n");
   }
+}
+
+// 聚焦
+function focus() {
+  nextTick(() => {
+    terminal.focus();
+  });
 }
 
 onMounted(async () => {
@@ -281,6 +290,7 @@ defineExpose({
   fit,
   destroyTerminal,
   disconnect,
+  focus,
 });
 </script>
 

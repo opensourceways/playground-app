@@ -86,8 +86,9 @@ function closeAllTerminal() {
   isFirstLoadTerminal = true;
 }
 
-function selectTerminal(id) {
+function selectTerminal(id, index) {
   currentId.value = id;
+  terminalRefs[index].focus();
 }
 
 function fullscreen(full = true) {
@@ -164,7 +165,7 @@ defineExpose({
       <div class="head-navs-wrap">
         <div class="head-navs">
           <div
-            v-for="ter in activeTerminalList"
+            v-for="(ter, idx) in activeTerminalList"
             :key="ter.id"
             class="nav-item"
             :class="[
@@ -172,7 +173,7 @@ defineExpose({
               `status-${ter.status}`,
             ]"
             :title="ter.name"
-            @click="selectTerminal(ter.id)"
+            @click="selectTerminal(ter.id, idx)"
           >
             <span class="label">{{ ter.name }}</span>
             <i class="status-dot"></i>

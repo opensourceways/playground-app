@@ -32,6 +32,10 @@ export class Xterm {
     this.term.write(this.decoder.decode(data));
   }
 
+  focus() {
+    this.term.focus();
+  }
+
   setWindowTitle() {
     // document.title = title;
   }
