@@ -250,7 +250,10 @@ async function createResource(isNew) {
     return;
   }
 
-  terminal = new Xterm(terminalEl.value);
+  terminal = new Xterm(terminalEl.value, {
+    cursorStyle: "block",
+    cursorBlink: true,
+  });
   initConnection(terminal, instance);
   focus();
 }

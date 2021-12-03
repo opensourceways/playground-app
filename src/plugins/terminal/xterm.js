@@ -3,9 +3,9 @@ import { FitAddon } from "xterm-addon-fit";
 import { lib } from "libapps";
 
 export class Xterm {
-  constructor(elem) {
+  constructor(elem, terminalConfig) {
     this.elem = elem;
-    this.term = new Terminal();
+    this.term = new Terminal(terminalConfig);
 
     this.term.open(elem, true);
 
