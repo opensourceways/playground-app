@@ -207,7 +207,7 @@ function onTimeout() {
 .ground-head {
   max-width: 1920px;
   margin: 0 auto;
-  padding: 24px;
+  padding: 24px 36px;
   line-height: 32px;
   display: flex;
   justify-content: space-between;
@@ -218,14 +218,14 @@ function onTimeout() {
   background: #fff;
 }
 .ground-article {
-  width: 20%;
-  min-width: 383px;
+  width: 30%;
+  min-width: 380px;
   height: 100%;
   flex-shrink: 0;
 }
 .ground-terminal {
   height: 100%;
-  width: 80%;
+  width: 70%;
   background: #141414;
   position: relative;
 }
@@ -257,35 +257,5 @@ function onTimeout() {
 }
 .terminal-mask-main {
   text-align: center;
-}
-</style>
-<style lang="scss">
-.dialog-login {
-  .auth-tip {
-    color: #c7cad0;
-    font-size: 12px;
-    margin-top: 8px;
-  }
-  .o-link {
-    color: #002fa7;
-    &:hover {
-      color: #083fca;
-      text-decoration: underline;
-    }
-  }
-  .login-actions {
-    text-align: center;
-  }
-}
-.time-tip {
-  display: flex;
-  align-items: flex-end;
-}
-.dialog-timeout {
-  .login-actions {
-    .o-button {
-      margin-right: 24px;
-    }
-  }
 }
 </style>

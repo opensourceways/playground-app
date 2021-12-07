@@ -105,7 +105,7 @@ function click(item) {
   }
   .body {
     overflow: auto;
-    padding: 36px 24px;
+    padding: 36px;
   }
   .foot {
     padding: 24px 40px 24px;

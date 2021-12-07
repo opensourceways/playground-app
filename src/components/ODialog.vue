@@ -117,6 +117,8 @@ function onCloseClick() {
     padding: 8px;
     cursor: pointer;
     z-index: 1;
+    line-height: 1;
+    font-size: 24px;
     &:hover {
       color: #002fa7;
     }

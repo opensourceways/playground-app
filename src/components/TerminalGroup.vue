@@ -271,7 +271,7 @@ defineExpose({
     height: 100%;
     display: flex;
     align-items: center;
-    padding: 0 32px 0 16px;
+    padding: 0 40px 0 24px;
     font-size: 16px;
     color: #fff;
     min-width: 116px;

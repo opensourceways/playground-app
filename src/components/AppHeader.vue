@@ -49,7 +49,7 @@ function toggleLoginDlg(show) {
   showLoginDlg.value = show;
 }
 const loginDlgSet = {
-  title: "登录提示",
+  title: "登录",
   content:
     "体验openEuler playground需要Gitee开发者身份权限，请您允许授权登录Gitee验证用户信息",
   button: {
@@ -75,7 +75,6 @@ mitt.on(LOGIN_EVENTS.SHOW_LOGIN, () => {
     <div class="header-wrap">
       <div class="header-logo">
         <img src="@/assets/openeuler-logo.png" alt="" srcset="" />
-        <span class="label">playground</span>
       </div>
       <div class="header-tools">
         <div class="tool-item user">
@@ -154,7 +153,7 @@ mitt.on(LOGIN_EVENTS.SHOW_LOGIN, () => {
 .header-wrap {
   max-width: 1920px;
   margin: 0 auto;
-  padding: 12px 24px;
+  padding: 16px 36px;
   display: flex;
   align-items: center;
   height: 100%;
@@ -167,9 +166,6 @@ mitt.on(LOGIN_EVENTS.SHOW_LOGIN, () => {
   img {
     vertical-align: top;
     height: 100%;
-  }
-  .label {
-    margin-left: 8px;
   }
 }
 .header-tools {
@@ -187,16 +183,17 @@ mitt.on(LOGIN_EVENTS.SHOW_LOGIN, () => {
   align-items: center;
   cursor: pointer;
   .user-avatar {
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
+    background: #002fa7;
     + .user-name {
       margin-left: 8px;
     }
   }
   .user-name {
     margin-left: 8px;
-    font-size: 14px;
+    font-size: 16px;
     max-width: 80px;
     white-space: nowrap;
     overflow: hidden;
@@ -233,6 +230,36 @@ mitt.on(LOGIN_EVENTS.SHOW_LOGIN, () => {
   .loading {
     font-size: 24px;
     color: #002fa7;
+  }
+}
+
+.dialog-login {
+  .auth-tip {
+    color: #c7cad0;
+    font-size: 12px;
+    margin-left: 24px;
+  }
+  .o-link {
+    color: #002fa7;
+    &:hover {
+      color: #083fca;
+      text-decoration: underline;
+    }
+  }
+  .login-actions {
+    display: flex;
+    align-items: center;
+  }
+}
+.time-tip {
+  display: flex;
+  align-items: flex-end;
+}
+.dialog-timeout {
+  .login-actions {
+    .o-button {
+      margin-right: 24px;
+    }
   }
 }
 </style>
