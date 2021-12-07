@@ -76,7 +76,6 @@ const timeoutDlgSet = {
 };
 
 const title = "体验openEuler";
-const remainTimeLabel = "剩余体验时间：";
 const remainTimeIns = ref(null);
 
 // 创建terminal，开始体验
@@ -129,7 +128,6 @@ function onTimeout() {
     <div class="ground-head">
       <h3 class="title">{{ title }}</h3>
       <div v-show="showRemainTime" class="time-tip">
-        <div class="time-label">{{ remainTimeLabel }}</div>
         <RemainTime ref="remainTimeIns" @timeout="onTimeout"></RemainTime>
       </div>
     </div>

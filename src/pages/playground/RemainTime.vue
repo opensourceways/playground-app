@@ -7,6 +7,8 @@ const emit = defineEmits(["timeout"]);
 
 const WARNING_THRESHOLD = 1 * 60; // 告警阈值
 
+const remainTimeLabel = "剩余体验时间：";
+
 const remainTime = reactive({
   hour: "00",
   minute: "00",
@@ -97,6 +99,7 @@ defineExpose({
 </script>
 
 <template>
+  <div class="remain-time-label">{{ remainTimeLabel }}</div>
   <div class="remain-time" :class="{ warning: remainTime.warning }">
     <span class="time-item">{{ remainTime.hour }}</span
     >:<span class="time-item">{{ remainTime.minute }}</span
@@ -105,6 +108,10 @@ defineExpose({
 </template>
 
 <style lang="scss">
+.remain-time-label {
+  font-size: 16px;
+  color: #002fa7;
+}
 .remain-time {
   font-size: 18px;
   color: #002fa7;
