@@ -102,7 +102,7 @@ function onCloseClick() {
     padding: 24px 36px;
   }
   .dialog-head {
-    padding: 24px 36px 16px;
+    padding: 36px 36px 16px;
     font-size: 24px;
     color: #000;
     text-align: left;

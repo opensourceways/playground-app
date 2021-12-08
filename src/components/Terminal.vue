@@ -19,7 +19,8 @@ import {
 } from "@/plugins/terminal";
 import { createCrdResouse, queryCrdResouse } from "@/service/api";
 import { getUserAuth, reLogin } from "@/shared/login";
-import GearLoading from "./LoadingGear.vue";
+// import GearLoading from "./LoadingGear.vue";
+import LoadingRandom from "./LoadingRandom.vue";
 
 const props = defineProps({
   isNew: {
@@ -253,6 +254,10 @@ async function createResource(isNew) {
   terminal = new Xterm(terminalEl.value, {
     cursorStyle: "block",
     cursorBlink: true,
+    theme: {
+      background: "#141414",
+      cursor: "#ff9933",
+    },
   });
   initConnection(terminal, instance);
   focus();
@@ -302,7 +307,8 @@ defineExpose({
     <div class="res-dlg-wrap" :class="{ hide: resStatus === 1 }">
       <div class="res-dlg">
         <div v-if="resStatus === RES_STATUS.CREATING" class="dlg-creating">
-          <GearLoading class="icon-loading"></GearLoading>
+          <!-- <GearLoading class="icon-loading"></GearLoading> -->
+          <loading-random class="icon-loading"></loading-random>
           <div class="label">{{ loadingLabel }}</div>
         </div>
         <div v-if="isResourceFailed(resStatus)" class="dlg-failed">
@@ -321,7 +327,6 @@ defineExpose({
 <style lang="scss">
 .open-terminal {
   height: 100%;
-  background-color: black;
 
   .terminal-el {
     width: 100%;
@@ -369,15 +374,18 @@ defineExpose({
     }
   }
   .icon-loading {
-    font-size: 32px;
+    font-size: 44px;
     color: #eee;
     .inner {
-      background-color: black;
+      background-color: #141414;
     }
+    margin-right: 4px;
   }
   .dlg-creating {
     display: flex;
     align-items: center;
+    font-size: 16px;
+    line-height: 1;
   }
   .dlg-failed {
     display: flex;
