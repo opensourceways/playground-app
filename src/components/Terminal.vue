@@ -23,11 +23,7 @@ import { getUserAuth, reLogin } from "@/shared/login";
 import LoadingRandom from "./LoadingRandom.vue";
 
 const props = defineProps({
-  isNew: {
-    type: Boolean,
-    default: false,
-  },
-  config: {
+  dataset: {
     type: Object,
     default: null,
   },
@@ -85,13 +81,26 @@ let webTTYInstance;
 const terminalEl = ref(null);
 const emit = defineEmits(["resource-status"]);
 
+function emitStatus(status) {
+  const params =
+    typeof status === "object"
+      ? { ...status, id: props.dataset.id }
+      : {
+          status,
+          id: props.dataset.id,
+        };
+  emit("resource-status", params);
+}
+
 /**
  * 轮询资源状态，直到返回成功或者失败
  */
 function ensureResourceReady(resId) {
   const { token } = getUserAuth();
-  const timeout = props.config.timeout || DEF_TIMEOUT;
-  const interval = props.config.query_interval || DEF_INTERVAL;
+  const { resource } = props.dataset;
+
+  const timeout = resource.timeout || DEF_TIMEOUT;
+  const interval = resource.query_interval || DEF_INTERVAL;
   return new Promise((resolve) => {
     let cnt = 0;
     let handler;
@@ -135,16 +144,17 @@ function ensureResourceReady(resId) {
  */
 async function createInstance(isNew) {
   const { userId, token } = getUserAuth();
-  if (!userId || !props.config) {
+  if (!userId || !props.dataset) {
     return;
   }
   try {
+    const { resource } = props.dataset;
     const res = await createCrdResouse({
       token,
       userId,
-      contactEmail: props.config.email,
-      templatePath: props.config.template,
-      resourceId: props.config.id,
+      contactEmail: resource.email,
+      templatePath: resource.template,
+      resourceId: resource.id,
       forceDelete: isNew ? 2 : 1,
     });
     if (res.code >= 200 && res.code < 400) {
@@ -199,7 +209,7 @@ function initConnection(term, instance) {
           openWebTTY();
         }, RETRY_INTERVAL * 1000);
       } else {
-        emit("resource-status", { status: RES_STATUS.CONNECT_FAILED });
+        emitStatus(RES_STATUS.CONNECT_FAILED);
         setResStatus(RES_STATUS.CONNECT_FAILED);
       }
     },
@@ -208,7 +218,7 @@ function initConnection(term, instance) {
         console.log("资源连接成功", data);
         isConneted = true;
         setResStatus(RES_STATUS.DONE);
-        emit("resource-status", instance);
+        emitStatus(instance);
       }
     },
     onClose() {
@@ -218,6 +228,10 @@ function initConnection(term, instance) {
           "\x1B[0;33m \r\n=========================\r\nresource disconnected!\r\n"
         );
         console.log("资源及连接已销毁");
+
+        // 禁止输入
+        terminal.disableInput();
+        emitStatus(RES_STATUS.CONNECT_FAILED);
       }
     },
   });
@@ -230,7 +244,7 @@ function initConnection(term, instance) {
 
 // 主动断连，需要上报断连事件，用于展示terminal状态
 function disconnect() {
-  emit("resource-status", { status: RES_STATUS.CONNECT_FAILED });
+  emitStatus(RES_STATUS.CONNECT_FAILED);
   terminalCloser && terminalCloser();
 }
 
@@ -243,11 +257,11 @@ function destroyTerminal() {
 async function createResource(isNew) {
   setResStatus(RES_STATUS.CREATING);
 
-  emit("resource-status", { status: RES_STATUS.CREATING });
+  emitStatus(RES_STATUS.CREATING);
 
   instance = await createInstance(isNew);
   if (!instance) {
-    emit("resource-status", { status: RES_STATUS.CREATE_FAILED });
+    emitStatus(RES_STATUS.CREATE_FAILED);
     return;
   }
 
@@ -285,7 +299,7 @@ function focus() {
 }
 
 onMounted(async () => {
-  createResource(props.isNew);
+  createResource(props.dataset.isNew);
 });
 
 onUnmounted(() => {

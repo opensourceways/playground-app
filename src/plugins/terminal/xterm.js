@@ -66,4 +66,9 @@ export class Xterm {
     window.removeEventListener("resize", this.fitResize);
     this.term.dispose();
   }
+
+  disableInput() {
+    this.term.setOption("disableStdin", true);
+    this.term.setOption("cursorBlink", false);
+  }
 }

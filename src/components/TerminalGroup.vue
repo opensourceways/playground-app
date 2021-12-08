@@ -32,7 +32,7 @@ async function addTerminal(isNew) {
     id: terminalId,
     name: `Terminal${terminalId}`,
     isNew,
-    config: props.resource,
+    resource: props.resource,
   });
 
   currentId.value = terminalId;
@@ -117,13 +117,16 @@ onBeforeUpdate(() => {
   terminalRefs = [];
 });
 
-function onResourceStatus(data, idx) {
-  if (!activeTerminalList.value[idx]) {
+function onResourceStatus(data) {
+  const currTerminal = activeTerminalList.value.find(
+    (item) => item.id === data.id
+  );
+  if (!currTerminal) {
     return;
   }
 
   const { status } = data;
-  activeTerminalList.value[idx].status = status;
+  currTerminal.status = status;
 
   if (status === RES_STATUS.DONE) {
     emit("terminal-loaded", { isFirst: isFirstLoadTerminal, terminal: data });
@@ -209,14 +212,13 @@ defineExpose({
     </div>
     <div class="terminal-list">
       <Terminal
-        v-for="(ter, idx) in activeTerminalList"
+        v-for="ter in activeTerminalList"
         v-show="currentId === ter.id"
         :key="ter.id"
         :ref="setItemRef"
-        :is-new="ter.isNew"
-        :config="ter.config"
+        :dataset="ter"
         class="terminal-item"
-        @resource-status="(e) => onResourceStatus(e, idx)"
+        @resource-status="(e) => onResourceStatus(e)"
       ></Terminal>
     </div>
   </div>
