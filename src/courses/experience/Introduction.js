@@ -33,9 +33,9 @@ export default [
   [
     "3.执行：",
     {
-      value: "systemctl start nginx",
+      value: "sudo systemctl start nginx",
       type: "code",
-      commond: "systemctl start nginx",
+      commond: "sudo systemctl start nginx",
     },
     "以后台方式启动nginx",
   ],
