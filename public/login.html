@@ -33,9 +33,10 @@
 
       function verifyRedirectUrl(url) {
         const whiteList = [
-          'http://localhost:3000',
           'https://playground.osinfra.cn',
+          'https://test.playground.osinfra.cn',
           'https://playground.openeuler.org',
+          'http://localhost:3000', // 本地开发调试，上线时需注释
         ]
 
         // 禁止使用当前登录页面作为目标页面
