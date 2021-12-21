@@ -55,15 +55,15 @@ const loadingLabel = "正在为您准备环境，请耐心等待...";
 
 const failedLabels = {
   [RES_STATUS.CREATE_FAILED]: {
-    label: "资源创建失败，",
+    label: "当前在线体验人数太多，",
     btnLabel: "请重试",
     btnClick() {
       createResource(false);
     },
   },
   [RES_STATUS.CONNECT_FAILED]: {
-    label: "资源连接失败，",
-    btnLabel: "请重试",
+    label: "资源连接失败，请检查本地网络环境，或",
+    btnLabel: "重试",
     btnClick() {
       createResource(false);
     },
