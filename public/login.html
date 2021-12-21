@@ -36,13 +36,13 @@
           'https://playground.osinfra.cn',
           'https://test.playground.osinfra.cn',
           'https://playground.openeuler.org',
-          'http://localhost:3000', // 本地开发调试，上线时需注释
+          // 'http://localhost:3000', // 本地开发调试，上线时需删除
         ]
 
         // 禁止使用当前登录页面作为目标页面
         if(url.startsWith(window.location.href + window.location.pathname)) {
           return whiteList[0];
-        } 
+        }
 
         // 禁止使用非白名单域名作为目标页面
         const isValidte =  whiteList.some(item=>{
@@ -50,7 +50,7 @@
         })
         if(!isValidte) {
           return whiteList[0];
-        } 
+        }
 
         return url;
       }
