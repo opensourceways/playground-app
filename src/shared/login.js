@@ -7,6 +7,7 @@ import {
 } from "@/service/api";
 import { getAuthCode } from "./login-code";
 import { isTestEnv } from "./utils";
+import { LOGIN_REDIRECT_URI, LOGIN_REDIRECT_URI_TEST } from "@/config";
 
 export const LOGIN_EVENTS = {
   SHOW_LOGIN: "show-login",
@@ -53,13 +54,11 @@ export function getUserInfo() {
 
 /**
  * 获取授权回调地址
- * @param {*} callbackUrl 测试环境时，设置指定的html，用于授权后跳转回之前的地址；现网直接使用当前地址
  * @returns 回调地址，用于url中的参数部分，需要encodeURIComponent处理
  */
-export function getRedirectUri(callbackUrl) {
-  const uri = isTestEnv()
-    ? `${callbackUrl}?redirect=${encodeURIComponent(window.location.href)}`
-    : window.location.href;
+export function getRedirectUri() {
+  const prefix = isTestEnv() ? LOGIN_REDIRECT_URI_TEST : LOGIN_REDIRECT_URI;
+  const uri = `${prefix}?redirect=${encodeURIComponent(window.location.href)}`;
 
   return encodeURIComponent(uri);
 }
@@ -76,10 +75,8 @@ export async function doSignUp() {
     try {
       setStatus(LOGIN_STATUS.DOING);
       // 从上次授权存储中获取
-      const callbackUrl = sessionStorage.getItem(LOGIN_KEYS.REDIRECT_URI);
-      sessionStorage.removeItem(LOGIN_KEYS.REDIRECT_URI);
 
-      const redirectUri = getRedirectUri(callbackUrl);
+      const redirectUri = getRedirectUri();
 
       const res = await queryAuthentication({
         code,
@@ -108,12 +105,10 @@ export async function goAuthorize() {
       throw new Error(res.code + res.message);
       return;
     }
-    const { callbackUrl, clientId } = res.callbackInfo;
-    // 存储回调地址，用于跳回后的授权接口使用，减少一次请求
-    sessionStorage.setItem(LOGIN_KEYS.REDIRECT_URI, callbackUrl);
+    const { clientId } = res.callbackInfo;
 
     // 现网环境使用当前页面地址
-    const rUrl = getRedirectUri(callbackUrl);
+    const rUrl = getRedirectUri();
 
     const url = `https://gitee.com/oauth/authorize?client_id=${clientId}&redirect_uri=${rUrl}&response_type=code`;
 

@@ -1,7 +1,3 @@
-export function getEnv() {
-  return "test";
-}
-
 export function isTestEnv() {
   const { href } = window.location;
   return (
