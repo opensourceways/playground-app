@@ -68,6 +68,11 @@ const loginDlgSet = {
 mitt.on(LOGIN_EVENTS.SHOW_LOGIN, () => {
   toggleLoginDlg(true);
 });
+
+const avatarLoaded = ref(false);
+function onAvatarLoad() {
+  avatarLoaded.value = true;
+}
 </script>
 
 <template>
@@ -86,7 +91,9 @@ mitt.on(LOGIN_EVENTS.SHOW_LOGIN, () => {
             <img
               v-if="userInfo.userId"
               class="user-avatar"
+              :class="{ loaded: avatarLoaded }"
               :src="userInfo.avatar"
+              @load="onAvatarLoad"
             />
             <div v-if="userInfo.userId" class="user-name">
               {{ userInfo.name }}
@@ -187,6 +194,9 @@ mitt.on(LOGIN_EVENTS.SHOW_LOGIN, () => {
     height: 40px;
     border-radius: 50%;
     background: #002fa7;
+    &.loaded {
+      background: transparent;
+    }
     + .user-name {
       margin-left: 8px;
     }
