@@ -353,6 +353,21 @@ defineExpose({
     z-index: 0;
     .xterm .xterm-viewport {
       overflow: overlay;
+      &::-webkit-scrollbar {
+        width: 8px;
+        height: 1px;
+      }
+      &::-webkit-scrollbar-thumb {
+        border-radius: 8px;
+        box-shadow: inset 0 0 5px rgba($color: #000000, $alpha: 0.2);
+        background: #bbb;
+      }
+
+      &::-webkit-scrollbar-track {
+        border-radius: 8px;
+        box-shadow: inset 0 0 5px rgba($color: #000000, $alpha: 0.2);
+        background: #383737;
+      }
     }
   }
   .res-dlg-wrap {
