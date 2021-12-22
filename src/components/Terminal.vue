@@ -155,6 +155,7 @@ async function createInstance(isNew) {
       contactEmail: resource.email,
       templatePath: resource.template,
       resourceId: resource.id,
+      // 1 复用原来资源；2 强制删除原来资源，重新创建
       forceDelete: isNew ? 2 : 1,
     });
     if (res.code >= 200 && res.code < 400) {
@@ -265,6 +266,8 @@ async function createResource(isNew) {
     return;
   }
 
+  // 先删除之前的terminal
+  destroyTerminal();
   terminal = new Xterm(terminalEl.value, {
     cursorStyle: "block",
     cursorBlink: true,
