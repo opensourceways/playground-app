@@ -243,7 +243,6 @@ function onTimeout() {
     font-size: 36px;
     line-height: 48px;
     text-align: center;
-    font-family: monospace;
     margin-bottom: 24px;
   }
   .bling {

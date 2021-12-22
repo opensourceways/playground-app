@@ -346,11 +346,14 @@ defineExpose({
   height: 100%;
 
   .terminal-el {
-    width: 100%;
+    width: calc(100% - 8px);
     height: calc(100% - 8px); // 底部预留位置，解决太靠底问题
-    padding-left: 8px;
+    margin-left: 8px;
     position: relative;
     z-index: 0;
+    .xterm .xterm-viewport {
+      overflow: overlay;
+    }
   }
   .res-dlg-wrap {
     position: absolute;
