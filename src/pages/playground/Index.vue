@@ -2,6 +2,7 @@
 import TerminalGroup from "@/components/TerminalGroup.vue";
 import OButton from "@/components/OButton.vue";
 import ODialog from "@/components/ODialog.vue";
+import TerminalPoster from "@/components/TerminalPoster.vue";
 import { ref } from "vue";
 import { PLAYGROUND_KEYS } from "./shared";
 import { LOGIN_EVENTS } from "@/shared/login";
@@ -26,15 +27,6 @@ function backToHome() {
   });
   terminals.value.closeAllTerminal();
 }
-
-const startBtn = {
-  label: "START",
-  icon: "arrow-right",
-  primary: true,
-  click() {
-    beginToTry();
-  },
-};
 
 const showTimeoutDlg = ref(false);
 function toggleTimeoutDlg(show) {
@@ -137,21 +129,7 @@ function onTimeout() {
       </div>
       <div class="ground-terminal">
         <div v-if="!isBegin" class="terminal-mask">
-          <div class="terminal-mask-main">
-            <div class="text">
-              <div>Welcome</div>
-              <div>LET'S PLAY <span class="bling">_</span></div>
-            </div>
-            <div class="actions">
-              <o-button
-                :primary="!isLoggingIn"
-                :icon="startBtn.icon"
-                :disabled="isLoggingIn"
-                @click="startBtn.click"
-                >{{ startBtn.label }}</o-button
-              >
-            </div>
-          </div>
+          <TerminalPoster class="poster" @btn-click="beginToTry" />
         </div>
         <TerminalGroup
           ref="terminals"
@@ -239,20 +217,27 @@ function onTimeout() {
   align-items: center;
   justify-content: center;
   z-index: 1;
-  .text {
-    font-size: 36px;
-    line-height: 48px;
-    text-align: center;
-    margin-bottom: 24px;
+  .poster {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 42px;
   }
-  .bling {
-    animation: bling 0.8s ease-in-out infinite;
-  }
-  .o-button {
-    min-width: 140px;
-  }
+  // .text {
+  //   font-size: 36px;
+  //   line-height: 48px;
+  //   text-align: center;
+  //   margin-bottom: 24px;
+  // }
+  // .bling {
+  //   animation: bling 0.8s ease-in-out infinite;
+  // }
+  // .o-button {
+  //   min-width: 140px;
+  // }
 }
-.terminal-mask-main {
-  text-align: center;
-}
+// .terminal-mask-main {
+//   text-align: center;
+// }
 </style>
