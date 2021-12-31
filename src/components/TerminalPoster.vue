@@ -91,16 +91,40 @@ setInterval(() => {
     <div class="item button" :style="{ transform: s8 }" @click="btnClick">
       {{ btnLabel }}
     </div>
+    <div class="item star l l1"></div>
+    <div class="item star m m1"></div>
+    <div class="item star m m2"></div>
+    <div class="item star m m3"></div>
+    <div class="item star n n1"></div>
+    <div class="item star n n2"></div>
+    <div class="item star n n3"></div>
+    <div class="item star n n4"></div>
+    <div class="item star n n5"></div>
+    <div class="item star s s1"></div>
+    <div class="item star s s2"></div>
+    <div class="item star s s3"></div>
   </div>
 </template>
 
 <style lang="scss">
+@keyframes star-bling {
+  0% {
+    opacity: 0.1;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.1;
+  }
+}
 .terminal-poster {
-  background: url(@/assets/terminal-poster/bg.png);
+  background: url(@/assets/terminal-poster/bg.png) no-repeat;
   background-size: cover;
   .item {
     position: absolute;
     transition: transform 2s linear;
+    background-repeat: no-repeat;
   }
   .persion1 {
     top: 60.37%;
@@ -136,7 +160,7 @@ setInterval(() => {
   }
   .ufo {
     top: 27.9%;
-    left: 46.5%;
+    left: 48.5%;
     background-position: -86px -181px;
     width: 85px;
     height: 30px;
@@ -171,6 +195,100 @@ setInterval(() => {
     background-position: -201px 0px;
     width: 280px;
     height: 69px;
+  }
+  .star {
+    width: 128px;
+    height: 117px;
+    background-image: url(@/assets/terminal-poster/star.png);
+    background-size: contain;
+    animation: star-bling 3s infinite reverse;
+    &.l {
+      width: 56px;
+      height: 52px;
+    }
+    &.m {
+      width: 36px;
+      height: 33px;
+    }
+    &.n {
+      width: 24px;
+      height: 22px;
+    }
+    &.s {
+      width: 16px;
+      height: 15px;
+    }
+  }
+  .l1 {
+    top: 23.06%;
+    left: 62.8%;
+    transform: rotate(10deg);
+  }
+  .m1 {
+    top: 29.8%;
+    left: 27.55%;
+    transform: rotate(40deg);
+    animation-delay: 0.1s;
+  }
+  .m2 {
+    top: 27.8%;
+    left: 67%;
+    transform: rotate(70deg);
+    animation-delay: 0.5s;
+  }
+  .m3 {
+    top: 55.8%;
+    left: 63.55%;
+    transform: rotate(20deg);
+    animation-delay: 0.8s;
+  }
+  .n1 {
+    top: 27.56%;
+    left: 30.52%;
+    transform: rotate(30deg);
+    animation-delay: 1s;
+  }
+  .n2 {
+    top: 50.56%;
+    left: 38.52%;
+    transform: rotate(170deg);
+    animation-delay: 0.2s;
+  }
+  .n3 {
+    top: 35.8%;
+    left: 56.52%;
+    transform: rotate(120deg);
+    animation-delay: 0.8s;
+  }
+  .n4 {
+    top: 51.56%;
+    left: 24.52%;
+    transform: rotate(160deg);
+    animation-delay: 0.6s;
+  }
+  .n5 {
+    top: 47.56%;
+    left: 73.52%;
+    transform: rotate(140deg);
+    animation-delay: 0.4s;
+  }
+  .s1 {
+    top: 52.8%;
+    left: 27.42%;
+    transform: rotate(80deg);
+    animation-delay: 1.2s;
+  }
+  .s2 {
+    top: 62.8%;
+    left: 22.42%;
+    transform: rotate(135deg);
+    animation-delay: 1.8s;
+  }
+  .s3 {
+    top: 65%;
+    left: 76%;
+    transform: rotate(30deg);
+    animation-delay: 0.7s;
   }
 }
 </style>
