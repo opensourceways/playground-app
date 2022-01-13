@@ -1,7 +1,7 @@
 <script setup>
 import { computed, reactive } from "vue";
 
-const btnLabel = "LEST'S PLAY";
+const btnLabel = "LET'S PLAY";
 
 const emits = defineEmits(["btn-click"]);
 
