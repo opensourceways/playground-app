@@ -104,12 +104,20 @@ function onCloseClick() {
   }
   .dialog-body {
     padding: 24px 36px;
+    line-height: 1.25;
+    @media screen and (max-width: 1023px) {
+      padding: 16px 24px;
+    }
   }
   .dialog-head {
     padding: 36px 36px 16px;
     font-size: 24px;
     color: #000;
     text-align: left;
+    @media screen and (max-width: 1023px) {
+      padding: 24px 24px 8px;
+      font-size: 18px;
+    }
   }
   .dialog-foot {
     padding: 16px 36px 36px;

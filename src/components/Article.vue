@@ -106,6 +106,10 @@ function click(item) {
   .body {
     overflow: auto;
     padding: 36px;
+
+    @media screen and (max-width: 1023px) {
+      padding: 24px;
+    }
   }
   .foot {
     padding: 24px 40px 24px;

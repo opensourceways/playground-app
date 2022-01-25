@@ -13,6 +13,9 @@ import AppHeader from "@/components/AppHeader.vue";
 <style lang="scss" scoped>
 .app-header {
   height: 80px;
+  @media screen and (max-width: 1023px) {
+    height: 60px;
+  }
 }
 .app-body {
   height: calc(100vh - 80px);

@@ -165,6 +165,10 @@ function onAvatarLoad() {
   align-items: center;
   height: 100%;
   justify-content: space-between;
+
+  @media screen and (max-width: 1023px) {
+    padding: 16px 24px;
+  }
 }
 .header-logo {
   height: 100%;

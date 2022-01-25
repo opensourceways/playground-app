@@ -187,6 +187,10 @@ function onTimeout() {
   line-height: 32px;
   display: flex;
   justify-content: space-between;
+
+  @media screen and (max-width: 1023px) {
+    padding: 12px 24px;
+  }
 }
 .ground-body {
   height: calc(100% - 80px);
