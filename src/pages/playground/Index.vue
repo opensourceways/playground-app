@@ -190,6 +190,7 @@ function onTimeout() {
 
   @media screen and (max-width: 1023px) {
     padding: 12px 24px;
+    display: block;
   }
 }
 .ground-body {
