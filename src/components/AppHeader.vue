@@ -248,6 +248,11 @@ function onAvatarLoad() {
     color: #c7cad0;
     font-size: 12px;
     margin-left: 24px;
+
+    @media screen and (max-width: 1023px) {
+      margin-left: 0;
+      margin-top: 16px;
+    }
   }
   .o-link {
     color: #002fa7;
@@ -259,6 +264,10 @@ function onAvatarLoad() {
   .login-actions {
     display: flex;
     align-items: center;
+    @media screen and (max-width: 1023px) {
+      display: block;
+      text-align: center;
+    }
   }
 }
 .time-tip {

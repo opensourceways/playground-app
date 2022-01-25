@@ -60,7 +60,7 @@ function onCloseClick() {
 }
 .o-dialog {
   visibility: hidden;
-  position: absolute;
+  position: fixed;
   left: 0;
   right: 0;
   top: 0;
@@ -97,6 +97,10 @@ function onCloseClick() {
     background-color: #fff;
     min-width: 550px;
     box-shadow: 0px 13px 33px 0px rgba(190, 196, 204, 0.2);
+    @media screen and (max-width: 1023px) {
+      min-width: auto;
+      width: 90%;
+    }
   }
   .dialog-body {
     padding: 24px 36px;

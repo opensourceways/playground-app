@@ -9,7 +9,7 @@ import { LOGIN_EVENTS } from "@/shared/login";
 import mitt from "@/shared/mitt";
 import { useRouter } from "vue-router";
 import { beginToTry } from "./shared";
-import { isLoggingIn } from "@/shared/login";
+// import { isLoggingIn } from "@/shared/login";
 import RemainTime from "./RemainTime.vue";
 import Courses from "@/configs/courses";
 
@@ -192,18 +192,29 @@ function onTimeout() {
   height: calc(100% - 80px);
   display: flex;
   background: #fff;
+  flex-wrap: wrap;
 }
 .ground-article {
   width: 30%;
   min-width: 380px;
   height: 100%;
   flex-shrink: 0;
+  @media screen and (max-width: 1365px) {
+    width: 100%;
+    height: auto;
+    min-width: auto;
+  }
 }
 .ground-terminal {
   height: 100%;
   width: 70%;
   background: #141414;
   position: relative;
+
+  @media screen and (max-width: 1365px) {
+    width: 100%;
+    height: 100vh;
+  }
 }
 
 .terminal-mask {

@@ -121,10 +121,18 @@ setInterval(() => {
 .terminal-poster {
   background: url(@/assets/terminal-poster/bg.png) no-repeat;
   background-size: cover;
+  @media screen and (max-width: 1365px) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
   .item {
     position: absolute;
     transition: transform 2s linear;
     background-repeat: no-repeat;
+    @media screen and (max-width: 1365px) {
+      display: none;
+    }
   }
   .persion1 {
     top: 60.37%;
@@ -195,6 +203,17 @@ setInterval(() => {
     background-position: -201px 0px;
     width: 280px;
     height: 69px;
+    @media screen and (max-width: 1365px) {
+      display: flex;
+      width: auto;
+      height: auto;
+      left: 50%;
+      padding: 16px 24px;
+      background: #0032b4;
+      white-space: nowrap;
+      position: static;
+      border-radius: 4px;
+    }
   }
   .star {
     width: 128px;
