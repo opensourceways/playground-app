@@ -2,7 +2,12 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import Playground from "@/pages/playground/Index.vue";
 import { isLogined } from "./shared/login";
 export const routes = [
-  { path: "/", redirect: "/app" },
+  { path: "/", redirect: "/home" },
+  {
+    path: "/home",
+    name: "home",
+    component: () => import("@/pages/home/TheHome.vue"),
+  },
   {
     path: "/app",
     component: Playground,
@@ -28,7 +33,7 @@ export const router = createRouter({
 });
 
 router.beforeEach((to) => {
-  if (!["welcome"].includes(to.name) && !isLogined()) {
-    return { name: "welcome" };
+  if (!["home"].includes(to.name) && !isLogined()) {
+    return { name: "home" };
   }
 });
