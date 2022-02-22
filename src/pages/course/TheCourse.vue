@@ -9,9 +9,7 @@ const route = useRoute();
 const { coursePath } = route.params;
 
 const courseInfo = computed(() => {
-  const rlt = courseList.value.find(
-    (item) => item._courses.name === coursePath
-  );
+  const rlt = courseList.value.find((item) => item._course.name === coursePath);
   return rlt || {};
 });
 

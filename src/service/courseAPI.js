@@ -64,7 +64,7 @@ export function queryCourseListInfo(status) {
       ).then((result) => {
         return result.map((item, idx) => ({
           ...item,
-          _courses: courses[idx],
+          _course: courses[idx],
         }));
       });
     }

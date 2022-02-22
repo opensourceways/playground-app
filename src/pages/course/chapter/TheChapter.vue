@@ -12,9 +12,7 @@ import { computed, ref } from "vue";
 const route = useRoute();
 
 const chapterList = computed(() => {
-  const rlt = courseList.value.find(
-    (item) => item._courses.name === coursePath
-  );
+  const rlt = courseList.value.find((item) => item._course.name === coursePath);
   return rlt ? rlt.chapters : [];
 });
 
