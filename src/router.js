@@ -1,12 +1,22 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import Playground from "@/pages/playground/Index.vue";
-import { isLogined } from "./shared/login";
+// import { isLogined } from "./shared/login";
 export const routes = [
   { path: "/", redirect: "/home" },
   {
     path: "/home",
     name: "home",
     component: () => import("@/pages/home/TheHome.vue"),
+  },
+  {
+    path: "/course/:coursePath",
+    name: "course",
+    component: () => import("@/pages/course/TheCourse.vue"),
+  },
+  {
+    path: "/course/:coursePath/chapter/:chapterPath",
+    name: "chapter",
+    component: () => import("@/pages/course/chapter/TheChapter.vue"),
   },
   {
     path: "/app",
@@ -32,8 +42,8 @@ export const router = createRouter({
   routes,
 });
 
-router.beforeEach((to) => {
-  if (!["home"].includes(to.name) && !isLogined()) {
-    return { name: "home" };
-  }
-});
+// router.beforeEach((to) => {
+// if (!["home"].includes(to.name) && !isLogined()) {
+//   return { name: "home" };
+// }
+// });

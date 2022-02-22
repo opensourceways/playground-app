@@ -1,5 +1,5 @@
 import "virtual:svg-icons-register";
-import "./styles/base.scss";
+import "./shared/styles/base.scss";
 
 // 从URL中获取code，必须提前引入
 import "./before";
