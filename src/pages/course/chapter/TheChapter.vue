@@ -1,5 +1,6 @@
 <script setup>
 // import OButton from "@/components/OButton.vue";
+import CourseArticle from "@/components/CourseArticle.vue";
 import {
   // useRouter,
   useRoute,
@@ -19,15 +20,18 @@ const chapterList = computed(() => {
 const { coursePath, chapterPath } = route.params;
 
 const stepList = ref([]);
-const intro = ref("");
-const finish = ref("");
+const intro = ref({});
+const finish = ref({});
 
 queryChapterDetail(coursePath, chapterPath).then((data) => {
-  console.log(data);
   stepList.value = data.details.steps;
-  intro.value = data.details.intro.html;
-  finish.value = data.details.finish.html;
+  intro.value = data.details.intro;
+  finish.value = data.details.finish;
 });
+
+function exec(e) {
+  console.log(e.command);
+}
 </script>
 <template>
   <div class="sec-head">
@@ -42,16 +46,19 @@ queryChapterDetail(coursePath, chapterPath).then((data) => {
     </div>
   </div>
   <div class="sec-body">
-    <div class="sec-step intro">{{ intro }}</div>
+    <div class="sec-step intro">
+      <CourseArticle :content="intro.html" @click="exec"></CourseArticle>
+    </div>
     <div class="sec-step steps">
       <div class="step-list">
         <div v-for="item in stepList" :key="item" class="step-item">
-          <!-- eslint-disable-next-line vue/no-v-html -->
-          <div v-html="item.html"></div>
+          <CourseArticle :content="item.html" @click="exec"></CourseArticle>
         </div>
       </div>
     </div>
-    <div class="sec-step finish">{{ finish }}</div>
+    <div class="sec-step finish">
+      <CourseArticle :content="finish.html" @click="exec"></CourseArticle>
+    </div>
   </div>
 </template>
 <style lang="scss" scoped>
@@ -66,3 +73,4 @@ queryChapterDetail(coursePath, chapterPath).then((data) => {
   margin: 12px;
 }
 </style>
+<style lang="scss"></style>
