@@ -5,6 +5,8 @@ import mitt from "@/shared/mitt";
 import ODialog from "./ODialog.vue";
 import OButton from "./OButton.vue";
 import LoadingDot from "./LoadingArc.vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
 
 import { doSignUp, isLoggingIn } from "@/shared/login";
 
@@ -73,12 +75,16 @@ const avatarLoaded = ref(false);
 function onAvatarLoad() {
   avatarLoaded.value = true;
 }
+
+function logoClick() {
+  router.push({ name: "home" });
+}
 </script>
 
 <template>
   <div class="open-header">
     <div class="header-wrap">
-      <div class="header-logo">
+      <div class="header-logo" @click="logoClick">
         <img src="@/assets/openeuler-logo.png" alt="" srcset="" />
       </div>
       <div class="header-tools">
@@ -174,6 +180,7 @@ function onAvatarLoad() {
   height: 100%;
   display: flex;
   align-items: center;
+  cursor: pointer;
   img {
     vertical-align: top;
     height: 100%;

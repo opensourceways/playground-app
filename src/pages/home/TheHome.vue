@@ -12,7 +12,7 @@ const btnLabel = "开始课程";
 
 function gotoCourse(item) {
   router.push({
-    path: `/course/${item._course.name}`,
+    path: `/course/${item._course.content_dir}`,
   });
 }
 </script>

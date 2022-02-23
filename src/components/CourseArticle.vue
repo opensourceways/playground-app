@@ -1,4 +1,8 @@
 <script setup>
+const COMMAND_INNER = {
+  content: "_content_",
+};
+
 defineProps({
   content: {
     type: String,
@@ -8,8 +12,11 @@ defineProps({
 const emit = defineEmits(["click"]);
 function onClick(e) {
   const { target } = e;
-  const command = target.getAttribute("exec");
+  let command = target.getAttribute("exec");
   if (command) {
+    if (command === COMMAND_INNER.content) {
+      command = target.innerText;
+    }
     emit("click", {
       e,
       command,
@@ -31,7 +38,6 @@ function onClick(e) {
   code {
     background-color: #e2e6f1;
     padding: 0 4px;
-    margin: 0 4px;
     border-radius: 4px;
     &[exec] {
       cursor: pointer;

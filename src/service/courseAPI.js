@@ -60,7 +60,7 @@ export function queryCourseListInfo(status) {
         : data.courses;
 
       return Promise.all(
-        courses.map((item) => queryCourseInfo(item.name))
+        courses.map((item) => queryCourseInfo(item.content_dir))
       ).then((result) => {
         return result.map((item, idx) => ({
           ...item,
@@ -135,7 +135,7 @@ export function queryChapterDetail(coursePath, chapterPath) {
           queryStepContent(coursePath, chapterPath, item.md_file)
         )
       ),
-      queryStepContent(coursePath, chapterPath, details.intro.md_file),
+      queryStepContent(coursePath, chapterPath, details.introduction.md_file),
       queryStepContent(coursePath, chapterPath, details.finish.md_file),
     ];
 
@@ -147,8 +147,8 @@ export function queryChapterDetail(coursePath, chapterPath) {
         };
       });
 
-      details.intro = {
-        ...details.intro,
+      details.introduction = {
+        ...details.introduction,
         ...rlt[1],
       };
       details.finish = {

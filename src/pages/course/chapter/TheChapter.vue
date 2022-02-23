@@ -13,19 +13,21 @@ import { computed, ref } from "vue";
 const route = useRoute();
 
 const chapterList = computed(() => {
-  const rlt = courseList.value.find((item) => item._course.name === coursePath);
+  const rlt = courseList.value.find(
+    (item) => item._course.content_dir === coursePath
+  );
   return rlt ? rlt.chapters : [];
 });
 
 const { coursePath, chapterPath } = route.params;
 
-const intro = ref({});
+const introduction = ref({});
 const stepList = ref([]);
 const finish = ref({});
 
 queryChapterDetail(coursePath, chapterPath).then((data) => {
   stepList.value = data.details.steps;
-  intro.value = data.details.intro;
+  introduction.value = data.details.introduction;
   finish.value = data.details.finish;
 });
 
@@ -46,8 +48,8 @@ function exec(e) {
     </div>
   </div>
   <div class="sec-body">
-    <div class="sec-step intro">
-      <CourseArticle :content="intro.html" @click="exec"></CourseArticle>
+    <div class="sec-step introduction">
+      <CourseArticle :content="introduction.html" @click="exec"></CourseArticle>
     </div>
     <div class="sec-step steps">
       <div class="step-list">
