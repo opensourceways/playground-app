@@ -31,10 +31,10 @@ function startCourse(item) {
       class="head-bg"
       :style="{ backgroundImage: `url(${courseInfo.poster})` }"
     ></div>
-    <div class="content">
+    <!-- <div class="content">
       <div class="title">{{ courseInfo.title }}</div>
       <div class="description">{{ courseInfo.description }}</div>
-    </div>
+    </div> -->
   </div>
   <div class="chapter-list">
     <div
