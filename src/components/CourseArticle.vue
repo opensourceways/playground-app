@@ -26,14 +26,17 @@ function onClick(e) {
   padding: 24px;
 
   font-size: 14px;
+  line-height: 20px;
   color: #000;
   code {
-    background-color: #dce6ff;
+    background-color: #e2e6f1;
     padding: 0 4px;
     margin: 0 4px;
+    border-radius: 4px;
     &[exec] {
       cursor: pointer;
       background-color: #dce6ff;
+      color: blue;
       &:hover {
         background-color: #cbd6ee;
       }
@@ -45,6 +48,8 @@ function onClick(e) {
   pre {
     background-color: #dce6ff;
     padding: 8px;
+    border-radius: 4px;
+
     code {
       margin: 0;
     }

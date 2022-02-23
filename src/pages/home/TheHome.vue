@@ -22,10 +22,7 @@ function gotoCourse(item) {
   </div>
   <div class="course-list">
     <div v-for="item in courseList" :key="item.id" class="course-card">
-      <div
-        class="card-head"
-        :style="{ backgroundImage: `url(${item.banner})` }"
-      >
+      <div class="card-head" :style="{ backgroundImage: `url(${item.cover})` }">
         <div class="course-logo">
           <img :src="item.logo" />
         </div>

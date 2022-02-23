@@ -19,8 +19,8 @@ const chapterList = computed(() => {
 
 const { coursePath, chapterPath } = route.params;
 
-const stepList = ref([]);
 const intro = ref({});
+const stepList = ref([]);
 const finish = ref({});
 
 queryChapterDetail(coursePath, chapterPath).then((data) => {

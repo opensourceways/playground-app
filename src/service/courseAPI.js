@@ -40,7 +40,7 @@ export function queryCourseInfo(coursePath) {
       data._prefix = prefix;
       // 处理资源路径
       data.logo = R(prefix, data.logo);
-      data.banner = R(prefix, data.banner);
+      data.cover = R(prefix, data.cover);
       data.poster = R(prefix, data.poster);
       return data;
     })
@@ -132,11 +132,11 @@ export function queryChapterDetail(coursePath, chapterPath) {
     const all = [
       Promise.all(
         details.steps.map((item) =>
-          queryStepContent(coursePath, chapterPath, item.text)
+          queryStepContent(coursePath, chapterPath, item.md_file)
         )
       ),
-      queryStepContent(coursePath, chapterPath, details.intro.text),
-      queryStepContent(coursePath, chapterPath, details.finish.text),
+      queryStepContent(coursePath, chapterPath, details.intro.md_file),
+      queryStepContent(coursePath, chapterPath, details.finish.md_file),
     ];
 
     return Promise.all(all).then((rlt) => {

@@ -18,9 +18,9 @@ function getBtnLabel(item) {
   return "开始课程";
 }
 function startCourse(item) {
-  if (item.chapter_id) {
+  if (item.content_dir) {
     router.push({
-      path: `/course/${coursePath}/chapter/${item.chapter_id}`,
+      path: `/course/${coursePath}/chapter/${item.content_dir}`,
     });
   }
 }
