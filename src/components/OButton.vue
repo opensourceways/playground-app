@@ -1,4 +1,6 @@
 <script setup>
+import { toRefs } from "vue";
+
 const props = defineProps({
   primary: {
     type: Boolean,
@@ -16,21 +18,29 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  color: {
+    type: String,
+    default: "#333",
+  },
 });
+
+const { color, disabled } = toRefs(props);
 
 const emit = defineEmits(["click"]);
 
 function onClick(e) {
-  if (props.disabled) {
+  if (disabled) {
     return;
   }
   emit("click", e);
 }
 </script>
+
 <template>
   <button
     class="o-button"
     :class="{ primary: primary, 'is-text': isText, 'is-disabled': disabled }"
+    :style="{ color }"
     @click="onClick"
   >
     <div class="wrap">
@@ -39,6 +49,7 @@ function onClick(e) {
     </div>
   </button>
 </template>
+
 <style lang="scss">
 .o-button {
   padding: 7px 16px;
@@ -48,7 +59,6 @@ function onClick(e) {
   border: 1px solid #333;
   outline: none;
   cursor: pointer;
-  color: #333;
   min-width: 120px;
   transition: color 0.2s, background-color 0.3s, border-color 0.3s;
   &:hover {

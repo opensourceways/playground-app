@@ -24,8 +24,8 @@ mitt.on(LOGIN_EVENTS.LOGOUT, () => {
 
 doSignUp();
 
-const logoutLabel = "退出";
-const loginLabel = "登录";
+const logoutLabel = "LOGIN OUT";
+const loginLabel = "LOGIN IN";
 
 const logoutLabels = {
   title: "退出Gitee账号",
@@ -82,38 +82,47 @@ function logoClick() {
 </script>
 
 <template>
-  <div class="open-header">
-    <div class="header-wrap">
-      <div class="header-logo" @click="logoClick">
-        <img src="@/assets/openeuler-logo.png" alt="" srcset="" />
+  <div class="header">
+    <div class="header-logo" @click="logoClick">
+      <img src="@/assets/openeuler-logo.png" alt="" srcset="" />
+    </div>
+    <div class="header-tool">
+      <div class="tool-item user">
+        <loading-dot v-if="isLoggingIn" class="loading"></loading-dot>
+        <div v-else class="user-info">
+          <div v-if="!userInfo.userId" @click="toggleLoginDlg(true)">
+            {{ loginLabel }}
+          </div>
+          <img
+            v-if="userInfo.userId"
+            class="user-avatar"
+            :class="{ loaded: avatarLoaded }"
+            :src="userInfo.avatar"
+            @load="onAvatarLoad"
+          />
+          <div v-if="userInfo.userId" class="user-name">
+            {{ userInfo.name }}
+          </div>
+        </div>
+        <img
+          v-if="userInfo.userId"
+          class="user-avatar"
+          :class="{ loaded: avatarLoaded }"
+          :src="userInfo.avatar"
+          @load="onAvatarLoad"
+        />
+        <div v-if="userInfo.userId" class="user-name">
+          {{ userInfo.name }}
+        </div>
       </div>
-      <div class="header-tools">
-        <div class="tool-item user">
-          <loading-dot v-if="isLoggingIn" class="loading"></loading-dot>
-          <div v-else class="user-info">
-            <div v-if="!userInfo.userId" @click="toggleLoginDlg(true)">
-              {{ loginLabel }}
-            </div>
-            <img
-              v-if="userInfo.userId"
-              class="user-avatar"
-              :class="{ loaded: avatarLoaded }"
-              :src="userInfo.avatar"
-              @load="onAvatarLoad"
-            />
-            <div v-if="userInfo.userId" class="user-name">
-              {{ userInfo.name }}
-            </div>
-          </div>
 
-          <div v-if="userInfo.userId" class="drop-menus">
-            <div class="menu-item" @click="toggleLogoutDlg(true)">
-              {{ logoutLabel }}
-            </div>
-          </div>
+      <div v-if="userInfo.userId" class="drop-menus">
+        <div class="menu-item" @click="toggleLogoutDlg(true)">
+          {{ logoutLabel }}
         </div>
       </div>
     </div>
+
     <o-dialog :show="showLogout" @close-click="toggleLogoutDlg(false)">
       <template #head>
         <div class="dlg-title">{{ logoutLabels.title }}</div>
@@ -159,12 +168,8 @@ function logoClick() {
 </template>
 
 <style lang="scss">
-.open-header {
-  background: #ffffff;
-  box-shadow: 0px 1px 3px 0px rgba(178, 178, 178, 0.5);
-}
-.header-wrap {
-  max-width: 1920px;
+.header {
+  max-width: 1488px;
   margin: 0 auto;
   padding: 16px 36px;
   display: flex;
@@ -176,6 +181,7 @@ function logoClick() {
     padding: 16px 24px;
   }
 }
+
 .header-logo {
   height: 100%;
   display: flex;
@@ -186,7 +192,7 @@ function logoClick() {
     height: 100%;
   }
 }
-.header-tools {
+.header-tool {
   height: 100%;
   display: flex;
   align-items: center;
