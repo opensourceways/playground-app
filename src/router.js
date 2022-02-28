@@ -35,6 +35,11 @@ export const routes = [
       },
     ],
   },
+  {
+    path: "/demo-markdown",
+    name: "demo",
+    component: () => import("@/pages/demo/MarkdownDemo.vue"),
+  },
 ];
 
 export const router = createRouter({
