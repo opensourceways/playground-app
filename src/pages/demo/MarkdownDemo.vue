@@ -71,7 +71,7 @@ function exec(e) {
 .page-demo {
   display: flex;
   padding: 60px;
-  height: 100%;
+  height: calc(100vh - 80px);
 }
 .section {
   flex: 1;
