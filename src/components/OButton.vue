@@ -1,6 +1,4 @@
 <script setup>
-import { toRefs } from "vue";
-
 const props = defineProps({
   primary: {
     type: Boolean,
@@ -18,18 +16,12 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  color: {
-    type: String,
-    default: "#333",
-  },
 });
-
-const { color, disabled } = toRefs(props);
 
 const emit = defineEmits(["click"]);
 
 function onClick(e) {
-  if (disabled) {
+  if (props.disabled) {
     return;
   }
   emit("click", e);
@@ -40,7 +32,6 @@ function onClick(e) {
   <button
     class="o-button"
     :class="{ primary: primary, 'is-text': isText, 'is-disabled': disabled }"
-    :style="{ color }"
     @click="onClick"
   >
     <div class="wrap">

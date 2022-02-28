@@ -69,9 +69,7 @@ function gotoCourse(item) {
           <div class="detail">{{ item.introduction }}</div>
         </div>
         <div class="item-operate">
-          <o-button primary color="#fff" @click="gotoCourse(item)">{{
-            btnLabel
-          }}</o-button>
+          <OButton primary @click="gotoCourse(item)">{{ btnLabel }}</OButton>
         </div>
       </div>
     </div>
