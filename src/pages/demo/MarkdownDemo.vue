@@ -71,7 +71,7 @@ function exec(e) {
 .page-demo {
   display: flex;
   padding: 60px;
-  height: calc(100vh - 80px);
+  min-height: calc(100vh - 80px);
 }
 .section {
   flex: 1;
