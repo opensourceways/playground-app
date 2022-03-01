@@ -4,9 +4,9 @@ import { handleMarkdown } from "@/shared/handle-markdown";
 import { watch, ref } from "vue";
 
 const initStr = `## 行内代码
-行内代码\`git clone\`行内代码
+行内代码\`git init\`行内代码
 
-行内可点击代码\`git clone\`{{git clone}}行内可点击代码
+行内可点击代码\`git init\`{{git init}}行内可点击代码\`git init\`{{RUN}}行内可点击代码
 
 ## 多行代码块
 
@@ -27,6 +27,14 @@ sh代码块
 git clone https://gitee.com/devin-cwd/openeuler-docs.git
 git push
 \`\`\`
+
+sh分行可执行代码块
+\`\`\`
+git clone https://gitee.com/devin-cwd/openeuler-docs.git
+\`\`\`{{RUN}}
+\`\`\`
+git push
+\`\`\`{{RUN}}
 
 bash代码块
 \`\`\`bash
@@ -54,6 +62,7 @@ function exec(e) {
 <template>
   <div class="page-demo">
     <div class="section">
+      <h3>Markdown</h3>
       <textarea
         id=""
         v-model="codeString"
@@ -63,7 +72,12 @@ function exec(e) {
       ></textarea>
     </div>
     <div class="section">
-      <CourseArticle :content="result" @click="exec"></CourseArticle>
+      <h3>Html</h3>
+      <CourseArticle
+        class="html"
+        :content="result"
+        @click="exec"
+      ></CourseArticle>
     </div>
   </div>
 </template>
@@ -75,9 +89,15 @@ function exec(e) {
 }
 .section {
   flex: 1;
-  background-color: #fafafa;
   + .section {
     margin-left: 24px;
+  }
+
+  .html {
+    background-color: #fafafa;
+  }
+  h3 {
+    margin-bottom: 16px;
   }
 
   textarea {
