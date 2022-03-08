@@ -1,10 +1,12 @@
 <script setup>
-import bannerImg from "@/assets/banner/banner.png";
-// import { queryCourseListInfo } from "@/service/courseAPI";
-// import { ref } from "vue";
-import OButton from "@/components/OButton.vue";
 import { useRouter } from "vue-router";
+
 import { courseList } from "@/shared/composition/course";
+
+import OButton from "@/components/OButton.vue";
+
+import bannerImg from "@/assets/banner/banner.png";
+import floorImg from "@/assets/banner/banner-floor.png";
 
 const router = useRouter();
 
@@ -26,7 +28,7 @@ const introDetail = [
 ];
 
 // course
-
+const courseTitle = "最新课程";
 const btnLabel = "开始课程";
 
 function gotoCourse(item) {
@@ -47,7 +49,7 @@ function gotoCourse(item) {
     </div>
   </div>
 
-  <div class="mooc-intro">
+  <div :style="{ backgroundImage: `url(${floorImg})` }" class="mooc-intro">
     <p class="mooc-intro-title">{{ introTitle }}</p>
     <p v-for="item in introDetail" :key="item.id" class="mooc-intro-detail">
       {{ item.text }}
@@ -55,7 +57,7 @@ function gotoCourse(item) {
   </div>
 
   <div class="mooc-course">
-    <div class="mooc-course-title">最新课程</div>
+    <div class="mooc-course-title">{{ courseTitle }}</div>
     <div class="mooc-course-list">
       <div
         v-for="item in courseList"
@@ -66,7 +68,7 @@ function gotoCourse(item) {
         <div class="item-content">
           <img :src="item.logo" class="logo" />
           <p class="title">{{ item.title }}</p>
-          <div class="detail">{{ item.introduction }}</div>
+          <p class="detail">{{ item.description }}</p>
         </div>
         <div class="item-operate">
           <OButton primary @click="gotoCourse(item)">{{ btnLabel }}</OButton>
@@ -75,6 +77,7 @@ function gotoCourse(item) {
     </div>
   </div>
 </template>
+
 <style lang="scss" scoped>
 .mooc-banner {
   display: flex;
@@ -82,14 +85,17 @@ function gotoCourse(item) {
   max-width: 1488px;
   margin: 0 auto;
   padding: 40px 36px;
+  @media screen and (max-width: 1023px) {
+    padding: 40px 24px;
+  }
 
   &-title {
-    margin-top: 53px;
+    margin-top: 90px;
     font-size: 64px;
     color: #000000;
     letter-spacing: 0;
     line-height: 84px;
-    font-weight: 400;
+    font-weight: 500;
 
     .banner-title-desc {
       margin-top: 10px;
@@ -108,6 +114,7 @@ function gotoCourse(item) {
     img {
       width: 100%;
       height: 100%;
+      object-fit: cover;
       vertical-align: top;
     }
   }
@@ -117,33 +124,43 @@ function gotoCourse(item) {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 60px 36px;
-  background-color: rgb(0, 42, 157);
+  padding: 76px 36px;
   font-weight: normal;
   color: #ffffff;
+  background-color: #002fa7;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  @media screen and (max-width: 1023px) {
+    padding: 76px 24px;
+  }
 
   &-title {
     font-size: 36px;
+    letter-spacing: 0;
+    text-align: center;
     line-height: 48px;
     text-align: center;
   }
 
   &-detail {
-    font-size: 18px;
-    line-height: 24px;
-    margin-top: 24px;
+    margin-top: 4px;
     text-align: center;
-
-    & + & {
-      margin-top: 12px;
-    }
+    font-size: 18px;
+    letter-spacing: 0;
+    text-align: center;
+    line-height: 24px;
   }
 }
 
 .mooc-course {
   max-width: 1156px;
   margin: 0 auto;
-  padding: 60px 36px 220px 36px;
+  padding: 60px 36px 198px 36px;
+  @media screen and (max-width: 1023px) {
+    padding: 60 24px 198px 24px;
+  }
 
   &-title {
     text-align: center;
@@ -156,13 +173,13 @@ function gotoCourse(item) {
 
   &-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(3, minmax(200px, 1fr));
     column-gap: 32px;
     row-gap: 32px;
-    margin-top: 30px;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    margin-top: 32px;
+    @media screen and (max-width: 1023px) {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
 
     .course-list-item {
       display: flex;
@@ -170,11 +187,20 @@ function gotoCourse(item) {
       justify-content: space-between;
       padding: 32px;
       box-shadow: 0px 12px 32px 0px rgba(190, 196, 204, 0.2);
+      background-color: #ffffff;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+
+      &:hover {
+        box-shadow: 0px 4px 20px 4px rgba(190, 196, 204, 0.2);
+      }
 
       .item-content {
         img {
-          width: 100px;
-          height: 100px;
+          width: 48px;
+          height: 48px;
+          object-fit: center;
           vertical-align: top;
         }
 
@@ -196,7 +222,7 @@ function gotoCourse(item) {
       }
 
       .item-operate {
-        margin-top: 50px;
+        margin-top: 48px;
       }
     }
   }

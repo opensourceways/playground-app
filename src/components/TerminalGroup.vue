@@ -19,7 +19,11 @@ const emit = defineEmits(["terminal-loaded", "terminal-disconnect"]);
 
 const terminalList = reactive([]);
 let isFirstLoadTerminal = true;
-const activeTerminalList = computed(() => terminalList.filter((item) => item));
+const activeTerminalList = computed(() => {
+  return terminalList.filter((item) => {
+    return item;
+  });
+});
 
 let terminalId = 0;
 const currentId = ref(0);
@@ -30,7 +34,7 @@ async function addTerminal(isNew) {
   terminalId += 1;
   terminalList.push({
     id: terminalId,
-    name: `Terminal${terminalId}`,
+    name: `终端${terminalId}`,
     isNew,
     resource: props.resource,
   });
@@ -211,7 +215,7 @@ defineExpose({
       </div>
     </div>
     <div class="terminal-list">
-      <Terminal
+      <terminal
         v-for="ter in activeTerminalList"
         v-show="currentId === ter.id"
         :key="ter.id"
@@ -219,7 +223,7 @@ defineExpose({
         :dataset="ter"
         class="terminal-item"
         @resource-status="(e) => onResourceStatus(e)"
-      ></Terminal>
+      ></terminal>
     </div>
   </div>
 </template>

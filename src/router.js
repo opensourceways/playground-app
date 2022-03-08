@@ -1,6 +1,8 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import Playground from "@/pages/playground/Index.vue";
-// import { isLogined } from "./shared/login";
+import { setFooterVisible } from "@/pages/shared";
+import { isLogined } from "./shared/login";
+
 export const routes = [
   { path: "/", redirect: "/home" },
   {
@@ -17,6 +19,11 @@ export const routes = [
     path: "/course/:coursePath/chapter/:chapterPath",
     name: "chapter",
     component: () => import("@/pages/course/chapter/TheChapter.vue"),
+    // beforeEnter: () => {
+    //   if (!isLogined.value) {
+    //     return { name: "home" };
+    //   }
+    // },
   },
   {
     path: "/app",
@@ -52,3 +59,11 @@ export const router = createRouter({
 //   return { name: "home" };
 // }
 // });
+
+router.beforeEach((to) => {
+  if (["chapter"].includes(to.name)) {
+    setFooterVisible(false);
+  } else {
+    setFooterVisible(true);
+  }
+});

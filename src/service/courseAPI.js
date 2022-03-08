@@ -49,23 +49,29 @@ export function queryCourseInfo(coursePath) {
 
 /**
  * 获取课程列表及每个课程的详情信息
- * @param {*} status 状态 test\online
+ * @param {*} status 状态 test/online
  * @returns
  */
 export function queryCourseListInfo(status) {
   return queryCourseList().then((data) => {
     if (Array.isArray(data.courses)) {
       const courses = status
-        ? data.courses.filter((item) => item.status.includes(status))
+        ? data.courses.filter((item) => {
+            return item.status.includes(status);
+          })
         : data.courses;
 
       return Promise.all(
-        courses.map((item) => queryCourseInfo(item.content_dir))
+        courses.map((item) => {
+          return queryCourseInfo(item.content_dir);
+        })
       ).then((result) => {
-        return result.map((item, idx) => ({
-          ...item,
-          _course: courses[idx],
-        }));
+        return result.map((item, idx) => {
+          return {
+            ...item,
+            _course: courses[idx],
+          };
+        });
       });
     }
   });
