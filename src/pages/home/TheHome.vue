@@ -3,7 +3,7 @@ import { useRouter } from "vue-router";
 
 import { courseList } from "@/shared/composition/course";
 
-import OButton from "@/components/OButton.vue";
+import OButton from "@/components/OpenDesing/OButton.vue";
 
 import bannerImg from "@/assets/banner/banner.png";
 import floorImg from "@/assets/banner/banner-floor.png";
@@ -71,7 +71,7 @@ function gotoCourse(item) {
           <p class="detail">{{ item.description }}</p>
         </div>
         <div class="item-operate">
-          <OButton primary @click="gotoCourse(item)">{{ btnLabel }}</OButton>
+          <o-button primary @click="gotoCourse(item)">{{ btnLabel }}</o-button>
         </div>
       </div>
     </div>

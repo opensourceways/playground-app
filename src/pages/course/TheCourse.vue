@@ -5,7 +5,7 @@ import { useRouter, useRoute } from "vue-router";
 import { isLogined } from "@/shared/login";
 import { courseList } from "@/shared/composition/course";
 
-import OButton from "@/components/OButton.vue";
+import OButton from "@/components/OpenDesign/OButton.vue";
 
 const router = useRouter();
 const route = useRoute();

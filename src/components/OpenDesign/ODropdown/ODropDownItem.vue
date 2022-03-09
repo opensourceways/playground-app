@@ -1,0 +1,53 @@
+<script setup>
+defineProps({
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+});
+</script>
+
+<template>
+  <li class="o-dropdown-item" :class="{ disabled: disabled }">
+    <slot></slot>
+  </li>
+</template>
+
+<style lang="scss" scoped>
+.o-dropdown-item {
+  width: 300px;
+  height: 48px;
+  padding: 0 20px;
+  list-style: none;
+  font-size: 14px;
+  font-weight: normal;
+  color: #000000;
+  line-height: 48px;
+  cursor: pointer;
+
+  background: #ffffff;
+  // &:nth-child(odd) {
+  //   background: #f7f8fa;
+  // }
+
+  // &:nth-child(even) {
+  //   background: #ffffff;
+  // }
+
+  &:hover {
+    background: #002fa7;
+    color: #ffffff;
+  }
+
+  &.diabled {
+    pointer-events: none;
+    color: gray;
+    background: transparent;
+
+    &:hover {
+      color: gray;
+      background: transparent;
+    }
+  }
+}
+</style>

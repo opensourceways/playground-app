@@ -7,8 +7,8 @@ import { goAuthorize, LOGIN_EVENTS, logout } from "@/shared/login";
 import { isLoggingIn } from "@/shared/login";
 import { PLAYGROUND_KEYS } from "@/pages/playground/shared";
 
-import ODialog from "./ODialog.vue";
-import OButton from "./OButton.vue";
+import ODialog from "./OpenDesign/ODialog.vue";
+import OButton from "./OpenDesign/OButton.vue";
 import LoadingDot from "./LoadingArc.vue";
 
 import logoImg from "@/assets/moocstudio-logo.png";

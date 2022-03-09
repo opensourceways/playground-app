@@ -9,12 +9,13 @@ import { queryChapterDetail } from "@/service/courseAPI";
 import { PLAYGROUND_KEYS } from "@/pages/playground/shared";
 import { toNumCN } from "@/shared/utils";
 
-import ODialog from "@/components/ODialog.vue";
-import ODropdown from "@/components/ODropdown.vue";
-import OButton from "@/components/OButton.vue";
+import ODialog from "@/components/OpenDesign//ODialog.vue";
+import OButton from "@/components/OpenDesign//OButton.vue";
 import CourseArticle from "@/components/CourseArticle.vue";
 import ChapterStep from "@/pages/course/chapter/ChapterStep.vue";
 import TerminalGroup from "@/components/TerminalGroup.vue";
+import ODropdown from "@/components/OpenDesign/ODropdown/ODropdown.vue";
+import ODropDownItem from "@/components/OpenDesign/ODropdown/ODropdownItem.vue";
 
 const courseData = Courses.experience;
 
@@ -37,6 +38,9 @@ const chapterList = computed(() => {
 
   return rlt ? rlt.chapters : [];
 });
+
+window.chapterList = chapterList.value;
+window.courseList = courseList.value;
 
 const chapterTitleList = computed(() => {
   return chapterList.value.map((chapter, idx) => {
@@ -68,14 +72,14 @@ const currentChapterTitle = computed(() => {
   );
 });
 
-// 开始课程
+// 开始
 const startBtnLabel = "START";
 // 步骤
 const currentStepIdx = ref(0);
 const currentStep = computed(() => {
   return stepList.value[currentStepIdx.value - 1] || {};
 });
-// 结束课程
+// 结束
 const finishBtnLabel = "FINISH";
 const showFinishDialog = ref(false);
 
@@ -169,7 +173,7 @@ onBeforeRouteUpdate((to) => {
   <div class="chapter-header">
     <div class="chapter-header-tool">
       <div class="tool-dropdown">
-        <o-dropdown>
+        <!-- <o-dropdown>
           <div class="dropdown-icon">
             <div class="row"></div>
             <div class="row"></div>
@@ -187,8 +191,23 @@ onBeforeRouteUpdate((to) => {
               </div>
             </div>
           </template>
+        </o-dropdown> -->
+        <o-dropdown>
+          <div class="dropdown-icon">
+            <div class="row"></div>
+            <div class="row"></div>
+            <div class="row"></div>
+          </div>
+          <template #menu>
+            <o-drop-down-item
+              v-for="(item, idx) in chapterTitleList"
+              :key="item.id"
+              @click="gotoChapter(idx)"
+            >
+              {{ item.title }}
+            </o-drop-down-item>
+          </template>
         </o-dropdown>
-
         <div class="dropdown-label">{{ currentChapterTitle }}</div>
       </div>
     </div>

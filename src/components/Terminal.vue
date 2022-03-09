@@ -148,13 +148,15 @@ async function createInstance(isNew) {
     return;
   }
   try {
+    debugger;
     const { resource } = props.dataset;
     const res = await createCrdResouse({
       token,
       userId,
       contactEmail: resource.email,
-      templatePath: resource.template,
-      resourceId: resource.id,
+      backend: resource.backend,
+      courseId: resource.courseId,
+      chapterId: resource.chapterId,
       // 1 复用原来资源；2 强制删除原来资源，重新创建
       forceDelete: isNew ? 2 : 1,
     });
