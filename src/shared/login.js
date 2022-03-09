@@ -54,13 +54,12 @@ export function getUserInfo() {
 // 注册
 export async function doSignUp() {
   const code = getAuthCode();
-  console.log(code);
   if (code) {
     try {
       setStatus(LOGIN_STATUS.DOING);
 
       const res = await queryAuthentication({
-        code: "hJQmubdIJTvwlve5x1D2zpHGllD4srzgyDRhQAqOFn1&state=hsar322cbs5j",
+        token: code,
       });
 
       if (res.code === 200) {
@@ -126,13 +125,9 @@ export async function requestUserInfo() {
     try {
       setStatus(LOGIN_STATUS.DOING);
 
-      // const res = await queryUserInfo({
-      //   token,
-      //   userId,
-      // });
-
-      const res = await queryAuthentication({
-        code: "hJQmubdIJTvwlve5x1D2zpHGllD4srzgyDRhQAqOFn1&state=hsar322cbs5j",
+      const res = await queryUserInfo({
+        token,
+        userId,
       });
 
       if (res.code === 200 && res.userInfo.userId) {
@@ -152,7 +147,6 @@ function afterLogined(userInfo) {
   if (!userInfo || !userInfo.userId) {
     return;
   }
-  // TODO:
   saveUserAuth(userInfo.userId, userInfo.userToken);
 
   setStatus(LOGIN_STATUS.DONE);
@@ -176,6 +170,15 @@ export async function initGuard() {
           clickCloseable: true,
           escCloseable: true,
         });
+        guard.on("login", (authClient) => {
+          if (authClient.token) {
+            setAuthCode(authClient.token);
+            doSignUp();
+            setTimeout(() => {
+              guard.hide();
+            }, 800);
+          }
+        });
       } else {
         console.error("获取登录信息失败！");
       }
@@ -190,19 +193,6 @@ export async function goAuthorize() {
   const guard = await initGuard();
   if (guard) {
     guard.show();
-    guard.on("login", (authClient) => {
-      if (authClient.token) {
-        // TODO:
-        setAuthCode(authClient.token);
-        // setAuthCode(
-        //   "hJQmubdIJTvwlve5x1D2zpHGllD4srzgyDRhQAqOFn1&state=hsar322cbs5j"
-        // );
-        setTimeout(() => {
-          guard.hide();
-          doSignUp();
-        }, 800);
-      }
-    });
   }
 }
 
