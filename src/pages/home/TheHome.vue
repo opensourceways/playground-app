@@ -3,7 +3,7 @@ import { useRouter } from "vue-router";
 
 import { courseList } from "@/shared/composition/course";
 
-import OButton from "@/components/OpenDesign/OButton.vue";
+import OButton from "@/components/OButton.vue";
 
 import bannerImg from "@/assets/banner/banner.png";
 import floorImg from "@/assets/banner/banner-floor.png";

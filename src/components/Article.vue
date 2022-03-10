@@ -1,5 +1,5 @@
 <script setup>
-import OButton from "@/components/OpenDesign/OButton.vue";
+import OButton from "@/components/OButton.vue";
 import { computed } from "vue";
 
 const emit = defineEmits(["item-click"]);

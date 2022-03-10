@@ -1,7 +1,7 @@
 <script setup>
 import TerminalGroup from "@/components/TerminalGroup.vue";
-import OButton from "@/components/OpenDesign/OButton.vue";
-import ODialog from "@/components/OpenDesign/ODialog.vue";
+import OButton from "@/components/OButton.vue";
+import ODialog from "@/components/ODialog.vue";
 import TerminalPoster from "@/components/TerminalPoster.vue";
 import { ref } from "vue";
 import { PLAYGROUND_KEYS } from "./shared";

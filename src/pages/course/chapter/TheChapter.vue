@@ -10,14 +10,14 @@ import { PLAYGROUND_KEYS } from "@/pages/playground/shared";
 import { toNumCN } from "@/shared/utils";
 import { isLoggingIn, isLogined } from "@/shared/login";
 
-import ODialog from "@/components/OpenDesign//ODialog.vue";
-import OButton from "@/components/OpenDesign//OButton.vue";
+import ODialog from "@/components/ODialog.vue";
+import OButton from "@/components/OButton.vue";
 import CourseArticle from "@/components/CourseArticle.vue";
 import ChapterStep from "@/pages/course/chapter/ChapterStep.vue";
 import TerminalGroup from "@/components/TerminalGroup.vue";
-import ODropdown from "@/components/OpenDesign/ODropdown/ODropdown.vue";
-import ODropDownItem from "@/components/OpenDesign/ODropdown/ODropdownItem.vue";
-import TerminalMask from "../../../components/TerminalMask.vue";
+import ODropdown from "@/components/ODropdown.vue";
+import ODropDownItem from "@/components/ODropdownItem.vue";
+import TerminalMask from "@/components/TerminalMask.vue";
 
 const courseData = Courses.experience;
 
