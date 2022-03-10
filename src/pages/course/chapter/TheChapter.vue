@@ -17,6 +17,7 @@ import ChapterStep from "@/pages/course/chapter/ChapterStep.vue";
 import TerminalGroup from "@/components/TerminalGroup.vue";
 import ODropdown from "@/components/OpenDesign/ODropdown/ODropdown.vue";
 import ODropDownItem from "@/components/OpenDesign/ODropdown/ODropdownItem.vue";
+import TerminalMask from "../../../components/TerminalMask.vue";
 
 const courseData = Courses.experience;
 
@@ -138,6 +139,9 @@ function exec(e) {
 }
 
 function startChapter(index) {
+  if (!terminals.value.addTerminal) {
+    return;
+  }
   currentStepIdx.value++;
   mitt.emit(PLAYGROUND_KEYS.START, index);
 }
@@ -300,13 +304,10 @@ watch(
       </div>
 
       <div class="chapter-content-terminal">
-        <div
-          v-if="currentStepIdx == 0 || !resourceLoaded"
-          class="terminal-mask"
-        >
-          <p>Welcome</p>
-          <p>LET'S PLAY _</p>
-        </div>
+        <terminal-mask v-if="currentStepIdx == 0 || !resourceLoaded">
+          <p class="mask-info">Welcome</p>
+          <p class="mask-info">LET'S PLAY _</p>
+        </terminal-mask>
         <terminal-group
           v-if="resourceLoaded"
           ref="terminals"
@@ -485,22 +486,8 @@ watch(
     height: 100%;
     position: relative;
 
-    .terminal-mask {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      top: 0;
-      background-color: #141414;
-      color: #eee;
-      flex-direction: column;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1;
-      p {
-        font-size: 30px;
-      }
+    .mask-info {
+      font-size: 30px;
     }
   }
 }
