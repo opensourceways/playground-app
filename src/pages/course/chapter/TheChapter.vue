@@ -15,8 +15,8 @@ import OButton from "@/components/OButton.vue";
 import CourseArticle from "@/components/CourseArticle.vue";
 import ChapterStep from "@/pages/course/chapter/ChapterStep.vue";
 import TerminalGroup from "@/components/TerminalGroup.vue";
-import ODropdown from "@/components/Odropdown/ODropdown.vue";
-import ODropDownItem from "@/components/Odropdown/ODropdownItem.vue";
+import ODropdown from "@/components/ODropdown.vue";
+import ODropDownItem from "@/components/ODropdownItem.vue";
 import TerminalMask from "@/components/TerminalMask.vue";
 
 const courseData = Courses.experience;
