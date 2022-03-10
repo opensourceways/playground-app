@@ -46,6 +46,9 @@ export const routes = [
 export const router = createRouter({
   history: createWebHashHistory(),
   routes,
+  scrollBehavior() {
+    return { top: 0 };
+  },
 });
 
 // router.beforeEach((to) => {

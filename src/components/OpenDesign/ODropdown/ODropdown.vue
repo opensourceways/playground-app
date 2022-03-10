@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, onUnmounted, ref } from "vue";
+import { onMounted, onUnmounted, ref } from 'vue';
 
 const dropdown = ref(null);
 const tool = ref(null);
@@ -9,7 +9,7 @@ const showMenu = ref(false);
 
 const menuHeight = ref(0);
 
-function toggleMenu(flag) {
+function toggleMenu() {
   // if (flag === undefined) {
   //   slide();
   //   showMenu.value = !showMenu.value;
@@ -18,7 +18,7 @@ function toggleMenu(flag) {
   //     return;
   //   }
   slide();
-  showMenu.value = flag;
+  showMenu.value = !showMenu.value;
   // }
 }
 
@@ -49,11 +49,11 @@ defineExpose({
 });
 
 onMounted(() => {
-  window.addEventListener("click", handleClick);
+  window.addEventListener('click', handleClick);
 });
 
 onUnmounted(() => {
-  window.removeEventListener("click", handleClick);
+  window.removeEventListener('click', handleClick);
 });
 </script>
 
