@@ -1,13 +1,9 @@
 import { ref, computed } from "vue";
 import mitt from "@/shared/mitt";
-import {
-  queryAuthParams,
-  queryAuthentication,
-  queryUserInfo,
-} from "@/service/api";
-import { getAuthCode } from "./login-code";
-import { isTestEnv } from "./utils";
-import { LOGIN_REDIRECT_URI, LOGIN_REDIRECT_URI_TEST } from "@/config";
+import { queryAuthentication, queryUserInfo } from "@/service/api";
+import { getAuthCode, setAuthCode } from "./login-code";
+import { AuthingGuard, GuardMode } from "@authing/native-js-ui-components";
+import { queryAppId } from "@/service/api";
 
 export const LOGIN_EVENTS = {
   SHOW_LOGIN: "show-login",
@@ -26,46 +22,39 @@ export const LOGIN_STATUS = {
 const LOGIN_KEYS = {
   USER_TOKEN: "_U_T_",
   USER_ID: "_U_I_",
-  REDIRECT_URI: "_R_I_",
 };
 
 export let loginStatus = ref(LOGIN_STATUS.NOT);
+
 function setStatus(val) {
   loginStatus.value = val;
 }
 
+// 是否登录中
 export const isLoggingIn = computed(() => {
   return loginStatus.value === LOGIN_STATUS.DOING;
 });
 
-let userInfo = null;
 // 是否登录
-export function isLogined() {
+export const isLogined = computed(() => {
   return loginStatus.value === LOGIN_STATUS.DONE;
-}
+});
+
+// 是否登录失败
+export const isLoginFailed = computed(() => {
+  return loginStatus.value === LOGIN_STATUS.FAILED;
+});
+
+let userInfo = null;
+let guard = null;
+
 // 获取用户信息
 export function getUserInfo() {
-  if (isLogined()) {
+  if (isLogined.value) {
     return userInfo;
   } else {
     return null;
   }
-}
-
-/**
- * 获取授权回调地址
- * @returns 回调地址，用于url中的参数部分，需要encodeURIComponent处理
- */
-export function getRedirectUri() {
-  const prefix = isTestEnv() ? LOGIN_REDIRECT_URI_TEST : LOGIN_REDIRECT_URI;
-  const uri = `${prefix}?redirect=${encodeURIComponent(window.location.href)}`;
-
-  return encodeURIComponent(uri);
-}
-
-// 登录
-export function showLogin() {
-  mitt.emit(LOGIN_EVENTS.SHOW_LOGIN);
 }
 
 // 注册
@@ -74,13 +63,9 @@ export async function doSignUp() {
   if (code) {
     try {
       setStatus(LOGIN_STATUS.DOING);
-      // 从上次授权存储中获取
-
-      const redirectUri = getRedirectUri();
 
       const res = await queryAuthentication({
-        code,
-        redirectUri,
+        token: code,
       });
 
       if (res.code === 200) {
@@ -97,26 +82,6 @@ export async function doSignUp() {
     requestUserInfo();
   }
 }
-// 去码云授权
-export async function goAuthorize() {
-  try {
-    const res = await queryAuthParams();
-    if (res.code !== 200) {
-      throw new Error(res.code + res.message);
-      return;
-    }
-    const { clientId } = res.callbackInfo;
-
-    // 现网环境使用当前页面地址
-    const rUrl = getRedirectUri();
-
-    const url = `https://gitee.com/oauth/authorize?client_id=${clientId}&redirect_uri=${rUrl}&response_type=code`;
-
-    window.location.href = url;
-  } catch (error) {
-    console.error("获取认证参数失败", error);
-  }
-}
 
 // 存储用户id及token，用于下次登录
 export function saveUserAuth(id, code) {
@@ -128,6 +93,7 @@ export function saveUserAuth(id, code) {
     localStorage.setItem(LOGIN_KEYS.USER_TOKEN, code);
   }
 }
+
 // 获取用户id及token
 export function getUserAuth() {
   let token = localStorage.getItem(LOGIN_KEYS.USER_TOKEN);
@@ -144,6 +110,12 @@ export function getUserAuth() {
     token,
   };
 }
+
+// 登录
+export function showLogin() {
+  mitt.emit(LOGIN_EVENTS.SHOW_LOGIN);
+}
+
 // 退出
 export function logout() {
   setStatus(LOGIN_STATUS.NOT);
@@ -151,6 +123,7 @@ export function logout() {
   saveUserAuth();
   mitt.emit(LOGIN_EVENTS.LOGOUT);
 }
+
 // 请求用户信息
 export async function requestUserInfo() {
   const { userId, token } = getUserAuth();
@@ -162,6 +135,7 @@ export async function requestUserInfo() {
         token,
         userId,
       });
+
       if (res.code === 200 && res.userInfo.userId) {
         afterLogined(res.userInfo);
       } else {
@@ -169,7 +143,6 @@ export async function requestUserInfo() {
       }
     } catch (err) {
       setStatus(LOGIN_STATUS.FAILED);
-
       saveUserAuth();
       console.error("获取用户信息失败", err);
     }
@@ -190,4 +163,45 @@ function afterLogined(userInfo) {
 export function reLogin() {
   logout();
   showLogin();
+}
+
+export async function initGuard() {
+  if (!guard) {
+    try {
+      const res = await queryAppId();
+      if (res.code === 200) {
+        guard = new AuthingGuard(res.callbackInfo.appId, {
+          title: "openEuler",
+          mode: GuardMode.Modal,
+          clickCloseable: true,
+          escCloseable: true,
+        });
+        guard.on("login", (authClient) => {
+          if (authClient.token) {
+            setAuthCode(authClient.token);
+            doSignUp();
+            setTimeout(() => {
+              guard.hide();
+            }, 800);
+          }
+        });
+      } else {
+        console.error("获取登录信息失败！");
+      }
+    } catch (error) {
+      console.error("获取登录信息失败！");
+    }
+  }
+  return guard;
+}
+
+export async function goAuthorize() {
+  const guard = await initGuard();
+  if (guard) {
+    guard.show();
+  }
+}
+
+export function removeGuard() {
+  guard = null;
 }

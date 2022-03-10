@@ -1,37 +1,43 @@
 <script setup>
 import { reactive, ref } from "vue";
-import { LOGIN_EVENTS, logout, goAuthorize } from "@/shared/login";
-import mitt from "@/shared/mitt";
-import ODialog from "./ODialog.vue";
-import OButton from "./OButton.vue";
-import LoadingDot from "./LoadingArc.vue";
 import { useRouter } from "vue-router";
+
+import mitt from "@/shared/mitt";
+import { goAuthorize, LOGIN_EVENTS, logout } from "@/shared/login";
+import { isLoggingIn } from "@/shared/login";
+import { PLAYGROUND_KEYS } from "@/pages/playground/shared";
+
+import ODialog from "./OpenDesign/ODialog.vue";
+import OButton from "./OpenDesign/OButton.vue";
+import LoadingDot from "./LoadingArc.vue";
+
+import logoImg from "@/assets/moocstudio-logo.png";
+
 const router = useRouter();
 
-import { doSignUp, isLoggingIn } from "@/shared/login";
-
-let userInfo = reactive({});
+const userInfo = reactive({});
 
 mitt.on(LOGIN_EVENTS.LOGINED, (data) => {
   userInfo.userId = data.userId;
-  userInfo.name = data.name || "--";
+  userInfo.name = data.nickName || data.email;
   userInfo.avatar = data.avatarUrl;
 });
+
 mitt.on(LOGIN_EVENTS.LOGOUT, () => {
   userInfo.userId = "";
   userInfo.name = "";
+  userInfo.avatar = "";
 });
 
-doSignUp();
-
-const logoutLabel = "LOGIN OUT";
-const loginLabel = "LOGIN IN";
+const logoutLabel = "LOG OUT";
+const loginLabel = "LOG IN";
 
 const logoutLabels = {
-  title: "退出Gitee账号",
-  detail: "退出Gitee账号",
-  btnLabel: "注销登录",
+  title: "提示",
+  detail: "退出账号将结束进程并返回首页",
+  btnLabels: ["取消操作", "继续退出"],
 };
+
 const showLogout = ref(false);
 
 function toggleLogoutDlg(flag) {
@@ -41,35 +47,16 @@ function toggleLogoutDlg(flag) {
     showLogout.value = flag;
   }
 }
+
+function doLogin() {
+  goAuthorize();
+}
+
 function doLogout() {
   toggleLogoutDlg(false);
   logout();
+  logoClick();
 }
-
-const showLoginDlg = ref(false);
-function toggleLoginDlg(show) {
-  showLoginDlg.value = show;
-}
-const loginDlgSet = {
-  title: "登录",
-  content:
-    "体验openEuler playground需要Gitee开发者身份权限，请您允许授权登录Gitee验证用户信息",
-  button: {
-    label: "Gitee授权登录",
-    primary: true,
-    click() {
-      console.log("开始授权");
-      toggleLoginDlg(false);
-      goAuthorize();
-    },
-  },
-  loginTip: ["登录即表示同意", "隐私条款"],
-  privacyLink: "https://www.openeuler.org",
-};
-
-mitt.on(LOGIN_EVENTS.SHOW_LOGIN, () => {
-  toggleLoginDlg(true);
-});
 
 const avatarLoaded = ref(false);
 function onAvatarLoad() {
@@ -84,26 +71,15 @@ function logoClick() {
 <template>
   <div class="header">
     <div class="header-logo" @click="logoClick">
-      <img src="@/assets/openeuler-logo.png" alt="" srcset="" />
+      <img :src="logoImg" alt="" srcset="" />
     </div>
     <div class="header-tool">
-      <div class="tool-item user">
-        <loading-dot v-if="isLoggingIn" class="loading"></loading-dot>
-        <div v-else class="user-info">
-          <div v-if="!userInfo.userId" @click="toggleLoginDlg(true)">
-            {{ loginLabel }}
-          </div>
-          <img
-            v-if="userInfo.userId"
-            class="user-avatar"
-            :class="{ loaded: avatarLoaded }"
-            :src="userInfo.avatar"
-            @load="onAvatarLoad"
-          />
-          <div v-if="userInfo.userId" class="user-name">
-            {{ userInfo.name }}
-          </div>
-        </div>
+      <loading-dot v-if="isLoggingIn" class="loading"></loading-dot>
+      <div v-else class="user-info">
+        <p v-if="!userInfo.userId" class="user-login" @click="doLogin">
+          {{ loginLabel }}
+        </p>
+
         <img
           v-if="userInfo.userId"
           class="user-avatar"
@@ -111,14 +87,15 @@ function logoClick() {
           :src="userInfo.avatar"
           @load="onAvatarLoad"
         />
+
         <div v-if="userInfo.userId" class="user-name">
           {{ userInfo.name }}
         </div>
-      </div>
 
-      <div v-if="userInfo.userId" class="drop-menus">
-        <div class="menu-item" @click="toggleLogoutDlg(true)">
-          {{ logoutLabel }}
+        <div v-if="userInfo.userId" class="drop-menus">
+          <div class="menu-item" @click="toggleLogoutDlg(true)">
+            {{ logoutLabel }}
+          </div>
         </div>
       </div>
     </div>
@@ -130,37 +107,13 @@ function logoClick() {
       <div class="dlg-body">{{ logoutLabels.detail }}</div>
       <template #foot>
         <div class="dlg-actions">
-          <o-button :primary="true" @click="doLogout">{{
-            logoutLabels.btnLabel
+          <o-button primary="" @click="toggleLogoutDlg(false)">{{
+            logoutLabels.btnLabels[0]
           }}</o-button>
-        </div>
-      </template>
-    </o-dialog>
-    <o-dialog
-      class="dialog-login"
-      :show="showLoginDlg"
-      @close-click="toggleLoginDlg(false)"
-    >
-      <template #head>
-        <h3 class="title">{{ loginDlgSet.title }}</h3>
-      </template>
-      <div class="dlg-content">{{ loginDlgSet.content }}</div>
-      <template #foot>
-        <div class="login-actions">
-          <o-button
-            :primary="loginDlgSet.button.primary"
-            @click="loginDlgSet.button.click(btn)"
-            >{{ loginDlgSet.button.label }}</o-button
-          >
-          <div class="auth-tip">
-            {{ loginDlgSet.loginTip[0] }}
-            <a
-              :href="loginDlgSet.privacyLink"
-              class="o-link"
-              target="__blank"
-              >{{ loginDlgSet.loginTip[1] }}</a
-            >
-          </div>
+
+          <o-button style="margin-left: 12px" @click="doLogout">{{
+            logoutLabels.btnLabels[1]
+          }}</o-button>
         </div>
       </template>
     </o-dialog>
@@ -180,122 +133,105 @@ function logoClick() {
   @media screen and (max-width: 1023px) {
     padding: 16px 24px;
   }
-}
 
-.header-logo {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  img {
-    vertical-align: top;
-    height: 100%;
-  }
-}
-.header-tool {
-  height: 100%;
-  display: flex;
-  align-items: center;
-}
-.tool-item {
-  position: relative;
-  height: 100%;
-}
-.user-info {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  .user-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: #002fa7;
-    &.loaded {
-      background: transparent;
-    }
-    + .user-name {
-      margin-left: 8px;
-    }
-  }
-  .user-name {
-    margin-left: 8px;
-    font-size: 16px;
-    max-width: 80px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-}
-
-.drop-menus {
-  display: none;
-  position: absolute;
-  right: 0;
-  top: 100%;
-  background-color: #fff;
-  box-shadow: 1px 2px 8px rgba($color: #000000, $alpha: 0.1);
-  padding: 8px 0;
-  .menu-item {
-    padding: 8px 24px;
-    white-space: nowrap;
-    cursor: pointer;
-    min-width: 110px;
-    &:hover {
-      color: #002fa7;
-    }
-  }
-}
-.tool-item.user {
-  display: flex;
-  align-items: center;
-  &:hover {
-    .drop-menus {
-      display: block;
-    }
-  }
-  .loading {
-    font-size: 24px;
-    color: #002fa7;
-  }
-}
-
-.dialog-login {
-  .auth-tip {
-    color: #c7cad0;
-    font-size: 12px;
-    margin-left: 24px;
-
-    @media screen and (max-width: 1023px) {
-      margin-left: 0;
-      margin-top: 16px;
-    }
-  }
-  .o-link {
-    color: #002fa7;
-    &:hover {
-      color: #083fca;
-      text-decoration: underline;
-    }
-  }
-  .login-actions {
+  &-logo {
     display: flex;
     align-items: center;
-    @media screen and (max-width: 1023px) {
-      display: block;
-      text-align: center;
+    height: 34px;
+    cursor: pointer;
+    img {
+      vertical-align: top;
+      height: 100%;
+    }
+  }
+
+  &-tool {
+    height: 100%;
+    display: flex;
+    align-items: center;
+
+    .loading {
+      font-size: 24px;
+      color: #002fa7;
+    }
+
+    .user-info {
+      position: relative;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+
+      .user-login {
+        padding: 12px;
+        height: 48px;
+        line-height: 24px;
+        font-size: 20px;
+        color: #5470ba;
+        border: 1px solid #002fa7;
+      }
+
+      .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #002fa7;
+        &.loaded {
+          background: transparent;
+        }
+      }
+
+      .user-name {
+        margin-left: 8px;
+        font-size: 16px;
+        max-width: 80px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .drop-menus {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: 30px;
+        background-color: #fff;
+        box-shadow: 1px 2px 8px rgba($color: #000000, $alpha: 0.1);
+        padding: 8px 0;
+        .menu-item {
+          padding: 8px 24px;
+          white-space: nowrap;
+          cursor: pointer;
+          min-width: 110px;
+          &:hover {
+            color: #002fa7;
+          }
+        }
+      }
+
+      &:hover {
+        .drop-menus {
+          display: block;
+        }
+      }
     }
   }
 }
-.time-tip {
-  display: flex;
-  align-items: flex-end;
+
+.dlg-title {
+  height: 32px;
+  font-size: 24px;
+  color: #000000;
+  letter-spacing: 0;
+  line-height: 32px;
+  font-weight: 400;
 }
-.dialog-timeout {
-  .login-actions {
-    .o-button {
-      margin-right: 24px;
-    }
-  }
+
+.dlg-body {
+  font-size: 14px;
+  color: #555555;
+  letter-spacing: 0;
+  line-height: 22px;
+  font-weight: 400;
 }
 </style>

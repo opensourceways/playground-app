@@ -24,25 +24,27 @@ function onClick(e) {
   }
 }
 </script>
+
 <template>
   <!-- eslint-disable-next-line vue/no-v-html -->
   <div class="course-article" @click="onClick" v-html="content"></div>
 </template>
+
 <style lang="scss">
 .course-article {
-  padding: 24px;
-
   font-size: 14px;
-  line-height: 20px;
-  color: #000;
+  font-weight: 400;
+  line-height: 22px;
+  color: #555555;
   code {
-    background-color: #e2e6f1;
-    border-radius: 4px;
+    background-color: #eceff0;
+    // border-radius: 4px;
     padding: 0 4px;
     &[exec] {
       cursor: pointer;
-      background-color: #dce6ff;
-      color: blue;
+      background-color: #d7e2ff;
+      // color: blue;
+      word-break: break-all;
       &:hover {
         background-color: #cbd6ee;
       }
@@ -65,14 +67,32 @@ function onClick(e) {
   }
   h1 {
     font-size: 24px;
+    line-height: 32px;
     margin: 24px 0 20px;
   }
   h2 {
-    font-size: 20px;
+    font-size: 18px;
+    line-height: 24px;
     margin: 24px 0 16px;
   }
   p {
-    margin: 12px 0;
+    margin: 16px 0;
+  }
+
+  code:first-child,
+  pre:first-child,
+  h1:first-child,
+  h2:first-child,
+  p:first-child {
+    margin-top: 0;
+  }
+
+  code:last-child,
+  pre:last-child,
+  h1:last-child,
+  h2:last-child,
+  p:last-child {
+    margin-bottom: 0;
   }
 }
 </style>

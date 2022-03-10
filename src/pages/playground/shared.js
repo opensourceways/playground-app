@@ -7,7 +7,7 @@ export const PLAYGROUND_KEYS = {
 };
 
 export function beginToTry() {
-  if (!isLogined()) {
+  if (!isLogined.value) {
     showLogin();
   } else {
     mitt.emit(PLAYGROUND_KEYS.START);

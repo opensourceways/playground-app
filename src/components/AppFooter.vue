@@ -1,6 +1,6 @@
 <script setup>
 import atomLogo from "@/assets/atom-logo.png";
-import moocLogo from "@/assets/mooc-logo-footer.png";
+import moocLogo from "@/assets/moocstudio-logo-footer.png";
 
 const linkList = [
   { id: "brand", text: "品牌", url: "" },
@@ -92,6 +92,7 @@ const copyright = "版权所有 © 2022 moocstudo 保留一切权利";
       .link-item {
         position: relative;
         display: inline-block;
+        color: #ffffff;
         cursor: pointer;
 
         & + .link-item {

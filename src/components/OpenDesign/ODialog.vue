@@ -3,7 +3,7 @@ import { useAttrs } from "vue";
 defineProps({
   close: {
     type: Boolean,
-    default: true,
+    default: false,
   },
   show: {
     type: Boolean,
@@ -18,6 +18,7 @@ function onCloseClick() {
   emit("close-click");
 }
 </script>
+
 <template>
   <teleport to="body">
     <div class="o-dialog" :class="{ show: show, hide: !show }" v-bind="attrs">
@@ -39,6 +40,7 @@ function onCloseClick() {
     </div>
   </teleport>
 </template>
+
 <style lang="scss">
 @keyframes o-dialog-show {
   from {
@@ -58,6 +60,7 @@ function onCloseClick() {
     transform: scale(1);
   }
 }
+
 .o-dialog {
   visibility: hidden;
   position: fixed;
@@ -81,47 +84,54 @@ function onCloseClick() {
     }
   }
 
-  .dialog-mask {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    z-index: 0;
-    background-color: rgba($color: #000000, $alpha: 0.6);
+  .dialog {
+    &-mask {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 0;
+      background-color: rgba($color: #000000, $alpha: 0.6);
+    }
+
+    &-wrap {
+      position: relative;
+      z-index: 1;
+      background-color: #fff;
+      min-width: 550px;
+      box-shadow: 0px 13px 33px 0px rgba(190, 196, 204, 0.2);
+      @media screen and (max-width: 1023px) {
+        min-width: auto;
+        width: 90%;
+      }
+    }
+
+    &-head {
+      padding: 40px 40px 8px;
+      font-size: 24px;
+      line-height: 32px;
+      text-align: left;
+      @media screen and (max-width: 1023px) {
+        padding: 24px 24px 4px;
+        font-size: 18px;
+      }
+    }
+
+    &-body {
+      padding: 8px 40px;
+      font-size: 14px;
+      line-height: 22px;
+      @media screen and (max-width: 1023px) {
+        padding: 4px 24px;
+      }
+    }
+
+    &-foot {
+      padding: 40px 40px 24px;
+    }
   }
 
-  .dialog-wrap {
-    position: relative;
-    z-index: 1;
-    background-color: #fff;
-    min-width: 550px;
-    box-shadow: 0px 13px 33px 0px rgba(190, 196, 204, 0.2);
-    @media screen and (max-width: 1023px) {
-      min-width: auto;
-      width: 90%;
-    }
-  }
-  .dialog-body {
-    padding: 24px 36px;
-    line-height: 1.25;
-    @media screen and (max-width: 1023px) {
-      padding: 16px 24px;
-    }
-  }
-  .dialog-head {
-    padding: 36px 36px 16px;
-    font-size: 24px;
-    color: #000;
-    text-align: left;
-    @media screen and (max-width: 1023px) {
-      padding: 24px 24px 8px;
-      font-size: 18px;
-    }
-  }
-  .dialog-foot {
-    padding: 16px 36px 36px;
-  }
   .close-btn {
     position: absolute;
     right: 0;

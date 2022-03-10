@@ -7,7 +7,9 @@ const STATUS_MAP = {
 };
 
 export const courseList = ref([]);
+export const courseLoaded = ref(false);
 
 queryCourseListInfo(STATUS_MAP.test).then((data) => {
   courseList.value = data;
+  courseLoaded.value = true;
 });

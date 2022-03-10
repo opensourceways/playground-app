@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import Playground from "@/pages/playground/Index.vue";
-// import { isLogined } from "./shared/login";
+import { setFooterVisible } from "@/pages/shared";
+
 export const routes = [
   { path: "/", redirect: "/home" },
   {
@@ -52,3 +53,11 @@ export const router = createRouter({
 //   return { name: "home" };
 // }
 // });
+
+router.beforeEach((to) => {
+  if (["chapter"].includes(to.name)) {
+    setFooterVisible(false);
+  } else {
+    setFooterVisible(true);
+  }
+});

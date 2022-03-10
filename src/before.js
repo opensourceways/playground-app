@@ -1,4 +1,3 @@
-import { getCodeByUrl } from "./shared/login-code";
+import { doSignUp } from "@/shared/login";
 
-// 获取授权code
-getCodeByUrl();
+doSignUp();

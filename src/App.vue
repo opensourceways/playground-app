@@ -1,4 +1,6 @@
 <script setup>
+import { footerVisible } from "@/pages/shared";
+
 import AppHeader from "@/components/AppHeader.vue";
 import AppFooter from "@/components/AppFooter.vue";
 </script>
@@ -13,13 +15,15 @@ import AppFooter from "@/components/AppFooter.vue";
   </main>
   <div class="app-dialogs"></div>
 
-  <footer class="app-footer">
+  <footer v-if="footerVisible" class="app-footer">
     <app-footer></app-footer>
   </footer>
 </template>
 
 <style lang="scss" scoped>
 .app-header {
+  position: relative;
+  z-index: 2;
   height: 80px;
   background: #ffffff;
   box-shadow: 0px 1px 3px 0px rgba(178, 178, 178, 0.5);
@@ -28,6 +32,8 @@ import AppFooter from "@/components/AppFooter.vue";
   }
 }
 .app-body {
+  position: relative;
+  z-index: 1;
   min-height: calc(100vh - 80px);
 }
 .app-dialogs {

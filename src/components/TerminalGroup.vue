@@ -8,9 +8,9 @@ const props = defineProps({
     default: 20,
   },
   resource: {
-    type: Object,
+    type: Array,
     default() {
-      return null;
+      return [];
     },
   },
 });
@@ -19,20 +19,24 @@ const emit = defineEmits(["terminal-loaded", "terminal-disconnect"]);
 
 const terminalList = reactive([]);
 let isFirstLoadTerminal = true;
-const activeTerminalList = computed(() => terminalList.filter((item) => item));
+const activeTerminalList = computed(() => {
+  return terminalList.filter((item) => {
+    return item;
+  });
+});
 
 let terminalId = 0;
 const currentId = ref(0);
 const isFullscreen = ref(false);
 let terminalRefs = [];
 
-async function addTerminal(isNew) {
+async function addTerminal(isNew, index) {
   terminalId += 1;
   terminalList.push({
     id: terminalId,
-    name: `Terminal${terminalId}`,
+    name: `终端${terminalId}`,
     isNew,
-    resource: props.resource,
+    resource: props.resource[index],
   });
 
   currentId.value = terminalId;
@@ -211,7 +215,7 @@ defineExpose({
       </div>
     </div>
     <div class="terminal-list">
-      <Terminal
+      <terminal
         v-for="ter in activeTerminalList"
         v-show="currentId === ter.id"
         :key="ter.id"
@@ -219,7 +223,7 @@ defineExpose({
         :dataset="ter"
         class="terminal-item"
         @resource-status="(e) => onResourceStatus(e)"
-      ></Terminal>
+      ></terminal>
     </div>
   </div>
 </template>
