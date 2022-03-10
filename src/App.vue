@@ -32,6 +32,8 @@ import AppFooter from "@/components/AppFooter.vue";
   }
 }
 .app-body {
+  position: relative;
+  z-index: 1;
   min-height: calc(100vh - 80px);
 }
 .app-dialogs {

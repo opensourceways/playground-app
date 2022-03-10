@@ -8,9 +8,9 @@ const props = defineProps({
     default: 20,
   },
   resource: {
-    type: Object,
+    type: Array,
     default() {
-      return null;
+      return [];
     },
   },
 });
@@ -30,13 +30,13 @@ const currentId = ref(0);
 const isFullscreen = ref(false);
 let terminalRefs = [];
 
-async function addTerminal(isNew) {
+async function addTerminal(isNew, index) {
   terminalId += 1;
   terminalList.push({
     id: terminalId,
     name: `终端${terminalId}`,
     isNew,
-    resource: props.resource,
+    resource: props.resource[index],
   });
 
   currentId.value = terminalId;

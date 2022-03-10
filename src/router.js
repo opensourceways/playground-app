@@ -1,7 +1,6 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import Playground from "@/pages/playground/Index.vue";
 import { setFooterVisible } from "@/pages/shared";
-import { isLogined } from "./shared/login";
 
 export const routes = [
   { path: "/", redirect: "/home" },
@@ -19,11 +18,6 @@ export const routes = [
     path: "/course/:coursePath/chapter/:chapterPath",
     name: "chapter",
     component: () => import("@/pages/course/chapter/TheChapter.vue"),
-    // beforeEnter: () => {
-    //   if (!isLogined.value) {
-    //     return { name: "home" };
-    //   }
-    // },
   },
   {
     path: "/app",

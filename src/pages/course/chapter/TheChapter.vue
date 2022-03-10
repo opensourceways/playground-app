@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useRoute, useRouter, onBeforeRouteUpdate } from "vue-router";
 
 import Courses from "@/configs/courses";
@@ -8,6 +8,7 @@ import { courseList } from "@/shared/composition/course";
 import { queryChapterDetail } from "@/service/courseAPI";
 import { PLAYGROUND_KEYS } from "@/pages/playground/shared";
 import { toNumCN } from "@/shared/utils";
+import { isLoggingIn, isLogined } from "@/shared/login";
 
 import ODialog from "@/components/OpenDesign//ODialog.vue";
 import OButton from "@/components/OpenDesign//OButton.vue";
@@ -31,16 +32,18 @@ const stepList = ref([]);
 const finish = ref({});
 
 // 章节
-const chapterList = computed(() => {
-  const rlt = courseList.value.find((item) => {
+const currentCourse = computed(() => {
+  return courseList.value.find((item) => {
     return item._course.content_dir === coursePath.value;
   });
-
-  return rlt ? rlt.chapters : [];
 });
 
-window.chapterList = chapterList.value;
-window.courseList = courseList.value;
+const chapterList = computed(() => {
+  return currentCourse.value ? currentCourse.value.chapters : [];
+});
+
+window.chapterList = chapterList;
+window.courseList = courseList;
 
 const chapterTitleList = computed(() => {
   return chapterList.value.map((chapter, idx) => {
@@ -72,6 +75,8 @@ const currentChapterTitle = computed(() => {
   );
 });
 
+const backendSrc = ref("");
+
 // 开始
 const startBtnLabel = "START";
 // 步骤
@@ -83,25 +88,58 @@ const currentStep = computed(() => {
 const finishBtnLabel = "FINISH";
 const showFinishDialog = ref(false);
 
+const chapterDetailLoaded = ref(false);
 // 获取章节具体信息
 function getChapterDetail() {
   queryChapterDetail(coursePath.value, chapterPath.value).then((data) => {
-    const { details } = data;
+    const { details, backend } = data;
+    chapterDetailLoaded.value = true;
+    backendSrc.value = backend.image_id;
     introduction.value = details.introduction;
     stepList.value = details.steps;
     finish.value = details.finish;
   });
 }
 
+const resourceLoaded = computed(() => {
+  return (
+    courseList.value.length && chapterList.value && chapterDetailLoaded.value
+  );
+});
+
+const resourceList = ref([]);
+
+watch(
+  () => {
+    return resourceLoaded.value;
+  },
+  (val) => {
+    if (val) {
+      for (let i = 0, len = chapterList.value.length; i < len; i++) {
+        resourceList.value.push({
+          courseId: currentCourse.value._course.id,
+          chapterId: chapterList.value[i].content_dir,
+          backend: backendSrc.value,
+          email: courseData.resource.email,
+          timeout: courseData.resource.timeout,
+          query_interval: courseData.resource.query_interval,
+        });
+      }
+    }
+  }
+);
+
 getChapterDetail();
+
+const dropdown = ref(null);
 
 function exec(e) {
   console.log(e.command);
 }
 
-function startChapter() {
+function startChapter(index) {
   currentStepIdx.value++;
-  mitt.emit(PLAYGROUND_KEYS.START);
+  mitt.emit(PLAYGROUND_KEYS.START, index);
 }
 
 function toggleFinishDialog(flag) {
@@ -156,138 +194,149 @@ function onTerminalLoaded() {}
 
 function onTerminalDisconnect() {}
 
-mitt.on(PLAYGROUND_KEYS.START, () => {
-  terminals.value.addTerminal();
+mitt.on(PLAYGROUND_KEYS.START, (index) => {
+  terminals.value.addTerminal(false, index);
 });
 
 onBeforeRouteUpdate((to) => {
   const { params } = to;
+  chapterDetailLoaded.value = false;
   coursePath.value = params.coursePath;
   chapterPath.value = params.chapterPath;
   currentStepIdx.value = 0;
   getChapterDetail();
 });
+
+const needsBack = computed(() => {
+  if (!isLoggingIn.value && !isLogined.value) {
+    return false;
+  }
+  return true;
+});
+
+watch(
+  () => needsBack.value,
+  (val) => {
+    if (!val) {
+      router.push({ name: "home" });
+    }
+  },
+  { immediate: true }
+);
 </script>
 
 <template>
-  <div class="chapter-header">
-    <div class="chapter-header-tool">
-      <div class="tool-dropdown">
-        <!-- <o-dropdown>
-          <div class="dropdown-icon">
-            <div class="row"></div>
-            <div class="row"></div>
-            <div class="row"></div>
-          </div>
-          <template #menu>
-            <div class="dropdown-menu" @click="hideMenu">
-              <div
+  <template v-if="isLogined">
+    <div class="chapter-header">
+      <div class="chapter-header-tool">
+        <div class="tool-dropdown">
+          <o-dropdown ref="dropdown">
+            <div class="dropdown-icon">
+              <div class="row"></div>
+              <div class="row"></div>
+              <div class="row"></div>
+            </div>
+            <template #menu>
+              <o-drop-down-item
                 v-for="(item, idx) in chapterTitleList"
                 :key="item.id"
-                class="dropdown-menu-item"
+                class="dropdown-item"
                 @click="gotoChapter(idx)"
               >
                 {{ item.title }}
-              </div>
-            </div>
-          </template>
-        </o-dropdown> -->
-        <o-dropdown>
-          <div class="dropdown-icon">
-            <div class="row"></div>
-            <div class="row"></div>
-            <div class="row"></div>
+              </o-drop-down-item>
+            </template>
+          </o-dropdown>
+          <div class="dropdown-label">{{ currentChapterTitle }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="chapter-content">
+      <div class="chapter-content-article">
+        <template v-if="currentStepIdx == 0">
+          <div class="article-top">
+            <course-article
+              :content="introduction.html"
+              @click="exec"
+            ></course-article>
           </div>
-          <template #menu>
-            <o-drop-down-item
-              v-for="(item, idx) in chapterTitleList"
-              :key="item.id"
-              @click="gotoChapter(idx)"
-            >
-              {{ item.title }}
-            </o-drop-down-item>
-          </template>
-        </o-dropdown>
-        <div class="dropdown-label">{{ currentChapterTitle }}</div>
+
+          <div class="article-bottom">
+            <o-button primary @click="startChapter(currentChapterIdx)">{{
+              startBtnLabel
+            }}</o-button>
+          </div>
+        </template>
+
+        <template v-if="currentStepIdx !== 0 && currentStepIdx !== -1">
+          <div class="article-top">
+            <course-article
+              :content="currentStep.html"
+              @click="exec"
+            ></course-article>
+          </div>
+          <div class="article-bottom" :class="{ reverse: true }">
+            <chapter-step
+              class="article-step"
+              @prev-click="onPrevClick"
+              @next-click="onNextClick"
+            ></chapter-step>
+          </div>
+        </template>
+
+        <template v-if="currentStepIdx === -1">
+          <div class="article-top">
+            <course-article
+              :content="finish.html"
+              @click="exec"
+            ></course-article>
+          </div>
+          <div class="article-bottom">
+            <o-button primary @click="toggleFinishDialog(true)">{{
+              finishBtnLabel
+            }}</o-button>
+          </div>
+        </template>
       </div>
-    </div>
-  </div>
-  <div class="chapter-content">
-    <div class="chapter-content-article">
-      <template v-if="currentStepIdx == 0">
-        <div class="article-top">
-          <course-article
-            :content="introduction.html"
-            @click="exec"
-          ></course-article>
-        </div>
 
-        <div class="article-bottom">
-          <o-button primary @click="startChapter">{{ startBtnLabel }}</o-button>
-        </div>
-      </template>
-
-      <template v-if="currentStepIdx !== 0 && currentStepIdx !== -1">
-        <div class="article-top">
-          <course-article
-            :content="currentStep.html"
-            @click="exec"
-          ></course-article>
-        </div>
-        <div class="article-bottom" :class="{ reverse: true }">
-          <chapter-step
-            class="article-step"
-            @prev-click="onPrevClick"
-            @next-click="onNextClick"
-          ></chapter-step>
-        </div>
-      </template>
-
-      <template v-if="currentStepIdx === -1">
-        <div class="article-top">
-          <course-article :content="finish.html" @click="exec"></course-article>
-        </div>
-        <div class="article-bottom">
-          <o-button primary @click="toggleFinishDialog(true)">{{
-            finishBtnLabel
-          }}</o-button>
-        </div>
-      </template>
-    </div>
-
-    <div class="chapter-content-terminal">
-      <div v-if="currentStepIdx == 0" class="terminal-mask">
-        <p>Welcome</p>
-        <p>LET'S PLAY _</p>
-      </div>
-      <terminal-group
-        ref="terminals"
-        :max="5"
-        :resource="courseData.resource"
-        @terminal-loaded="onTerminalLoaded"
-        @terminal-disconnect="onTerminalDisconnect"
-      ></terminal-group>
-    </div>
-  </div>
-
-  <o-dialog :show="showFinishDialog" @close-click="toggleFinishDialog(false)">
-    <template #head>
-      <div class="dlg-title">课程完成！</div>
-    </template>
-    <div class="dlg-body">恭喜你完成本门课程，进一寸有进一寸的欢喜</div>
-    <template #foot>
-      <div class="dlg-actions">
-        <o-button
-          v-if="currentChapterIdx !== chapterList.length - 1"
-          primary
-          :style="{ marginRight: '12px' }"
-          @click="gotoChapter(currentChapterIdx + 1)"
-          >下一章节</o-button
+      <div class="chapter-content-terminal">
+        <div
+          v-if="currentStepIdx == 0 || !resourceLoaded"
+          class="terminal-mask"
         >
-        <o-button primary @click="restartChapter">重新开始</o-button>
+          <p>Welcome</p>
+          <p>LET'S PLAY _</p>
+        </div>
+        <terminal-group
+          v-if="resourceLoaded"
+          ref="terminals"
+          :max="5"
+          :resource="resourceList"
+          @terminal-loaded="onTerminalLoaded"
+          @terminal-disconnect="onTerminalDisconnect"
+        ></terminal-group>
       </div>
-    </template>
-  </o-dialog>
+    </div>
+
+    <o-dialog :show="showFinishDialog" @close-click="toggleFinishDialog(false)">
+      <template #head>
+        <div class="dlg-title">课程完成！</div>
+      </template>
+      <div class="dlg-body">恭喜你完成本门课程，进一寸有进一寸的欢喜</div>
+      <template #foot>
+        <div class="dlg-actions">
+          <o-button
+            v-if="currentChapterIdx !== chapterList.length - 1"
+            primary
+            :style="{ marginRight: '12px' }"
+            @click="gotoChapter(currentChapterIdx + 1)"
+            >下一章节</o-button
+          >
+          <o-button primary @click="restartChapter">重新开始</o-button>
+        </div>
+      </template>
+    </o-dialog>
+  </template>
 </template>
 
 <style lang="scss" scoped>
@@ -295,7 +344,7 @@ onBeforeRouteUpdate((to) => {
   height: 92px;
   background: #f5f7fb;
   position: relative;
-  z-index: 1;
+  z-index: 2;
 
   &-tool {
     display: flex;
@@ -366,32 +415,26 @@ onBeforeRouteUpdate((to) => {
         }
       }
 
-      .dropdown-menu {
-        width: 300px;
-        border: 1px solid #002fa7;
+      .dropdown-item {
+        border-left: 1px solid rgba(0, 47, 167, 1);
+        border-right: 1px solid rgba(0, 47, 167, 1);
+        &:first-child {
+          border-top: 1px solid rgba(0, 47, 167, 1);
+        }
+        &:last-child {
+          border-bottom: 1px solid rgba(0, 47, 167, 1);
+        }
+        &:nth-child(odd) {
+          background: #f7f8fa;
+        }
 
-        &-item {
-          width: 100%;
-          height: 48px;
-          padding: 0 20px;
-          font-size: 14px;
-          font-weight: normal;
-          color: #000000;
-          line-height: 48px;
-          cursor: pointer;
+        &:nth-child(even) {
+          background: #ffffff;
+        }
 
-          &:nth-child(odd) {
-            background: #f7f8fa;
-          }
-
-          &:nth-child(even) {
-            background: #ffffff;
-          }
-
-          &:hover {
-            background: #002fa7;
-            color: #ffffff;
-          }
+        &:hover {
+          background: #002fa7;
+          color: #ffffff;
         }
       }
 
@@ -410,6 +453,8 @@ onBeforeRouteUpdate((to) => {
 .chapter-content {
   display: flex;
   width: 100%;
+  position: relative;
+  z-index: 1;
   height: calc(100vh - 172px);
 
   &-article {
@@ -446,6 +491,7 @@ onBeforeRouteUpdate((to) => {
       right: 0;
       bottom: 0;
       top: 0;
+      background-color: #141414;
       color: #eee;
       flex-direction: column;
       display: flex;

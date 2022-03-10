@@ -7,9 +7,19 @@ const menu = ref(null);
 
 const showMenu = ref(false);
 
-function toggleMenu() {
+const menuHeight = ref(0);
+
+function toggleMenu(flag) {
+  // if (flag === undefined) {
+  //   slide();
+  //   showMenu.value = !showMenu.value;
+  // } else {
+  //   if (showMenu.value === flag) {
+  //     return;
+  //   }
   slide();
-  showMenu.value = !showMenu.value;
+  showMenu.value = flag;
+  // }
 }
 
 function handleClick(e) {
@@ -24,22 +34,19 @@ function handleClick(e) {
 }
 
 function slide() {
-  const isOpen = tool.value.classList.contains("open");
-  const menuHeight = menu.value.scrollHeight;
+  const height = menu.value.scrollHeight;
 
-  if (isOpen) {
-    tool.value.classList.remove("open");
-    setAni(menu.value, "height", "0px", 300);
+  if (showMenu.value) {
+    menuHeight.value = 0;
   } else {
-    tool.value.classList.add("open");
-    setAni(menu.value, "height", `${menuHeight}px`, 300);
+    menuHeight.value = height;
   }
 }
 
-function setAni(dom, attribute, value, time) {
-  dom.style.transition = `${attribute} ${time}ms`;
-  dom.style[attribute] = value;
-}
+defineExpose({
+  toggleMenu,
+  showMenu,
+});
 
 onMounted(() => {
   window.addEventListener("click", handleClick);
@@ -52,11 +59,16 @@ onUnmounted(() => {
 
 <template>
   <div ref="dropdown" class="o-dropdown">
-    <div ref="tool" class="dropdown-tool" @click.stop="toggleMenu">
+    <div ref="tool" class="o-dropdown-tool" @click.stop="toggleMenu">
       <slot></slot>
     </div>
 
-    <ul ref="menu" class="dropdown-menu" @click.stop="toggleMenu">
+    <ul
+      ref="menu"
+      class="o-dropdown-menu"
+      :style="{ height: `${menuHeight}px` }"
+      @click.stop="toggleMenu"
+    >
       <slot name="menu"></slot>
     </ul>
   </div>
@@ -65,18 +77,18 @@ onUnmounted(() => {
 <style lang="scss" scoped>
 .o-dropdown {
   position: relative;
-
-  .dropdown-tool {
+  &-tool {
     display: flex;
     align-items: center;
   }
-  .dropdown-menu {
+  &-menu {
     position: absolute;
     height: 0;
     overflow: hidden;
     left: 0;
     top: calc(100% + 18px);
     z-index: 1;
+    transition: height 0.3s;
   }
 }
 </style>

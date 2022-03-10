@@ -148,7 +148,6 @@ async function createInstance(isNew) {
     return;
   }
   try {
-    debugger;
     const { resource } = props.dataset;
     const res = await createCrdResouse({
       token,

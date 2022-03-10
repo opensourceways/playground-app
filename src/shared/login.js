@@ -30,17 +30,23 @@ function setStatus(val) {
   loginStatus.value = val;
 }
 
+// 是否登录中
 export const isLoggingIn = computed(() => {
   return loginStatus.value === LOGIN_STATUS.DOING;
 });
-
-let userInfo = null;
-let guard = null;
 
 // 是否登录
 export const isLogined = computed(() => {
   return loginStatus.value === LOGIN_STATUS.DONE;
 });
+
+// 是否登录失败
+export const isLoginFailed = computed(() => {
+  return loginStatus.value === LOGIN_STATUS.FAILED;
+});
+
+let userInfo = null;
+let guard = null;
 
 // 获取用户信息
 export function getUserInfo() {
