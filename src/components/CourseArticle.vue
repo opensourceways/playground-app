@@ -9,7 +9,7 @@ defineProps({
     default: "",
   },
 });
-const emit = defineEmits(["click"]);
+const emit = defineEmits(["command-click"]);
 function onClick(e) {
   const { target } = e;
   let command = target.getAttribute("exec");
@@ -17,7 +17,7 @@ function onClick(e) {
     if (command === COMMAND_INNER.exec) {
       command = target.innerText;
     }
-    emit("click", {
+    emit("command-click", {
       e,
       command,
     });

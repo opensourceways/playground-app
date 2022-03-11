@@ -13,6 +13,10 @@ const props = defineProps({
       return [];
     },
   },
+  activeIndex: {
+    type: Number,
+    default: 0,
+  },
 });
 
 const emit = defineEmits(["terminal-loaded", "terminal-disconnect"]);
@@ -107,7 +111,7 @@ function fullscreen(full = true) {
 }
 
 function add() {
-  addTerminal();
+  addTerminal(false, props.activeIndex);
 }
 function remove(ter) {
   closeTerminal({ id: ter.id });

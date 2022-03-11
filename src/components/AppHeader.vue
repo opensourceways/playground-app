@@ -5,7 +5,6 @@ import { useRouter } from "vue-router";
 import mitt from "@/shared/mitt";
 import { goAuthorize, LOGIN_EVENTS, logout } from "@/shared/login";
 import { isLoggingIn } from "@/shared/login";
-import { PLAYGROUND_KEYS } from "@/pages/playground/shared";
 
 import ODialog from "./ODialog.vue";
 import OButton from "./OButton.vue";

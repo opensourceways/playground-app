@@ -6,6 +6,11 @@ export const PLAYGROUND_KEYS = {
   ENTER: "enter-terminal",
 };
 
+export const PLAYGROUND_PAGES = {
+  BACK_TO_HOME: "back-to-home",
+  SET_FOOTER: "set-footer",
+};
+
 export function beginToTry() {
   if (!isLogined.value) {
     showLogin();

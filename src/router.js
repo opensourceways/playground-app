@@ -1,6 +1,8 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-import Playground from "@/pages/playground/Index.vue";
-import { setFooterVisible } from "@/pages/shared";
+// import Playground from "@/pages/playground/Index.vue";
+import mitt from "@/shared/mitt";
+
+import { PLAYGROUND_PAGES } from "@/pages/playground/shared";
 
 export const routes = [
   { path: "/", redirect: "/home" },
@@ -19,28 +21,28 @@ export const routes = [
     name: "chapter",
     component: () => import("@/pages/course/chapter/TheChapter.vue"),
   },
-  {
-    path: "/app",
-    component: Playground,
-    children: [
-      { path: "", redirect: "/app/welcome" },
-      {
-        path: "welcome",
-        name: "welcome",
-        component: () => import("@/pages/playground/Welcome.vue"),
-      },
-      {
-        path: "introduction",
-        name: "introduction",
-        component: () => import("@/pages/playground/Introduction.vue"),
-      },
-    ],
-  },
-  {
-    path: "/demo-markdown",
-    name: "demo",
-    component: () => import("@/pages/demo/MarkdownDemo.vue"),
-  },
+  // {
+  //   path: "/app",
+  //   component: Playground,
+  //   children: [
+  //     { path: "", redirect: "/app/welcome" },
+  //     {
+  //       path: "welcome",
+  //       name: "welcome",
+  //       component: () => import("@/pages/playground/Welcome.vue"),
+  //     },
+  //     {
+  //       path: "introduction",
+  //       name: "introduction",
+  //       component: () => import("@/pages/playground/Introduction.vue"),
+  //     },
+  //   ],
+  // },
+  // {
+  //   path: "/demo-markdown",
+  //   name: "demo",
+  //   component: () => import("@/pages/demo/MarkdownDemo.vue"),
+  // },
 ];
 
 export const router = createRouter({
@@ -59,8 +61,8 @@ export const router = createRouter({
 
 router.beforeEach((to) => {
   if (["chapter"].includes(to.name)) {
-    setFooterVisible(false);
+    mitt.emit(PLAYGROUND_PAGES.SET_FOOTER, false);
   } else {
-    setFooterVisible(true);
+    mitt.emit(PLAYGROUND_PAGES.SET_FOOTER, true);
   }
 });

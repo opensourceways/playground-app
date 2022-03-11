@@ -10,7 +10,6 @@ const showMenu = ref(false);
 const menuHeight = ref(0);
 
 function toggleMenu(flag) {
-  console.log(1);
   if (typeof flag === "undefined" || typeof flag !== "boolean") {
     showMenu.value = !showMenu.value;
   } else {

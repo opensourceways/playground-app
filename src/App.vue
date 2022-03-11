@@ -1,8 +1,17 @@
 <script setup>
-import { footerVisible } from "@/pages/shared";
+import { ref } from "vue";
+import mitt from "@/shared/mitt";
+
+import { PLAYGROUND_PAGES } from "@/pages/playground/shared";
 
 import AppHeader from "@/components/AppHeader.vue";
 import AppFooter from "@/components/AppFooter.vue";
+
+const showFooter = ref(true);
+
+mitt.on(PLAYGROUND_PAGES.SET_FOOTER, (val) => {
+  showFooter.value = val;
+});
 </script>
 
 <template>
@@ -15,7 +24,7 @@ import AppFooter from "@/components/AppFooter.vue";
   </main>
   <div class="app-dialogs"></div>
 
-  <footer v-if="footerVisible" class="app-footer">
+  <footer v-if="showFooter" class="app-footer">
     <app-footer></app-footer>
   </footer>
 </template>

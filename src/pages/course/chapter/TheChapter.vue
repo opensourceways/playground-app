@@ -144,16 +144,20 @@ getChapterDetail();
 
 const dropdown = ref(null);
 
-function exec(e) {
+function handleCommandClick(e) {
   console.log(e.command);
+  mitt.emit(PLAYGROUND_KEYS.ENTER, { commond: e.command });
 }
 
+mitt.on(PLAYGROUND_KEYS.ENTER, (data) => {
+  terminals.value && terminals.value.enterCommond(data.commond);
+});
+
 function startChapter(index) {
-  if (!terminals.value.addTerminal) {
-    return;
+  if (terminals.value && terminals.value.addTerminal) {
+    currentStepIdx.value++;
+    mitt.emit(PLAYGROUND_KEYS.START, index);
   }
-  currentStepIdx.value++;
-  mitt.emit(PLAYGROUND_KEYS.START, index);
 }
 
 function toggleFinishDialog(flag) {
@@ -209,13 +213,17 @@ function onTerminalLoaded() {}
 function onTerminalDisconnect() {}
 
 mitt.on(PLAYGROUND_KEYS.START, (index) => {
-  terminals.value.addTerminal(false, index);
+  terminals.value && terminals.value.addTerminal(false, index);
 });
 
 onBeforeRouteUpdate((to) => {
+  terminals.value && terminals.value.closeAllTerminal();
   const { params } = to;
   dropdown.value.toggleMenu(false);
+  resourceList.value = [];
   backendPathLoaded.value = false;
+  backendPath.value = "";
+
   coursePath.value = params.coursePath;
   chapterPath.value = params.chapterPath;
   currentStepIdx.value = 0;
@@ -272,14 +280,17 @@ watch(
           <div class="article-top">
             <course-article
               :content="introduction.html"
-              @click="exec"
+              @command-click="handleCommandClick"
             ></course-article>
           </div>
 
           <div class="article-bottom">
-            <o-button primary @click="startChapter(currentChapterIdx)">{{
-              startBtnLabel
-            }}</o-button>
+            <o-button
+              v-if="resourceLoaded"
+              primary
+              @click="startChapter(currentChapterIdx)"
+              >{{ startBtnLabel }}</o-button
+            >
           </div>
         </template>
 
@@ -287,7 +298,7 @@ watch(
           <div class="article-top">
             <course-article
               :content="currentStep.html"
-              @click="exec"
+              @command-click="handleCommandClick"
             ></course-article>
           </div>
           <div class="article-bottom" :class="{ reverse: true }">
@@ -303,7 +314,7 @@ watch(
           <div class="article-top">
             <course-article
               :content="finish.html"
-              @click="exec"
+              @command-click="handleCommandClick"
             ></course-article>
           </div>
           <div class="article-bottom">
@@ -323,6 +334,7 @@ watch(
           v-if="resourceLoaded"
           ref="terminals"
           :max="5"
+          :active-index="currentChapterIdx"
           :resource="resourceList"
           @terminal-loaded="onTerminalLoaded"
           @terminal-disconnect="onTerminalDisconnect"

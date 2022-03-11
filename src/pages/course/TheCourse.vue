@@ -108,6 +108,7 @@ function startCourse(item) {
     position: relative;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     padding: 32px;
     box-shadow: 0px 12px 32px 0px rgba(190, 196, 204, 0.2);
     background-color: #ffffff;
