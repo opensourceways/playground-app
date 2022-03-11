@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref, watch } from "vue";
 
 const dropdown = ref(null);
 const tool = ref(null);
@@ -9,17 +9,13 @@ const showMenu = ref(false);
 
 const menuHeight = ref(0);
 
-function toggleMenu() {
-  // if (flag === undefined) {
-  //   slide();
-  //   showMenu.value = !showMenu.value;
-  // } else {
-  //   if (showMenu.value === flag) {
-  //     return;
-  //   }
-  slide();
-  showMenu.value = !showMenu.value;
-  // }
+function toggleMenu(flag) {
+  console.log(1);
+  if (typeof flag === "undefined" || typeof flag !== "boolean") {
+    showMenu.value = !showMenu.value;
+  } else {
+    showMenu.value = flag;
+  }
 }
 
 function handleClick(e) {
@@ -28,32 +24,34 @@ function handleClick(e) {
   }
 
   if (!dropdown.value.contains(e.tartget)) {
-    slide();
     showMenu.value = false;
-  }
-}
-
-function slide() {
-  const height = menu.value.scrollHeight;
-
-  if (showMenu.value) {
-    menuHeight.value = 0;
-  } else {
-    menuHeight.value = height;
   }
 }
 
 defineExpose({
   toggleMenu,
-  showMenu,
 });
 
+watch(
+  () => {
+    return showMenu.value;
+  },
+  (val) => {
+    const height = menu.value.scrollHeight;
+    if (val) {
+      menuHeight.value = height;
+    } else {
+      menuHeight.value = 0;
+    }
+  }
+);
+
 onMounted(() => {
-  window.addEventListener('click', handleClick);
+  window.addEventListener("click", handleClick);
 });
 
 onUnmounted(() => {
-  window.removeEventListener('click', handleClick);
+  window.removeEventListener("click", handleClick);
 });
 </script>
 
@@ -67,7 +65,7 @@ onUnmounted(() => {
       ref="menu"
       class="o-dropdown-menu"
       :style="{ height: `${menuHeight}px` }"
-      @click.stop="toggleMenu"
+      @click.stop="toggleMenu(false)"
     >
       <slot name="menu"></slot>
     </ul>

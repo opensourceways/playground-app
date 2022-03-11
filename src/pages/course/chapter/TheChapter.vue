@@ -12,12 +12,12 @@ import { isLoggingIn, isLogined } from "@/shared/login";
 
 import ODialog from "@/components/ODialog.vue";
 import OButton from "@/components/OButton.vue";
-import CourseArticle from "@/components/CourseArticle.vue";
-import ChapterStep from "@/pages/course/chapter/ChapterStep.vue";
-import TerminalGroup from "@/components/TerminalGroup.vue";
 import ODropdown from "@/components/ODropdown.vue";
 import ODropDownItem from "@/components/ODropdownItem.vue";
 import TerminalMask from "@/components/TerminalMask.vue";
+import CourseArticle from "@/components/CourseArticle.vue";
+import ChapterStep from "@/pages/course/chapter/ChapterStep.vue";
+import TerminalGroup from "@/components/TerminalGroup.vue";
 
 const courseData = Courses.experience;
 
@@ -32,13 +32,19 @@ const introduction = ref({});
 const stepList = ref([]);
 const finish = ref({});
 
-// 章节
+// 当前课程
 const currentCourse = computed(() => {
   return courseList.value.find((item) => {
     return item._course.content_dir === coursePath.value;
   });
 });
 
+// 课程镜像路径
+const backendPath = ref("");
+// 课程镜像路径是否请求完成
+const backendPathLoaded = ref(false);
+
+// 章节列表
 const chapterList = computed(() => {
   return currentCourse.value ? currentCourse.value.chapters : [];
 });
@@ -46,6 +52,7 @@ const chapterList = computed(() => {
 window.chapterList = chapterList;
 window.courseList = courseList;
 
+// 章节标题列表
 const chapterTitleList = computed(() => {
   return chapterList.value.map((chapter, idx) => {
     const title = chapter.title || "";
@@ -56,6 +63,7 @@ const chapterTitleList = computed(() => {
   });
 });
 
+// 当前章节索引
 const currentChapterIdx = computed(() => {
   let index;
   for (let i = 0, len = chapterList.value.length; i < len; i++) {
@@ -68,6 +76,7 @@ const currentChapterIdx = computed(() => {
   return index;
 });
 
+// 当前章节标题
 const currentChapterTitle = computed(() => {
   return (
     (chapterTitleList.value[currentChapterIdx.value] &&
@@ -76,38 +85,39 @@ const currentChapterTitle = computed(() => {
   );
 });
 
-const backendSrc = ref("");
-
-// 开始
-const startBtnLabel = "START";
-// 步骤
-const currentStepIdx = ref(0);
+// 当前步骤
 const currentStep = computed(() => {
   return stepList.value[currentStepIdx.value - 1] || {};
 });
-// 结束
+// 当前步骤索引
+const currentStepIdx = ref(0);
+
+// 开始label
+const startBtnLabel = "START";
+// 结束label
 const finishBtnLabel = "FINISH";
 const showFinishDialog = ref(false);
 
-const chapterDetailLoaded = ref(false);
+// 镜像信息是否加载完成
+const resourceLoaded = computed(() => {
+  return (
+    courseList.value.length && chapterList.value && backendPathLoaded.value
+  );
+});
+
 // 获取章节具体信息
 function getChapterDetail() {
   queryChapterDetail(coursePath.value, chapterPath.value).then((data) => {
     const { details, backend } = data;
-    chapterDetailLoaded.value = true;
-    backendSrc.value = backend.image_id;
+    backendPathLoaded.value = true;
+    backendPath.value = backend.image_id;
     introduction.value = details.introduction;
     stepList.value = details.steps;
     finish.value = details.finish;
   });
 }
 
-const resourceLoaded = computed(() => {
-  return (
-    courseList.value.length && chapterList.value && chapterDetailLoaded.value
-  );
-});
-
+// 镜像资源列表
 const resourceList = ref([]);
 
 watch(
@@ -120,7 +130,7 @@ watch(
         resourceList.value.push({
           courseId: currentCourse.value._course.id,
           chapterId: chapterList.value[i].content_dir,
-          backend: backendSrc.value,
+          backend: backendPath.value,
           email: courseData.resource.email,
           timeout: courseData.resource.timeout,
           query_interval: courseData.resource.query_interval,
@@ -204,7 +214,8 @@ mitt.on(PLAYGROUND_KEYS.START, (index) => {
 
 onBeforeRouteUpdate((to) => {
   const { params } = to;
-  chapterDetailLoaded.value = false;
+  dropdown.value.toggleMenu(false);
+  backendPathLoaded.value = false;
   coursePath.value = params.coursePath;
   chapterPath.value = params.chapterPath;
   currentStepIdx.value = 0;
