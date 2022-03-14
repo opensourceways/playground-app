@@ -1,7 +1,12 @@
 import { ref, computed } from "vue";
 import mitt from "@/shared/mitt";
 import { queryAuthentication, queryUserInfo } from "@/service/api";
-import { getAuthCode, setAuthCode } from "./login-code";
+import {
+  getAuthCode,
+  getAuthIdentity,
+  setAuthCode,
+  setAuthIdentity,
+} from "./login-code";
 import { Guard, GuardMode } from "@authing/native-js-ui-components";
 import { queryAppId } from "@/service/api";
 
@@ -60,12 +65,14 @@ export function getUserInfo() {
 // 注册
 export async function doSignUp() {
   const code = getAuthCode();
+  const identity = getAuthIdentity();
   if (code) {
     try {
       setStatus(LOGIN_STATUS.DOING);
 
       const res = await queryAuthentication({
-        token: code,
+        id: code,
+        federationIdentityId: identity,
       });
 
       if (res.code === 200) {
@@ -178,8 +185,9 @@ export async function initGuard() {
         });
         guard.on("login", (authClient) => {
           console.log("authClient:", authClient);
-          if (authClient.token) {
-            setAuthCode(authClient.token);
+          if (authClient.id) {
+            setAuthCode(authClient.id);
+            setAuthIdentity(authClient.federationIdentityId || "");
             doSignUp();
             setTimeout(() => {
               guard.hide();
