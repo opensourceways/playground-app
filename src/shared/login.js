@@ -2,7 +2,7 @@ import { ref, computed } from "vue";
 import mitt from "@/shared/mitt";
 import { queryAuthentication, queryUserInfo } from "@/service/api";
 import { getAuthCode, setAuthCode } from "./login-code";
-import { AuthingGuard, GuardMode } from "@authing/native-js-ui-components";
+import { Guard, GuardMode } from "@authing/native-js-ui-components";
 import { queryAppId } from "@/service/api";
 
 export const LOGIN_EVENTS = {
@@ -170,7 +170,7 @@ export async function initGuard() {
     try {
       const res = await queryAppId();
       if (res.code === 200) {
-        guard = new AuthingGuard(res.callbackInfo.appId, {
+        guard = new Guard(res.callbackInfo.appId, {
           title: "openEuler",
           mode: GuardMode.Modal,
           clickCloseable: true,

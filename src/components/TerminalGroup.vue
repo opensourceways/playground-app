@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, reactive, onBeforeUpdate, nextTick } from "vue";
+import { ref, computed, reactive, onBeforeUpdate, nextTick, watch } from "vue";
 import Terminal, { RES_STATUS } from "./Terminal.vue";
 
 const props = defineProps({
@@ -90,6 +90,7 @@ function closeTerminal(params) {
 }
 
 function closeAllTerminal() {
+  terminalId = 0;
   terminalList.length = 0;
   isFirstLoadTerminal = true;
 }
@@ -168,68 +169,92 @@ defineExpose({
   disconnectTerminal,
   disconnectAllTerminal,
 });
+
+const normalWrap = ref(null);
+const fullWrap = ref(null);
+const terminalGroup = ref(null);
+
+watch(
+  () => {
+    return isFullscreen.value;
+  },
+  (val) => {
+    const wrap = val ? fullWrap.value : normalWrap.value;
+    wrap.appendChild(terminalGroup.value);
+  }
+);
 </script>
 
 <template>
-  <div class="open-terminal-group" :class="{ fullscreen: isFullscreen }">
-    <div class="terminal-head">
-      <div class="head-navs-wrap">
-        <div class="head-navs">
+  <div ref="normalWrap" class="normal-wrap">
+    <div
+      ref="terminalGroup"
+      class="open-terminal-group"
+      :class="{ fullscreen: isFullscreen }"
+    >
+      <div class="terminal-head">
+        <div class="head-navs-wrap">
+          <div class="head-navs">
+            <div
+              v-for="(ter, idx) in activeTerminalList"
+              :key="ter.id"
+              class="nav-item"
+              :class="[
+                currentId === ter.id ? 'active' : '',
+                `status-${ter.status}`,
+              ]"
+              :title="ter.name"
+              @click="selectTerminal(ter.id, idx)"
+            >
+              <span class="label">{{ ter.name }}</span>
+              <i class="status-dot"></i>
+              <span class="btn-close" @click.stop="remove(ter)"
+                ><svg-icon name="x"></svg-icon
+              ></span>
+            </div>
+            <div
+              v-if="max > activeTerminalList.length"
+              class="btn-plus"
+              @click.stop="add"
+            >
+              <svg-icon name="plus"></svg-icon>
+            </div>
+          </div>
+        </div>
+        <div class="tools">
           <div
-            v-for="(ter, idx) in activeTerminalList"
-            :key="ter.id"
-            class="nav-item"
-            :class="[
-              currentId === ter.id ? 'active' : '',
-              `status-${ter.status}`,
-            ]"
-            :title="ter.name"
-            @click="selectTerminal(ter.id, idx)"
+            v-if="!isFullscreen"
+            class="tool-item"
+            @click.stop="fullscreen(true)"
           >
-            <span class="label">{{ ter.name }}</span>
-            <i class="status-dot"></i>
-            <span class="btn-close" @click.stop="remove(ter)"
-              ><svg-icon name="x"></svg-icon
-            ></span>
+            <svg-icon name="maximize"></svg-icon>
           </div>
           <div
-            v-if="max > activeTerminalList.length"
-            class="btn-plus"
-            @click.stop="add"
+            v-if="isFullscreen"
+            class="tool-item"
+            @click.stop="fullscreen(false)"
           >
-            <svg-icon name="plus"></svg-icon>
+            <svg-icon name="minimize"></svg-icon>
           </div>
         </div>
       </div>
-      <div class="tools">
-        <div
-          v-if="!isFullscreen"
-          class="tool-item"
-          @click.stop="fullscreen(true)"
-        >
-          <svg-icon name="maximize"></svg-icon>
-        </div>
-        <div
-          v-if="isFullscreen"
-          class="tool-item"
-          @click.stop="fullscreen(false)"
-        >
-          <svg-icon name="minimize"></svg-icon>
-        </div>
+      <div class="terminal-list">
+        <terminal
+          v-for="ter in activeTerminalList"
+          v-show="currentId === ter.id"
+          :key="ter.id"
+          :ref="setItemRef"
+          :dataset="ter"
+          class="terminal-item"
+          @resource-status="(e) => onResourceStatus(e)"
+        ></terminal>
       </div>
-    </div>
-    <div class="terminal-list">
-      <terminal
-        v-for="ter in activeTerminalList"
-        v-show="currentId === ter.id"
-        :key="ter.id"
-        :ref="setItemRef"
-        :dataset="ter"
-        class="terminal-item"
-        @resource-status="(e) => onResourceStatus(e)"
-      ></terminal>
     </div>
   </div>
+
+  <teleport v-show="isFullscreen" to="body">
+    <div ref="fullWrap" class="full-wrap"></div>
+  </teleport>
 </template>
 
 <style lang="scss">
@@ -402,5 +427,13 @@ defineExpose({
     bottom: 0;
     top: 0;
   }
+}
+
+.normal-wrap {
+  height: 100%;
+}
+
+.full-wrap {
+  height: 0;
 }
 </style>
