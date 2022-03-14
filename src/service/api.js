@@ -1,4 +1,5 @@
 import { request } from "@/plugins/axios";
+import { getUserAuth } from "../shared/login";
 
 // /**
 //  * 获取授权的相关回调链接
@@ -82,4 +83,38 @@ export function queryUserInfo(params) {
   return request.get(url, { params }).then((res) => {
     return res.data;
   });
+}
+
+/**
+ * 获取用户学习进度
+ * @returns
+ */
+export function queryCourseStatus() {
+  const { userId, token } = getUserAuth();
+  const url = "/api/playground/users/course/chapter";
+  return request
+    .get(url, {
+      params: {
+        userId,
+        token,
+      },
+    })
+    .then((res) => {
+      return res.data;
+    });
+}
+
+/**
+ * 绑定用户学习进度
+ * @param {*} params
+ * @returns
+ */
+export function setCourseStatus(params) {
+  const { userId, token } = getUserAuth();
+  const url = "/api/playground/users/course/chapter";
+  return request
+    .post(url, Object.assign({ token, userId }, params))
+    .then((res) => {
+      return res.data;
+    });
 }

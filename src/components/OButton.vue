@@ -43,8 +43,8 @@ function onClick(e) {
 
 <style lang="scss">
 .o-button {
-  padding: 7px 16px;
-  line-height: 32px;
+  padding: 12px 28px;
+  line-height: 24px;
   font-size: 16px;
   background-color: transparent;
   border: 1px solid #333;
@@ -80,15 +80,16 @@ function onClick(e) {
     }
     &.is-disabled,
     &.is-disabled:hover {
-      background-color: #b8d9ff;
-      border-color: #b8d9ff;
       color: #eee;
+      background-color: #c5c5c5;
+      border-color: #c5c5c5;
     }
   }
   &.is-disabled,
   &.is-disabled:hover {
-    color: #999;
-    border-color: #999;
+    color: #ffffff;
+    background: #c5c5c5;
+    border-color: #c5c5c5;
     cursor: not-allowed;
   }
 
@@ -100,7 +101,7 @@ function onClick(e) {
   }
 
   .icon {
-    margin-left: 8px;
+    margin-left: 10px;
   }
 }
 </style>

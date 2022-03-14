@@ -15,24 +15,14 @@ defineProps({
 
 <style lang="scss" scoped>
 .o-dropdown-item {
-  width: 300px;
-  height: 48px;
   padding: 0 20px;
   list-style: none;
   font-size: 14px;
-  font-weight: normal;
-  color: #000000;
   line-height: 48px;
-  cursor: pointer;
-
+  font-weight: normal;
   background: #ffffff;
-  // &:nth-child(odd) {
-  //   background: #f7f8fa;
-  // }
-
-  // &:nth-child(even) {
-  //   background: #ffffff;
-  // }
+  color: #000000;
+  cursor: pointer;
 
   &:hover {
     background: #002fa7;

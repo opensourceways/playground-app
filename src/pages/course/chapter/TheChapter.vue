@@ -18,6 +18,7 @@ import TerminalMask from "@/components/TerminalMask.vue";
 import CourseArticle from "@/components/CourseArticle.vue";
 import ChapterStep from "@/pages/course/chapter/ChapterStep.vue";
 import TerminalGroup from "@/components/TerminalGroup.vue";
+import { setCourseStatus } from "@/service/api";
 
 const courseData = Courses.experience;
 
@@ -26,17 +27,53 @@ const router = useRouter();
 
 const coursePath = ref(route.params.coursePath);
 const chapterPath = ref(route.params.chapterPath);
+
 const terminals = ref(null);
+const scroller = ref(null);
 
 const introduction = ref({});
 const stepList = ref([]);
 const finish = ref({});
 
+// 开始按钮文字
+const startBtnLabel = "START";
+// 结束按钮文字
+const finishBtnLabel = "FINISH";
+
+// 结束对话框文字
+const finishDlgLabels = {
+  title: "课程完成！",
+  info: "恭喜你完成本门课程，进一寸有进一寸的欢喜",
+  nextBtn: "下一章节",
+  restartBtn: "重新开始",
+};
+
+// 用户未登录，需返回首页
+const needsBack = computed(() => {
+  if (!isLoggingIn.value && !isLogined.value) {
+    return true;
+  }
+  return false;
+});
+
+watch(
+  () => {
+    return needsBack.value;
+  },
+  (val) => {
+    if (val) {
+      router.push({ name: "home" });
+    }
+  },
+  { immediate: true }
+);
+
 // 当前课程
-const currentCourse = computed(() => {
-  return courseList.value.find((item) => {
+const courseInfo = computed(() => {
+  const rlt = courseList.value.find((item) => {
     return item._course.content_dir === coursePath.value;
   });
+  return rlt || {};
 });
 
 // 课程镜像路径
@@ -46,7 +83,7 @@ const backendPathLoaded = ref(false);
 
 // 章节列表
 const chapterList = computed(() => {
-  return currentCourse.value ? currentCourse.value.chapters : [];
+  return courseInfo.value.chapters ? courseInfo.value.chapters : [];
 });
 
 window.chapterList = chapterList;
@@ -65,15 +102,9 @@ const chapterTitleList = computed(() => {
 
 // 当前章节索引
 const currentChapterIdx = computed(() => {
-  let index;
-  for (let i = 0, len = chapterList.value.length; i < len; i++) {
-    let item = chapterList.value[i];
-    if (item.content_dir === chapterPath.value) {
-      index = i;
-      break;
-    }
-  }
-  return index;
+  return chapterList.value.findIndex((item) => {
+    return item.content_dir === chapterPath.value;
+  });
 });
 
 // 当前章节标题
@@ -85,18 +116,13 @@ const currentChapterTitle = computed(() => {
   );
 });
 
+// 当前步骤索引，0：开始； -1：结束； 其他：中间步骤
+const currentStepIdx = ref(0);
+
 // 当前步骤
 const currentStep = computed(() => {
   return stepList.value[currentStepIdx.value - 1] || {};
 });
-// 当前步骤索引
-const currentStepIdx = ref(0);
-
-// 开始label
-const startBtnLabel = "START";
-// 结束label
-const finishBtnLabel = "FINISH";
-const showFinishDialog = ref(false);
 
 // 镜像信息是否加载完成
 const resourceLoaded = computed(() => {
@@ -104,6 +130,131 @@ const resourceLoaded = computed(() => {
     courseList.value.length && chapterList.value && backendPathLoaded.value
   );
 });
+
+// 镜像资源列表
+const resourceList = ref([]);
+
+// 镜像资源请求完成
+watch(
+  () => {
+    return resourceLoaded.value;
+  },
+  (val) => {
+    if (val) {
+      for (let i = 0, len = chapterList.value.length; i < len; i++) {
+        resourceList.value.push({
+          courseId: courseInfo.value._course.id,
+          chapterId: chapterList.value[i].content_dir,
+          backend: backendPath.value,
+          email: courseData.resource.email,
+          timeout: courseData.resource.timeout,
+          query_interval: courseData.resource.query_interval,
+        });
+      }
+    }
+  }
+);
+
+const dropdown = ref(null);
+
+// 输入命令
+function handleCommandClick(e) {
+  console.log(e.command);
+  mitt.emit(PLAYGROUND_KEYS.ENTER, { commond: e.command });
+}
+
+mitt.on(PLAYGROUND_KEYS.ENTER, (data) => {
+  terminals.value && terminals.value.enterCommond(data.commond);
+});
+
+// 开始章节
+function startChapter() {
+  setCourseStatus({
+    courseId: courseInfo.value._course.id,
+    status: 1,
+    // chapterInfo: {
+    //   chapterId: chapterList.value[index].content_dir,
+    //   status: 1,
+    // },
+  });
+  mitt.emit(PLAYGROUND_KEYS.START, currentStepIdx.value);
+  currentStepIdx.value++;
+}
+
+mitt.on(PLAYGROUND_KEYS.START, (index) => {
+  terminals.value && terminals.value.addTerminal(false, index);
+});
+
+// 是否显示结束对话框
+const showFinishDialog = ref(false);
+
+// 结束章节
+function finishChapter() {
+  setCourseStatus({
+    courseId: courseInfo.value._course.id,
+    chapterId: chapterList.value[currentChapterIdx.value].content_dir,
+    status: 2,
+  });
+  toggleFinishDialog(true);
+}
+
+// 切换结束对话框
+function toggleFinishDialog(flag) {
+  if (flag === undefined) {
+    showFinishDialog.value = !showFinishDialog.value;
+  } else {
+    showFinishDialog.value = flag;
+  }
+}
+
+// 上一步
+function handlePrevClick() {
+  if (currentStepIdx.value === 0) {
+    return;
+  }
+  if (currentStepIdx.value > 0) {
+    currentStepIdx.value--;
+  }
+}
+
+// 下一步
+function handleNextClick() {
+  if (currentStepIdx.value === -1) {
+    return;
+  }
+  if (currentStepIdx.value < stepList.value.length) {
+    currentStepIdx.value++;
+  } else {
+    currentStepIdx.value = -1;
+  }
+}
+
+// 跳转至某一章节
+function gotoChapter(idx) {
+  if (idx >= 0 && idx < chapterList.value.length) {
+    toggleFinishDialog(false);
+    terminals.value && terminals.value.closeAllTerminal();
+    const item = chapterList.value[idx];
+    if (item && item.content_dir) {
+      router.push({
+        path: `/course/${coursePath.value}/chapter/${item.content_dir}`,
+      });
+    }
+  }
+
+  toggleFinishDialog(false);
+}
+
+// 重新开始某一章节
+function restartChapter() {
+  showFinishDialog.value = false;
+  terminals.value && terminals.value.closeAllTerminal();
+  currentStepIdx.value = 0;
+}
+
+function onTerminalLoaded() {}
+
+function onTerminalDisconnect() {}
 
 // 获取章节具体信息
 function getChapterDetail() {
@@ -117,135 +268,28 @@ function getChapterDetail() {
   });
 }
 
-// 镜像资源列表
-const resourceList = ref([]);
-
-watch(
-  () => {
-    return resourceLoaded.value;
-  },
-  (val) => {
-    if (val) {
-      for (let i = 0, len = chapterList.value.length; i < len; i++) {
-        resourceList.value.push({
-          courseId: currentCourse.value._course.id,
-          chapterId: chapterList.value[i].content_dir,
-          backend: backendPath.value,
-          email: courseData.resource.email,
-          timeout: courseData.resource.timeout,
-          query_interval: courseData.resource.query_interval,
-        });
-      }
-    }
-  }
-);
-
 getChapterDetail();
 
-const dropdown = ref(null);
-
-function handleCommandClick(e) {
-  console.log(e.command);
-  mitt.emit(PLAYGROUND_KEYS.ENTER, { commond: e.command });
-}
-
-mitt.on(PLAYGROUND_KEYS.ENTER, (data) => {
-  terminals.value && terminals.value.enterCommond(data.commond);
-});
-
-function startChapter(index) {
-  if (terminals.value && terminals.value.addTerminal) {
-    currentStepIdx.value++;
-    mitt.emit(PLAYGROUND_KEYS.START, index);
-  }
-}
-
-function toggleFinishDialog(flag) {
-  if (flag === undefined) {
-    showFinishDialog.value = !showFinishDialog.value;
-  } else {
-    showFinishDialog.value = flag;
-  }
-}
-
-function onPrevClick() {
-  if (currentStepIdx.value === 0) {
-    return;
-  }
-  if (currentStepIdx.value > 0) {
-    currentStepIdx.value--;
-  }
-}
-
-function onNextClick() {
-  if (currentStepIdx.value === -1) {
-    return;
-  }
-  if (currentStepIdx.value < stepList.value.length) {
-    currentStepIdx.value++;
-  } else {
-    currentStepIdx.value = -1;
-  }
-}
-
-function gotoChapter(idx) {
-  if (idx >= 0 && idx < chapterList.value.length) {
-    showFinishDialog.value = false;
-
-    const item = chapterList.value[idx];
-    if (item && item.content_dir) {
-      router.push({
-        path: `/course/${coursePath.value}/chapter/${item.content_dir}`,
-      });
-    }
-  }
-
-  toggleFinishDialog(false);
-}
-
-function restartChapter() {
-  showFinishDialog.value = false;
-  currentStepIdx.value = 0;
-}
-
-function onTerminalLoaded() {}
-
-function onTerminalDisconnect() {}
-
-mitt.on(PLAYGROUND_KEYS.START, (index) => {
-  terminals.value && terminals.value.addTerminal(false, index);
-});
-
+// 路由更新
 onBeforeRouteUpdate((to) => {
-  terminals.value && terminals.value.closeAllTerminal();
   const { params } = to;
-  dropdown.value.toggleMenu(false);
+
+  terminals.value && terminals.value.closeAllTerminal(); // 关闭terminal
+  dropdown.value.toggleMenu(false); // 下拉菜单收起
+  currentStepIdx.value = 0; // 步骤置为0
+
+  // 路由信息更新
+  coursePath.value = params.coursePath;
+  chapterPath.value = params.chapterPath;
+
+  // 镜像资源信息更新
   resourceList.value = [];
   backendPathLoaded.value = false;
   backendPath.value = "";
 
-  coursePath.value = params.coursePath;
-  chapterPath.value = params.chapterPath;
-  currentStepIdx.value = 0;
+  // 重新获取章节信息
   getChapterDetail();
 });
-
-const needsBack = computed(() => {
-  if (!isLoggingIn.value && !isLogined.value) {
-    return false;
-  }
-  return true;
-});
-
-watch(
-  () => needsBack.value,
-  (val) => {
-    if (!val) {
-      router.push({ name: "home" });
-    }
-  },
-  { immediate: true }
-);
 </script>
 
 <template>
@@ -278,49 +322,50 @@ watch(
       <div class="chapter-content-article">
         <template v-if="currentStepIdx == 0">
           <div class="article-top">
+            <o-button
+              v-if="resourceLoaded"
+              primary
+              icon="arrow-right"
+              @click="startChapter"
+              >{{ startBtnLabel }}</o-button
+            >
+          </div>
+
+          <div class="article-bottom">
             <course-article
               :content="introduction.html"
               @command-click="handleCommandClick"
             ></course-article>
           </div>
-
-          <div class="article-bottom">
-            <o-button
-              v-if="resourceLoaded"
-              primary
-              @click="startChapter(currentChapterIdx)"
-              >{{ startBtnLabel }}</o-button
-            >
-          </div>
         </template>
 
         <template v-if="currentStepIdx !== 0 && currentStepIdx !== -1">
-          <div class="article-top">
+          <div class="article-top" :class="{ reverse: true }">
+            <!-- <chapter-step
+              class="article-step"
+              @prev-click="handlePrevClick"
+              @next-click="handleNextClick"
+            ></chapter-step> -->
+          </div>
+          <div ref="scroller" class="article-bottom">
             <course-article
               :content="currentStep.html"
               @command-click="handleCommandClick"
             ></course-article>
           </div>
-          <div class="article-bottom" :class="{ reverse: true }">
-            <chapter-step
-              class="article-step"
-              @prev-click="onPrevClick"
-              @next-click="onNextClick"
-            ></chapter-step>
-          </div>
         </template>
 
         <template v-if="currentStepIdx === -1">
           <div class="article-top">
+            <o-button primary icon="arrow-right" @click="finishChapter">{{
+              finishBtnLabel
+            }}</o-button>
+          </div>
+          <div class="article-bottom">
             <course-article
               :content="finish.html"
               @command-click="handleCommandClick"
             ></course-article>
-          </div>
-          <div class="article-bottom">
-            <o-button primary @click="toggleFinishDialog(true)">{{
-              finishBtnLabel
-            }}</o-button>
           </div>
         </template>
       </div>
@@ -331,7 +376,6 @@ watch(
           <p class="mask-info">LET'S PLAY _</p>
         </terminal-mask>
         <terminal-group
-          v-if="resourceLoaded"
           ref="terminals"
           :max="5"
           :active-index="currentChapterIdx"
@@ -344,19 +388,22 @@ watch(
 
     <o-dialog :show="showFinishDialog" @close-click="toggleFinishDialog(false)">
       <template #head>
-        <div class="dlg-title">课程完成！</div>
+        <div class="dlg-title">{{ finishDlgLabels.title }}</div>
       </template>
-      <div class="dlg-body">恭喜你完成本门课程，进一寸有进一寸的欢喜</div>
+      <div class="dlg-body">{{ finishDlgLabels.info }}</div>
       <template #foot>
         <div class="dlg-actions">
           <o-button
             v-if="currentChapterIdx !== chapterList.length - 1"
+            icon="arrow-right"
             primary
             :style="{ marginRight: '12px' }"
             @click="gotoChapter(currentChapterIdx + 1)"
-            >下一章节</o-button
+            >{{ finishDlgLabels.nextBtn }}</o-button
           >
-          <o-button primary @click="restartChapter">重新开始</o-button>
+          <o-button primary @click="restartChapter">
+            {{ finishDlgLabels.restartBtn }}</o-button
+          >
         </div>
       </template>
     </o-dialog>
@@ -440,8 +487,10 @@ watch(
       }
 
       .dropdown-item {
+        width: 300px;
         border-left: 1px solid rgba(0, 47, 167, 1);
         border-right: 1px solid rgba(0, 47, 167, 1);
+        transition: color 0.2s, background-color 0.3s;
         &:first-child {
           border-top: 1px solid rgba(0, 47, 167, 1);
         }
@@ -481,26 +530,33 @@ watch(
   z-index: 1;
   height: calc(100vh - 172px);
 
+  @media screen and (max-width: 1023px) {
+    flex-direction: column;
+    height: auto;
+  }
+
   &-article {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     width: 26.25%;
     height: 100%;
     padding: 32px 32px 50px;
-    overflow-y: auto;
-
-    .article-top {
-      max-height: 90%;
-      overflow-x: hidden;
-      overflow-y: auto;
+    @media screen and (max-width: 1023px) {
+      width: 100%;
     }
 
-    .article-bottom {
+    .article-top {
       display: flex;
+      margin-bottom: 32px;
       &.reverse {
         flex-direction: row-reverse;
       }
+    }
+
+    .article-bottom {
+      height: 90%;
+      overflow-x: hidden;
+      overflow-y: auto;
     }
   }
 
@@ -508,6 +564,11 @@ watch(
     width: 73.75%;
     height: 100%;
     position: relative;
+
+    @media screen and (max-width: 1023px) {
+      width: 100%;
+      height: calc(100vh - 172px);
+    }
 
     .mask-info {
       font-size: 30px;

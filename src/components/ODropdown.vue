@@ -6,24 +6,25 @@ const tool = ref(null);
 const menu = ref(null);
 
 const showMenu = ref(false);
-
 const menuHeight = ref(0);
+
+const emit = defineEmits(["toggle"]);
 
 function toggleMenu(flag) {
   if (typeof flag === "undefined" || typeof flag !== "boolean") {
     showMenu.value = !showMenu.value;
+    emit("toggle", showMenu.value);
   } else {
     showMenu.value = flag;
   }
 }
 
-function handleClick(e) {
+function onClick(e) {
   if (!showMenu.value) {
     return;
   }
-
-  if (!dropdown.value.contains(e.tartget)) {
-    showMenu.value = false;
+  if (!dropdown.value.contains(e.target)) {
+    toggleMenu(false);
   }
 }
 
@@ -46,20 +47,21 @@ watch(
 );
 
 onMounted(() => {
-  window.addEventListener("click", handleClick);
+  window.addEventListener("click", onClick);
 });
 
 onUnmounted(() => {
-  window.removeEventListener("click", handleClick);
+  window.removeEventListener("click", onClick);
 });
 </script>
 
 <template>
   <div ref="dropdown" class="o-dropdown">
-    <div ref="tool" class="o-dropdown-tool" @click.stop="toggleMenu">
+    <div ref="tool" class="o-dropdown-tool" @click="toggleMenu">
       <slot></slot>
     </div>
 
+    <!-- <transition name="fade"> -->
     <ul
       ref="menu"
       class="o-dropdown-menu"
@@ -68,24 +70,24 @@ onUnmounted(() => {
     >
       <slot name="menu"></slot>
     </ul>
+    <!-- </transition> -->
   </div>
 </template>
 
 <style lang="scss" scoped>
 .o-dropdown {
   position: relative;
-  &-tool {
-    display: flex;
-    align-items: center;
-  }
+  display: inline-block;
+  cursor: pointer;
+
   &-menu {
     position: absolute;
-    height: 0;
     overflow: hidden;
     left: 0;
     top: calc(100% + 18px);
     z-index: 1;
-    transition: height 0.3s;
+    height: 0;
+    transition: height cubic-bezier(0.645, 0.045, 0.355, 1) 0.3s;
   }
 }
 </style>

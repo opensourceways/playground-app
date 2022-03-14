@@ -16,18 +16,6 @@ const router = useRouter();
 
 const userInfo = reactive({});
 
-mitt.on(LOGIN_EVENTS.LOGINED, (data) => {
-  userInfo.userId = data.userId;
-  userInfo.name = data.nickName || data.email;
-  userInfo.avatar = data.avatarUrl;
-});
-
-mitt.on(LOGIN_EVENTS.LOGOUT, () => {
-  userInfo.userId = "";
-  userInfo.name = "";
-  userInfo.avatar = "";
-});
-
 const logoutLabel = "LOG OUT";
 const loginLabel = "LOG IN";
 
@@ -38,6 +26,7 @@ const logoutLabels = {
 };
 
 const showLogout = ref(false);
+const avatarLoaded = ref(false);
 
 function toggleLogoutDlg(flag) {
   if (flag === undefined) {
@@ -57,7 +46,6 @@ function doLogout() {
   logoClick();
 }
 
-const avatarLoaded = ref(false);
 function onAvatarLoad() {
   avatarLoaded.value = true;
 }
@@ -65,6 +53,18 @@ function onAvatarLoad() {
 function logoClick() {
   router.push({ name: "home" });
 }
+
+mitt.on(LOGIN_EVENTS.LOGINED, (data) => {
+  userInfo.userId = data.userId;
+  userInfo.name = data.nickName || data.email;
+  userInfo.avatar = data.avatarUrl;
+});
+
+mitt.on(LOGIN_EVENTS.LOGOUT, () => {
+  userInfo.userId = "";
+  userInfo.name = "";
+  userInfo.avatar = "";
+});
 </script>
 
 <template>
@@ -106,13 +106,19 @@ function logoClick() {
       <div class="dlg-body">{{ logoutLabels.detail }}</div>
       <template #foot>
         <div class="dlg-actions">
-          <o-button primary="" @click="toggleLogoutDlg(false)">{{
-            logoutLabels.btnLabels[0]
-          }}</o-button>
+          <o-button
+            icon="arrow-right"
+            primary
+            @click="toggleLogoutDlg(false)"
+            >{{ logoutLabels.btnLabels[0] }}</o-button
+          >
 
-          <o-button style="margin-left: 12px" @click="doLogout">{{
-            logoutLabels.btnLabels[1]
-          }}</o-button>
+          <o-button
+            icon="arrow-right"
+            style="margin-left: 12px"
+            @click="doLogout"
+            >{{ logoutLabels.btnLabels[1] }}</o-button
+          >
         </div>
       </template>
     </o-dialog>
@@ -193,7 +199,7 @@ function logoClick() {
         display: none;
         position: absolute;
         right: 0;
-        top: 30px;
+        top: 100%;
         background-color: #fff;
         box-shadow: 1px 2px 8px rgba($color: #000000, $alpha: 0.1);
         padding: 8px 0;
