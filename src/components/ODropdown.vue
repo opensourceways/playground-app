@@ -61,7 +61,6 @@ onUnmounted(() => {
       <slot></slot>
     </div>
 
-    <!-- <transition name="fade"> -->
     <ul
       ref="menu"
       class="o-dropdown-menu"
@@ -70,7 +69,6 @@ onUnmounted(() => {
     >
       <slot name="menu"></slot>
     </ul>
-    <!-- </transition> -->
   </div>
 </template>
 

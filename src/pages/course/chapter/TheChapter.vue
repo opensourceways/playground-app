@@ -229,6 +229,10 @@ function handleNextClick() {
   }
 }
 
+function handleItemClick(idx) {
+  currentStepIdx.value = idx + 1;
+}
+
 // 跳转至某一章节
 function gotoChapter(idx) {
   if (idx >= 0 && idx < chapterList.value.length) {
@@ -341,11 +345,14 @@ onBeforeRouteUpdate((to) => {
 
         <template v-if="currentStepIdx !== 0 && currentStepIdx !== -1">
           <div class="article-top" :class="{ reverse: true }">
-            <!-- <chapter-step
+            <chapter-step
               class="article-step"
+              :count="stepList.length"
+              :prev-disabled="currentStepIdx === 1"
               @prev-click="handlePrevClick"
               @next-click="handleNextClick"
-            ></chapter-step> -->
+              @item-click="handleItemClick"
+            ></chapter-step>
           </div>
           <div ref="scroller" class="article-bottom">
             <course-article

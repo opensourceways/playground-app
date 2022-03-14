@@ -18,12 +18,17 @@ const props = defineProps({
     default: 1,
   },
 });
-const emit = defineEmits(["prev-click", "next-click"]);
+const emit = defineEmits(["prev-click", "next-click", "item-click"]);
 
 function handlePrevClick(e) {
   if (!props.prevDisabled) {
     emit("prev-click", e);
   }
+}
+
+function onItemClick(idx) {
+  activeIndex.value = idx + 1;
+  emit("item-click", idx);
 }
 
 function handleNextClick(e) {
@@ -59,7 +64,7 @@ const data = new Array(props.count).fill(null).map((item, idx) => {
     >
       <div class="arrow"></div>
     </div>
-    <!-- <o-dropdown class="dropdown" @toggle="handleToggle">
+    <o-dropdown class="dropdown" @toggle="handleToggle">
       <div class="dropdown-tool">
         <div class="tool-lable">{{ label }}</div>
         <div class="tool-icon">
@@ -75,11 +80,11 @@ const data = new Array(props.count).fill(null).map((item, idx) => {
           v-for="(item, idx) in data"
           :key="item.id"
           class="dropdown-item"
-          @click="on"
+          @click="onItemClick(idx)"
           >{{ item.text }}</o-drop-down-item
         >
       </template>
-    </o-dropdown> -->
+    </o-dropdown>
     <div
       class="next"
       :class="{ 'is-disabled': nextDisabled }"
