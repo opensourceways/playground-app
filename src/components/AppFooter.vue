@@ -3,23 +3,39 @@ import atomLogo from "@/assets/atom-logo.png";
 import moocLogo from "@/assets/moocstudio-logo-footer.png";
 
 const linkList = [
-  { id: "brand", text: "品牌", url: "" },
-  { id: "privacy", text: "隐私政策", url: "" },
-  { id: "law", text: "法律声明", url: "" },
+  {
+    id: "brand",
+    text: "品牌",
+    url: "https://www.openeuler.org/zh/other/brand/",
+  },
+  {
+    id: "privacy",
+    text: "隐私政策",
+    url: "https://www.openeuler.org/zh/other/privacy/",
+  },
+  {
+    id: "law",
+    text: "法律声明",
+    url: "https://www.openeuler.org/zh/other/legal/",
+  },
 ];
 
-const atomDesc =
-  "moocstudio是由开放原子开源基金会（OpenAtom Foundation）孵化及运营的开源项目";
+const labels = {
+  atom: "moocstudio是由开放原子开源基金会（OpenAtom Foundation）孵化及运营的开源项目",
+  contact: "contact@openeuler.org",
+  copyright: "版权所有 © 2022 moocstudo 保留一切权利",
+};
 
-const contact = "contact@openeuler.org";
-const copyright = "版权所有 © 2022 moocstudo 保留一切权利";
+function handleHrefClick(url) {
+  window.open(url);
+}
 </script>
 
 <template>
   <div class="footer">
     <div class="atom">
       <img :src="atomLogo" alt="" class="atom-logo" />
-      <p class="atom-desc">{{ atomDesc }}</p>
+      <p class="atom-desc">{{ labels.atom }}</p>
     </div>
     <div class="footer-content">
       <img :src="moocLogo" alt="" class="logo" />
@@ -27,13 +43,13 @@ const copyright = "版权所有 © 2022 moocstudo 保留一切权利";
         <a
           v-for="item in linkList"
           :key="item.id"
-          :link="item.url"
           class="link-item"
+          @click="handleHrefClick(item.url)"
           >{{ item.text }}</a
         >
       </div>
-      <p class="contact">{{ contact }}</p>
-      <p class="copyright">{{ copyright }}</p>
+      <p class="contact">{{ labels.contact }}</p>
+      <p class="copyright">{{ labels.copyright }}</p>
     </div>
   </div>
 </template>
