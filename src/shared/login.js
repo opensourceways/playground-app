@@ -177,6 +177,7 @@ export async function initGuard() {
           escCloseable: true,
         });
         guard.on("login", (authClient) => {
+          console.log("authClient:", authClient);
           if (authClient.token) {
             setAuthCode(authClient.token);
             doSignUp();

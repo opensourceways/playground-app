@@ -1,10 +1,11 @@
 <script setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 import ODropdown from "@/components/ODropdown.vue";
 import ODropDownItem from "@/components/ODropdownItem.vue";
+
 const props = defineProps({
-  preveDisabed: {
+  prevDisabled: {
     type: Boolean,
     default: false,
   },
@@ -12,11 +13,15 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  count: {
+    type: Number,
+    default: 1,
+  },
 });
 const emit = defineEmits(["prev-click", "next-click"]);
 
 function handlePrevClick(e) {
-  if (!props.preveDisabed) {
+  if (!props.prevDisabled) {
     emit("prev-click", e);
   }
 }
@@ -31,16 +36,32 @@ const triangleRotate = ref(false);
 function handleToggle(val) {
   triangleRotate.value = val;
 }
+
+const activeIndex = ref(1);
+const label = computed(() => {
+  return `${activeIndex.value}/${props.count}`;
+});
+
+const data = new Array(props.count).fill(null).map((item, idx) => {
+  return {
+    id: `${idx}`,
+    text: `${idx + 1}`,
+  };
+});
 </script>
 
 <template>
   <div class="chapter-step">
-    <div class="prev" @click="handlePrevClick">
+    <div
+      class="prev"
+      :class="{ 'is-disabled': prevDisabled }"
+      @click="handlePrevClick"
+    >
       <div class="arrow"></div>
     </div>
-    <o-dropdown class="dropdown" @toggle="handleToggle">
+    <!-- <o-dropdown class="dropdown" @toggle="handleToggle">
       <div class="dropdown-tool">
-        <div class="tool-lable">1/5</div>
+        <div class="tool-lable">{{ label }}</div>
         <div class="tool-icon">
           <div
             class="triangle"
@@ -50,13 +71,20 @@ function handleToggle(val) {
       </div>
 
       <template #menu>
-        <o-drop-down-item class="dropdown-item">1</o-drop-down-item>
-        <o-drop-down-item class="dropdown-item">2</o-drop-down-item>
-        <o-drop-down-item class="dropdown-item">3</o-drop-down-item>
-        <o-drop-down-item class="dropdown-item">4</o-drop-down-item>
+        <o-drop-down-item
+          v-for="(item, idx) in data"
+          :key="item.id"
+          class="dropdown-item"
+          @click="on"
+          >{{ item.text }}</o-drop-down-item
+        >
       </template>
-    </o-dropdown>
-    <div class="next" @click="handleNextClick">
+    </o-dropdown> -->
+    <div
+      class="next"
+      :class="{ 'is-disabled': nextDisabled }"
+      @click="handleNextClick"
+    >
       <div class="arrow"></div>
     </div>
   </div>
@@ -75,12 +103,22 @@ function handleToggle(val) {
     width: 32px;
     height: 32px;
     border: 1px solid #000000;
+    cursor: pointer;
 
     .arrow {
       width: 10px;
       height: 10px;
       border-top: 1px solid #000;
       border-left: 1px solid #000;
+    }
+
+    &.is-disabled {
+      border: 1px solid #c5c5c5;
+
+      .arrow {
+        border-top: 1px solid #c5c5c5;
+        border-left: 1px solid #c5c5c5;
+      }
     }
   }
 
