@@ -1,6 +1,10 @@
 import { ref, computed } from "vue";
 import mitt from "@/shared/mitt";
-import { queryAuthentication, queryUserInfo } from "@/service/api";
+import {
+  queryAuthentication,
+  queryUserInfo,
+  // loginMethods,
+} from "@/service/api";
 import {
   getAuthCode,
   getAuthIdentity,
@@ -182,6 +186,9 @@ export async function initGuard() {
           mode: GuardMode.Modal,
           clickCloseable: true,
           escCloseable: true,
+          disableRegister: true,
+          disableResetPwd: true,
+          // loginMethods: [LoginMethods.PhoneCode],
         });
         guard.on("login", (authClient) => {
           console.log("authClient:", authClient);
@@ -191,6 +198,7 @@ export async function initGuard() {
             doSignUp();
             setTimeout(() => {
               guard.hide();
+              removeGuard();
             }, 800);
           }
         });

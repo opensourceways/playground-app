@@ -1,7 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@authing/native-js-ui-components': ^3.0.26
+  '@authing/native-js-ui-components': 3.0.23-rc.3
   '@vitejs/plugin-vue': ^1.9.3
   '@vue/eslint-config-prettier': ^6.0.0
   axios: ^0.24.0
@@ -21,7 +21,7 @@ specifiers:
   xterm-addon-fit: ^0.5.0
 
 dependencies:
-  '@authing/native-js-ui-components': registry.npmmirror.com/@authing/native-js-ui-components/3.0.26
+  '@authing/native-js-ui-components': registry.npmmirror.com/@authing/native-js-ui-components/3.0.23-rc.3
   axios: registry.npmmirror.com/axios/0.24.0
   libapps: github.com/yudai/libapps/424e3e95e5346ef0c0c281aaf2ef73463a55b39e
   markdown-it: registry.npmmirror.com/markdown-it/12.3.2
@@ -1981,7 +1981,7 @@ packages:
     dependencies:
       '@ant-design/colors': registry.npmmirror.com/@ant-design/colors/6.0.0
       '@ant-design/icons-svg': registry.npmmirror.com/@ant-design/icons-svg/4.2.1
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
       classnames: registry.npmmirror.com/classnames/2.3.1
       rc-util: registry.npmmirror.com/rc-util/5.19.3_react-dom@16.14.0+react@16.14.0
       react: registry.npmmirror.com/react/16.14.0
@@ -1996,7 +1996,7 @@ packages:
     peerDependencies:
       react: '>=16.9.0'
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
       classnames: registry.npmmirror.com/classnames/2.3.1
       json2mq: registry.npmmirror.com/json2mq/0.2.0
       lodash: registry.npmmirror.com/lodash/4.17.21
@@ -2004,31 +2004,30 @@ packages:
       resize-observer-polyfill: registry.npmmirror.com/resize-observer-polyfill/1.5.1
     dev: false
 
-  registry.npmmirror.com/@authing/native-js-ui-components/3.0.26:
-    resolution: {integrity: sha512-4xiglek6bDB1XuDWzpCGZ+uPJ8wbcGe8udjREZU/s+Cg1OsGx9J7Z/IHezouS8tbLU5ylhJFIO2C+JjndTFYZQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@authing/native-js-ui-components/-/native-js-ui-components-3.0.26.tgz}
+  registry.npmmirror.com/@authing/native-js-ui-components/3.0.23-rc.3:
+    resolution: {integrity: sha512-HgFr4hJc9QaRbitm9nuFpiKmLhcQXsoD/heSHgqnB/o6h4phRoeCOw4QYy2KUtwzzZX7iEZX5yYE9XjXSVbujg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@authing/native-js-ui-components/-/native-js-ui-components-3.0.23-rc.3.tgz}
     name: '@authing/native-js-ui-components'
-    version: 3.0.26
+    version: 3.0.23-rc.3
     dependencies:
-      '@authing/react-ui-components': registry.npmmirror.com/@authing/react-ui-components/3.0.26_react-dom@16.14.0+react@16.14.0
+      '@authing/react-ui-components': registry.npmmirror.com/@authing/react-ui-components/3.0.23-rc.3_react-dom@16.14.0+react@16.14.0
       react: registry.npmmirror.com/react/16.14.0
       react-dom: registry.npmmirror.com/react-dom/16.14.0_react@16.14.0
     dev: false
 
-  registry.npmmirror.com/@authing/react-ui-components/3.0.26_react-dom@16.14.0+react@16.14.0:
-    resolution: {integrity: sha512-LHEZLwOQ0dsEYhLv40Uzh2fbWAu95KJWYDaG1MlXXmH44wy0xO1oiPhYcUX3PDVDQma5qgIRB9kTgdAwRWWkwA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@authing/react-ui-components/-/react-ui-components-3.0.26.tgz}
-    id: registry.npmmirror.com/@authing/react-ui-components/3.0.26
+  registry.npmmirror.com/@authing/react-ui-components/3.0.23-rc.3_react-dom@16.14.0+react@16.14.0:
+    resolution: {integrity: sha512-6fMJlipZYb+4Q3AbtoHZCxQJxzozq17eEEeGsteFyFOTwwa4EXgb9DgdPihScPCW6vHvrOjIMc7N33Gdhydfmw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@authing/react-ui-components/-/react-ui-components-3.0.23-rc.3.tgz}
+    id: registry.npmmirror.com/@authing/react-ui-components/3.0.23-rc.3
     name: '@authing/react-ui-components'
-    version: 3.0.26
+    version: 3.0.23-rc.3
     peerDependencies:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     dependencies:
       antd: registry.npmmirror.com/antd/4.19.2_react-dom@16.14.0+react@16.14.0
-      authing-js-sdk: registry.npmmirror.com/authing-js-sdk/4.23.27
+      authing-js-sdk: registry.npmmirror.com/authing-js-sdk/4.23.26
       face-api.js: registry.npmmirror.com/face-api.js/0.22.2
       fastclick: registry.npmmirror.com/fastclick/1.0.6
       global: registry.npmmirror.com/global/4.4.0
-      phone: registry.npmmirror.com/phone/3.1.13
       qs: registry.npmmirror.com/qs/6.10.3
       react: registry.npmmirror.com/react/16.14.0
       react-dom: registry.npmmirror.com/react-dom/16.14.0_react@16.14.0
@@ -2045,10 +2044,10 @@ packages:
     hasBin: true
     dev: false
 
-  registry.npmmirror.com/@babel/runtime/7.17.2:
-    resolution: {integrity: sha512-hzeyJyMA1YGdJTuWU0e/j4wKXrU4OMFvY2MSlaI9B7VQb0r5cxTE3EAIS2Q7Tn2RIcDkRvTA/v2JsAEhxe99uw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@babel/runtime/-/runtime-7.17.2.tgz}
+  registry.npmmirror.com/@babel/runtime/7.17.7:
+    resolution: {integrity: sha512-L6rvG9GDxaLgFjg41K+5Yv9OMrU98sWe+Ykmc6FDJW/+vYZMhdOMKkISgzptMaERHvS2Y2lw9MDRm2gHhlQQoA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@babel/runtime/-/runtime-7.17.7.tgz}
     name: '@babel/runtime'
-    version: 7.17.2
+    version: 7.17.7
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: registry.npmmirror.com/regenerator-runtime/0.13.9
@@ -2320,7 +2319,7 @@ packages:
       '@ant-design/colors': registry.npmmirror.com/@ant-design/colors/6.0.0
       '@ant-design/icons': registry.npmmirror.com/@ant-design/icons/4.7.0_react-dom@16.14.0+react@16.14.0
       '@ant-design/react-slick': registry.npmmirror.com/@ant-design/react-slick/0.28.4_react@16.14.0
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
       '@ctrl/tinycolor': registry.npmmirror.com/@ctrl/tinycolor/3.4.0
       classnames: registry.npmmirror.com/classnames/2.3.1
       copy-to-clipboard: registry.npmmirror.com/copy-to-clipboard/3.3.1
@@ -2347,7 +2346,7 @@ packages:
       rc-rate: registry.npmmirror.com/rc-rate/2.9.1_react-dom@16.14.0+react@16.14.0
       rc-resize-observer: registry.npmmirror.com/rc-resize-observer/1.2.0_react-dom@16.14.0+react@16.14.0
       rc-select: registry.npmmirror.com/rc-select/14.0.3_react-dom@16.14.0+react@16.14.0
-      rc-slider: registry.npmmirror.com/rc-slider/10.0.0-alpha.4_react-dom@16.14.0+react@16.14.0
+      rc-slider: registry.npmmirror.com/rc-slider/10.0.0-alpha.5_react-dom@16.14.0+react@16.14.0
       rc-steps: registry.npmmirror.com/rc-steps/4.1.4_react-dom@16.14.0+react@16.14.0
       rc-switch: registry.npmmirror.com/rc-switch/3.2.2_react-dom@16.14.0+react@16.14.0
       rc-table: registry.npmmirror.com/rc-table/7.23.0_react-dom@16.14.0+react@16.14.0
@@ -2382,10 +2381,10 @@ packages:
     version: 4.0.7
     dev: false
 
-  registry.npmmirror.com/authing-js-sdk/4.23.27:
-    resolution: {integrity: sha512-3LmY1lcf8HQGLeSkBfKtvRfnmRnuOGNHresW11bdEbGuf8QxTMDLdCkXMqQWqVKf24d5zZbqwZ/t2LPvOU5LTw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/authing-js-sdk/-/authing-js-sdk-4.23.27.tgz}
+  registry.npmmirror.com/authing-js-sdk/4.23.26:
+    resolution: {integrity: sha512-NUF/gZxrIl/e0PS1gNtSajVRTa+Enuguo+z9/5ATIMBA6jROstDgfdRRjvgm2PPWERnSEG7z3qDZmQSNNMks2Q==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/authing-js-sdk/-/authing-js-sdk-4.23.26.tgz}
     name: authing-js-sdk
-    version: 4.23.27
+    version: 4.23.26
     engines: {node: '>=8.9'}
     dependencies:
       axios: registry.npmmirror.com/axios/0.19.2
@@ -2528,10 +2527,10 @@ packages:
     engines: {node: '>=0.11'}
     dev: false
 
-  registry.npmmirror.com/dayjs/1.10.8:
-    resolution: {integrity: sha512-wbNwDfBHHur9UOzNUjeKUOJ0fCb0a52Wx0xInmQ7Y8FstyajiV1NmK1e00cxsr9YrE9r7yAChE0VvpuY5Rnlow==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/dayjs/-/dayjs-1.10.8.tgz}
+  registry.npmmirror.com/dayjs/1.11.0:
+    resolution: {integrity: sha512-JLC809s6Y948/FuCZPm5IX8rRhQwOiyMb2TfVVQEixG7P8Lm/gt5S7yoQZmC8x1UehI9Pb7sksEt4xx14m+7Ug==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/dayjs/-/dayjs-1.11.0.tgz}
     name: dayjs
-    version: 1.10.8
+    version: 1.11.0
     dev: false
 
   registry.npmmirror.com/debug/2.6.9:
@@ -3315,13 +3314,6 @@ packages:
       callsites: registry.nlark.com/callsites/3.1.0
     dev: true
 
-  registry.npmmirror.com/phone/3.1.13:
-    resolution: {integrity: sha512-Jszw7J37Fj8FiINO1Y7Ki9pLqXiQX4cB2jHLHktsqodJl3hyctV0A0YTjl2eKO/gVM7AupUmZelnx+KNw2an1Q==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/phone/-/phone-3.1.13.tgz}
-    name: phone
-    version: 3.1.13
-    engines: {node: '>=12'}
-    dev: false
-
   registry.npmmirror.com/picocolors/1.0.0:
     resolution: {integrity: sha1-y1vcdP8/UYkiNur3nWi8RFZKuBw=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/picocolors/download/picocolors-1.0.0.tgz?cache=0&sync_timestamp=1634093786249&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fpicocolors%2Fdownload%2Fpicocolors-1.0.0.tgz}
     name: picocolors
@@ -3408,7 +3400,7 @@ packages:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
       classnames: registry.npmmirror.com/classnames/2.3.1
       dom-align: registry.npmmirror.com/dom-align/1.12.2
       lodash: registry.npmmirror.com/lodash/4.17.21
@@ -3427,7 +3419,7 @@ packages:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
       array-tree-filter: registry.npmmirror.com/array-tree-filter/2.1.0
       classnames: registry.npmmirror.com/classnames/2.3.1
       rc-select: registry.npmmirror.com/rc-select/14.0.3_react-dom@16.14.0+react@16.14.0
@@ -3446,7 +3438,7 @@ packages:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
       classnames: registry.npmmirror.com/classnames/2.3.1
       react: registry.npmmirror.com/react/16.14.0
       react-dom: registry.npmmirror.com/react-dom/16.14.0_react@16.14.0
@@ -3461,7 +3453,7 @@ packages:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
       classnames: registry.npmmirror.com/classnames/2.3.1
       rc-motion: registry.npmmirror.com/rc-motion/2.4.6_react-dom@16.14.0+react@16.14.0
       rc-util: registry.npmmirror.com/rc-util/5.19.3_react-dom@16.14.0+react@16.14.0
@@ -3479,7 +3471,7 @@ packages:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
       classnames: registry.npmmirror.com/classnames/2.3.1
       rc-motion: registry.npmmirror.com/rc-motion/2.4.6_react-dom@16.14.0+react@16.14.0
       rc-util: registry.npmmirror.com/rc-util/5.19.3_react-dom@16.14.0+react@16.14.0
@@ -3496,7 +3488,7 @@ packages:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
       classnames: registry.npmmirror.com/classnames/2.3.1
       rc-util: registry.npmmirror.com/rc-util/5.19.3_react-dom@16.14.0+react@16.14.0
       react: registry.npmmirror.com/react/16.14.0
@@ -3512,7 +3504,7 @@ packages:
       react: '>=16.11.0'
       react-dom: '>=16.11.0'
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
       classnames: registry.npmmirror.com/classnames/2.3.1
       rc-trigger: registry.npmmirror.com/rc-trigger/5.2.11_react-dom@16.14.0+react@16.14.0
       rc-util: registry.npmmirror.com/rc-util/5.19.3_react-dom@16.14.0+react@16.14.0
@@ -3530,7 +3522,7 @@ packages:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
       async-validator: registry.npmmirror.com/async-validator/4.0.7
       rc-util: registry.npmmirror.com/rc-util/5.19.3_react-dom@16.14.0+react@16.14.0
       react: registry.npmmirror.com/react/16.14.0
@@ -3546,7 +3538,7 @@ packages:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
       classnames: registry.npmmirror.com/classnames/2.3.1
       rc-dialog: registry.npmmirror.com/rc-dialog/8.6.0_react-dom@16.14.0+react@16.14.0
       rc-util: registry.npmmirror.com/rc-util/5.19.3_react-dom@16.14.0+react@16.14.0
@@ -3563,7 +3555,7 @@ packages:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
       classnames: registry.npmmirror.com/classnames/2.3.1
       rc-util: registry.npmmirror.com/rc-util/5.19.3_react-dom@16.14.0+react@16.14.0
       react: registry.npmmirror.com/react/16.14.0
@@ -3579,7 +3571,7 @@ packages:
       react: '>=16.0.0'
       react-dom: '>=16.0.0'
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
       classnames: registry.npmmirror.com/classnames/2.3.1
       rc-util: registry.npmmirror.com/rc-util/5.19.3_react-dom@16.14.0+react@16.14.0
       react: registry.npmmirror.com/react/16.14.0
@@ -3595,7 +3587,7 @@ packages:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
       classnames: registry.npmmirror.com/classnames/2.3.1
       rc-menu: registry.npmmirror.com/rc-menu/9.3.2_react-dom@16.14.0+react@16.14.0
       rc-textarea: registry.npmmirror.com/rc-textarea/0.3.7_react-dom@16.14.0+react@16.14.0
@@ -3614,7 +3606,7 @@ packages:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
       classnames: registry.npmmirror.com/classnames/2.3.1
       rc-motion: registry.npmmirror.com/rc-motion/2.4.6_react-dom@16.14.0+react@16.14.0
       rc-overflow: registry.npmmirror.com/rc-overflow/1.2.4_react-dom@16.14.0+react@16.14.0
@@ -3634,7 +3626,7 @@ packages:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
       classnames: registry.npmmirror.com/classnames/2.3.1
       rc-util: registry.npmmirror.com/rc-util/5.19.3_react-dom@16.14.0+react@16.14.0
       react: registry.npmmirror.com/react/16.14.0
@@ -3651,7 +3643,7 @@ packages:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
       classnames: registry.npmmirror.com/classnames/2.3.1
       rc-motion: registry.npmmirror.com/rc-motion/2.4.6_react-dom@16.14.0+react@16.14.0
       rc-util: registry.npmmirror.com/rc-util/5.19.3_react-dom@16.14.0+react@16.14.0
@@ -3668,7 +3660,7 @@ packages:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
       classnames: registry.npmmirror.com/classnames/2.3.1
       rc-resize-observer: registry.npmmirror.com/rc-resize-observer/1.2.0_react-dom@16.14.0+react@16.14.0
       rc-util: registry.npmmirror.com/rc-util/5.19.3_react-dom@16.14.0+react@16.14.0
@@ -3685,7 +3677,7 @@ packages:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
       classnames: registry.npmmirror.com/classnames/2.3.1
       react: registry.npmmirror.com/react/16.14.0
       react-dom: registry.npmmirror.com/react-dom/16.14.0_react@16.14.0
@@ -3701,10 +3693,10 @@ packages:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
       classnames: registry.npmmirror.com/classnames/2.3.1
       date-fns: registry.npmmirror.com/date-fns/2.28.0
-      dayjs: registry.npmmirror.com/dayjs/1.10.8
+      dayjs: registry.npmmirror.com/dayjs/1.11.0
       moment: registry.npmmirror.com/moment/2.29.1
       rc-trigger: registry.npmmirror.com/rc-trigger/5.2.11_react-dom@16.14.0+react@16.14.0
       rc-util: registry.npmmirror.com/rc-util/5.19.3_react-dom@16.14.0+react@16.14.0
@@ -3722,7 +3714,7 @@ packages:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
       classnames: registry.npmmirror.com/classnames/2.3.1
       rc-util: registry.npmmirror.com/rc-util/5.19.3_react-dom@16.14.0+react@16.14.0
       react: registry.npmmirror.com/react/16.14.0
@@ -3739,7 +3731,7 @@ packages:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
       classnames: registry.npmmirror.com/classnames/2.3.1
       rc-util: registry.npmmirror.com/rc-util/5.19.3_react-dom@16.14.0+react@16.14.0
       react: registry.npmmirror.com/react/16.14.0
@@ -3755,7 +3747,7 @@ packages:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
       classnames: registry.npmmirror.com/classnames/2.3.1
       rc-util: registry.npmmirror.com/rc-util/5.19.3_react-dom@16.14.0+react@16.14.0
       react: registry.npmmirror.com/react/16.14.0
@@ -3773,7 +3765,7 @@ packages:
       react: '*'
       react-dom: '*'
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
       classnames: registry.npmmirror.com/classnames/2.3.1
       rc-motion: registry.npmmirror.com/rc-motion/2.4.6_react-dom@16.14.0+react@16.14.0
       rc-overflow: registry.npmmirror.com/rc-overflow/1.2.4_react-dom@16.14.0+react@16.14.0
@@ -3784,17 +3776,17 @@ packages:
       react-dom: registry.npmmirror.com/react-dom/16.14.0_react@16.14.0
     dev: false
 
-  registry.npmmirror.com/rc-slider/10.0.0-alpha.4_react-dom@16.14.0+react@16.14.0:
-    resolution: {integrity: sha512-ih2xwkBgXAWAf7MjZIZyCiiWo6tnoIMuHifn0UeKXVAup7sH53QdSVvT9x/cysuSZIPNMYWEf6mec184n3gbiQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/rc-slider/-/rc-slider-10.0.0-alpha.4.tgz}
-    id: registry.npmmirror.com/rc-slider/10.0.0-alpha.4
+  registry.npmmirror.com/rc-slider/10.0.0-alpha.5_react-dom@16.14.0+react@16.14.0:
+    resolution: {integrity: sha512-EUAl7silkx+vtBbRkjUEzFWzxnMJrxOLcmUhCwP2xdZybRInRnLMU6TfE1fJLxb6ZN77ghSai6k7yExayVC+Gg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/rc-slider/-/rc-slider-10.0.0-alpha.5.tgz}
+    id: registry.npmmirror.com/rc-slider/10.0.0-alpha.5
     name: rc-slider
-    version: 10.0.0-alpha.4
+    version: 10.0.0-alpha.5
     engines: {node: '>=8.x'}
     peerDependencies:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
       classnames: registry.npmmirror.com/classnames/2.3.1
       rc-tooltip: registry.npmmirror.com/rc-tooltip/5.1.1_react-dom@16.14.0+react@16.14.0
       rc-util: registry.npmmirror.com/rc-util/5.19.3_react-dom@16.14.0+react@16.14.0
@@ -3813,7 +3805,7 @@ packages:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
       classnames: registry.npmmirror.com/classnames/2.3.1
       rc-util: registry.npmmirror.com/rc-util/5.19.3_react-dom@16.14.0+react@16.14.0
       react: registry.npmmirror.com/react/16.14.0
@@ -3829,7 +3821,7 @@ packages:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
       classnames: registry.npmmirror.com/classnames/2.3.1
       rc-util: registry.npmmirror.com/rc-util/5.19.3_react-dom@16.14.0+react@16.14.0
       react: registry.npmmirror.com/react/16.14.0
@@ -3846,7 +3838,7 @@ packages:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
       classnames: registry.npmmirror.com/classnames/2.3.1
       rc-resize-observer: registry.npmmirror.com/rc-resize-observer/1.2.0_react-dom@16.14.0+react@16.14.0
       rc-util: registry.npmmirror.com/rc-util/5.19.3_react-dom@16.14.0+react@16.14.0
@@ -3865,7 +3857,7 @@ packages:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
       classnames: registry.npmmirror.com/classnames/2.3.1
       rc-dropdown: registry.npmmirror.com/rc-dropdown/3.3.3_react-dom@16.14.0+react@16.14.0
       rc-menu: registry.npmmirror.com/rc-menu/9.3.2_react-dom@16.14.0+react@16.14.0
@@ -3884,7 +3876,7 @@ packages:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
       classnames: registry.npmmirror.com/classnames/2.3.1
       rc-resize-observer: registry.npmmirror.com/rc-resize-observer/1.2.0_react-dom@16.14.0+react@16.14.0
       rc-util: registry.npmmirror.com/rc-util/5.19.3_react-dom@16.14.0+react@16.14.0
@@ -3902,7 +3894,7 @@ packages:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
       rc-trigger: registry.npmmirror.com/rc-trigger/5.2.11_react-dom@16.14.0+react@16.14.0
       react: registry.npmmirror.com/react/16.14.0
       react-dom: registry.npmmirror.com/react-dom/16.14.0_react@16.14.0
@@ -3917,7 +3909,7 @@ packages:
       react: '*'
       react-dom: '*'
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
       classnames: registry.npmmirror.com/classnames/2.3.1
       rc-select: registry.npmmirror.com/rc-select/14.0.3_react-dom@16.14.0+react@16.14.0
       rc-tree: registry.npmmirror.com/rc-tree/5.4.4_react-dom@16.14.0+react@16.14.0
@@ -3936,7 +3928,7 @@ packages:
       react: '*'
       react-dom: '*'
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
       classnames: registry.npmmirror.com/classnames/2.3.1
       rc-motion: registry.npmmirror.com/rc-motion/2.4.6_react-dom@16.14.0+react@16.14.0
       rc-util: registry.npmmirror.com/rc-util/5.19.3_react-dom@16.14.0+react@16.14.0
@@ -3955,7 +3947,7 @@ packages:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
       classnames: registry.npmmirror.com/classnames/2.3.1
       rc-align: registry.npmmirror.com/rc-align/4.0.11_react-dom@16.14.0+react@16.14.0
       rc-motion: registry.npmmirror.com/rc-motion/2.4.6_react-dom@16.14.0+react@16.14.0
@@ -3973,7 +3965,7 @@ packages:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
       classnames: registry.npmmirror.com/classnames/2.3.1
       rc-util: registry.npmmirror.com/rc-util/5.19.3_react-dom@16.14.0+react@16.14.0
       react: registry.npmmirror.com/react/16.14.0
@@ -3989,7 +3981,7 @@ packages:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
       react: registry.npmmirror.com/react/16.14.0
       react-dom: registry.npmmirror.com/react-dom/16.14.0_react@16.14.0
       react-is: registry.npmmirror.com/react-is/16.13.1
@@ -4135,7 +4127,7 @@ packages:
     name: rtl-css-js
     version: 1.15.0
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.2
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.17.7
     dev: false
 
   registry.npmmirror.com/sass/1.43.4:
