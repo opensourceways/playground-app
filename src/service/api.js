@@ -112,6 +112,7 @@ export function queryCourseStatus() {
 export function setCourseStatus(params) {
   const { userId, token } = getUserAuth();
   const url = "/api/playground/users/course/chapter";
+  console.log(Object.assign({ token, userId }, params));
   return request
     .post(url, Object.assign({ token, userId }, params))
     .then((res) => {

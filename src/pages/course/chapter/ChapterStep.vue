@@ -17,6 +17,10 @@ const props = defineProps({
     type: Number,
     default: 1,
   },
+  activeIndex: {
+    type: Number,
+    default: 0,
+  },
 });
 const emit = defineEmits(["prev-click", "next-click", "item-click"]);
 
@@ -27,7 +31,6 @@ function handlePrevClick(e) {
 }
 
 function onItemClick(idx) {
-  activeIndex.value = idx + 1;
   emit("item-click", idx);
 }
 
@@ -42,9 +45,8 @@ function handleToggle(val) {
   triangleRotate.value = val;
 }
 
-const activeIndex = ref(1);
 const label = computed(() => {
-  return `${activeIndex.value}/${props.count}`;
+  return `${props.activeIndex}/${props.count}`;
 });
 
 const data = new Array(props.count).fill(null).map((item, idx) => {
@@ -147,6 +149,7 @@ const data = new Array(props.count).fill(null).map((item, idx) => {
 
     &-tool {
       padding: 4px 4px 4px 8px;
+      min-width: 60px;
       display: flex;
       align-items: center;
 

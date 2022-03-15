@@ -43,16 +43,19 @@ const courseStatusInfo = ref([]);
 const chapterStatus = computed(() => {
   const rlt = new Map();
   const chapterStatusInfo = courseStatusInfo.value.find((item) => {
-    return item.courseId === coursePath;
+    return item.courseId === courseInfo.value._course.id;
   });
-  if (chapterStatusInfo && chapterStatusInfo.length) {
-    chapterStatusInfo.forEach((item) => {
+  const info = chapterStatusInfo && chapterStatusInfo.chapterInfo;
+  if (info && info.length) {
+    info.forEach((item) => {
       rlt.set(item.chapterId, item.status);
     });
   }
   return rlt;
 });
 
+window.chapterStatus = chapterStatus;
+window.courseInfo = courseInfo;
 // 登录后获取用户学习进度
 watch(
   () => {
@@ -115,10 +118,10 @@ watch(
           :disabled="!isLogined"
           :primary="isLogined"
           icon="arrow-right"
-          :class="{ isLearned: chapterStatus.get(item.content_dir) == 2 }"
+          :class="{ 'is-learned': chapterStatus.get(item.content_dir) }"
           @click="startCourse(item)"
           >{{
-            chapterStatus.get(item.content_dir) == 2
+            chapterStatus.get(item.content_dir)
               ? startBtnLabels[1]
               : startBtnLabels[0]
           }}</o-button

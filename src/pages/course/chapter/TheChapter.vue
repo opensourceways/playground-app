@@ -172,12 +172,14 @@ function startChapter() {
   setCourseStatus({
     courseId: courseInfo.value._course.id,
     status: 1,
-    // chapterInfo: {
-    //   chapterId: chapterList.value[index].content_dir,
-    //   status: 1,
-    // },
+    chapterInfo: [
+      {
+        chapterId: chapterList.value[currentChapterIdx.value].content_dir,
+        status: 1,
+      },
+    ],
   });
-  mitt.emit(PLAYGROUND_KEYS.START, currentStepIdx.value);
+  mitt.emit(PLAYGROUND_KEYS.START, currentChapterIdx.value);
   currentStepIdx.value++;
 }
 
@@ -192,8 +194,13 @@ const showFinishDialog = ref(false);
 function finishChapter() {
   setCourseStatus({
     courseId: courseInfo.value._course.id,
-    chapterId: chapterList.value[currentChapterIdx.value].content_dir,
-    status: 2,
+    status: 1,
+    chapterInfo: [
+      {
+        chapterId: chapterList.value[currentChapterIdx.value].content_dir,
+        status: 2,
+      },
+    ],
   });
   toggleFinishDialog(true);
 }
@@ -348,6 +355,7 @@ onBeforeRouteUpdate((to) => {
             <chapter-step
               class="article-step"
               :count="stepList.length"
+              :active-index="currentStepIdx"
               :prev-disabled="currentStepIdx === 1"
               @prev-click="handlePrevClick"
               @next-click="handleNextClick"

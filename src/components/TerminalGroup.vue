@@ -56,6 +56,7 @@ function disconnectTerminal(params) {
     terminalRefs[index].disconnect();
   }
 }
+
 function disconnectAllTerminal() {
   isFirstLoadTerminal = true;
   terminalRefs.forEach((item) => item.disconnect());
@@ -114,6 +115,7 @@ function fullscreen(full = true) {
 function add() {
   addTerminal(false, props.activeIndex);
 }
+
 function remove(ter) {
   closeTerminal({ id: ter.id });
 }

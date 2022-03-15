@@ -1,10 +1,6 @@
 import { ref, computed } from "vue";
 import mitt from "@/shared/mitt";
-import {
-  queryAuthentication,
-  queryUserInfo,
-  // loginMethods,
-} from "@/service/api";
+import { queryAuthentication, queryUserInfo } from "@/service/api";
 import {
   getAuthCode,
   getAuthIdentity,
