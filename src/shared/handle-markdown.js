@@ -1,9 +1,9 @@
 import Markdown from "markdown-it";
 
 const mkit = new Markdown({ html: true });
-export function handleMarkdown(str) {
+export function handleMarkdown(str, parseFn) {
   // 支持可执行命令
-  const rlt = str
+  let rlt = str
     // 不换行代码块
     .replace(/`{3}(.+?)`{3}{{([^}}]+?)}}/g, '<code exec="$2">$1</code>')
     // 行内代码
@@ -17,5 +17,8 @@ export function handleMarkdown(str) {
       return `<pre><code ${classname} ${exec}>${content}</code></pre>`;
     });
 
+  if (parseFn) {
+    rlt = parseFn(rlt);
+  }
   return mkit.render(rlt);
 }

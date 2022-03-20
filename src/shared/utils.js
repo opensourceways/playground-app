@@ -26,7 +26,7 @@ export function resolveAsset(...paths) {
     resolvePath = resolvePath.replace(/(\/+)/, "/");
   } else {
     resolvePath = resolvePath
-      .replace(/(?!^)\w+\/+\.{2}\//g, "")
+      .replace(/(?!^)[\w-]+\/+\.{2}\//g, "")
       .replace(/(?!^)\.\//g, "")
       .replace(/\/+$/, "");
   }

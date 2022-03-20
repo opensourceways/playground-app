@@ -108,12 +108,17 @@ export function queryChapterInfo(coursePath, chapterPath) {
  */
 export function queryStepContent(coursePath, chapterPath, stepPath) {
   const prefix = `/${coursePath}/${chapterPath}/${stepPath}`;
-
+  const prefixImg = `/${coursePath}/${chapterPath}`;
   const path = url(prefix);
   return request
     .get(path)
     .then((res) => {
-      const html = handleMarkdown(res.data);
+      const html = handleMarkdown(res.data, (str) => {
+        return str.replace(/\[avatar\]\(([^)]+)\)/g, (_, $1) => {
+          return `[avatar](${R(prefixImg, $1)})`;
+        });
+      });
+
       return {
         html: html,
         _prefix: prefix,
