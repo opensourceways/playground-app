@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 const progress = ref(null); //进度条
 const processHeight = ref(0); //进度条高度
 const box = ref(null); // 自定义滚动条盒子
@@ -7,9 +7,8 @@ const bar = ref(null); // 滚动条
 const barHeight = 80; // 滚动条高度
 
 let force = false; // 滚动条是否被鼠标光标按住
-/**
- * 鼠标滚轮
- */
+
+// 鼠标滚轮
 function handleMouseWheel(e) {
   e.preventDefault();
   const eventDelta = e.wheelDelta || -e.deltaY * 40; // 火狐和其他浏览器都兼容
@@ -21,24 +20,21 @@ function handleMouseWheel(e) {
       box.value.clientHeight /
         (box.value.scrollHeight - box.value.clientHeight));
 }
-/**
- * 鼠标按下
- */
+
+// 鼠标按下
 function handleMouseDown(e) {
   e.preventDefault();
   if (e.target === bar.value || e.target === progress.value) {
     force = true;
   }
 }
-/**
- * 鼠标按键释放
- */
+
+// 鼠标按键释放
 function handleMouseUp() {
   force = false;
 }
-/**
- * 鼠标移动
- */
+
+// 鼠标移动
 function handleMouseMove(e) {
   if (force && e.offsetY >= 0 && e.offsetY <= barHeight) {
     e.preventDefault();
@@ -48,33 +44,35 @@ function handleMouseMove(e) {
       (box.value.scrollHeight - box.value.clientHeight);
   }
 }
-/**
- * 点击进度条
- */
+
+// 点击进度条
 function handleClick(e) {
   processHeight.value = e.offsetY;
   box.value.scrollTop =
     (processHeight.value / barHeight) *
     (box.value.scrollHeight - box.value.clientHeight);
 }
-
 onMounted(() => {
-  document.addEventListener("mouseup", handleMouseUp);
-  document.addEventListener("mousemove", handleMouseMove);
+  window.addEventListener("pointerup", handleMouseUp);
+  window.addEventListener("pointermove", handleMouseMove);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("pointerup", handleMouseUp);
+  window.removeEventListener("pointermove", handleMouseMove);
 });
 </script>
-
 <template>
   <div
-    ref="box.value"
-    class="o-scroll"
+    ref="box"
+    class="o-scroller"
     @wheel="handleMouseWheel"
     @mouseenter="handleMouseEnter"
     @mouseleave="handleMouseLeave"
   >
     <div
       ref="bar"
-      class="scroll-bar"
+      class="scroller-bar"
       :style="{ height: barHeight + 'px' }"
       @click="handleClick"
       @mousedown="handleMouseDown"
@@ -88,19 +86,19 @@ onMounted(() => {
     <slot></slot>
   </div>
 </template>
-
 <style lang="scss" scoped>
 // 滚动条宽度
 $scrollbar-width: 6px;
 
-.o-scroll {
+.o-scroller {
   width: 100%;
   height: 100%;
   position: relative;
   padding-right: $scrollbar-width;
+  overflow-x: hidden;
   overflow-y: hidden;
 }
-.scroll-bar {
+.scroller-bar {
   cursor: pointer;
   position: -webkit-sticky; /* Safari */
   position: sticky;

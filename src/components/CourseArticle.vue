@@ -54,9 +54,28 @@ function onClick(e) {
     }
   }
   pre {
+    overflow-x: auto;
     background-color: #e2e6f1;
     padding: 8px;
     border-radius: 4px;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 3px;
+      background-color: #d8d8d8;
+      background-clip: content-box;
+    }
+
+    &::-webkit-scrollbar-track {
+      border-radius: 3px;
+      box-shadow: inset 0 0 2px rgba($color: #000000, $alpha: 0.2);
+      background: #ffffff;
+      // background:transparent;
+    }
 
     code,
     code[exec] {
@@ -78,7 +97,14 @@ function onClick(e) {
   p {
     margin: 16px 0;
   }
-
+  img {
+    max-width: 100%;
+  }
+  ol {
+    li {
+      list-style: none;
+    }
+  }
   code:first-child,
   pre:first-child,
   h1:first-child,

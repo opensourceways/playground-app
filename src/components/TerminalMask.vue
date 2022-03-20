@@ -2,14 +2,14 @@
 
 <template>
   <div class="terminal-mask">
-    <div class="mask-header">
+    <!-- <div class="mask-header">
       <div class="btn-plus">
         <svg-icon name="plus"></svg-icon>
       </div>
       <div class="btn-maximize">
         <svg-icon name="maximize"></svg-icon>
       </div>
-    </div>
+    </div> -->
     <div class="mask-body">
       <slot></slot>
     </div>
@@ -57,7 +57,8 @@
   }
 
   .mask-body {
-    height: calc(100% - 42px);
+    // height: calc(100% - 42px);
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;

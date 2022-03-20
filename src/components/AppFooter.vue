@@ -1,6 +1,6 @@
 <script setup>
-import atomLogo from "@/assets/atom-logo.png";
-import moocLogo from "@/assets/moocstudio-logo-footer.png";
+import atomLogo from "@/assets/logo/atom-logo.png";
+import moocLogo from "@/assets/logo/moocstudio-logo-footer.png";
 
 const linkList = [
   {
@@ -21,9 +21,9 @@ const linkList = [
 ];
 
 const labels = {
-  atom: "moocstudio是由开放原子开源基金会（OpenAtom Foundation）孵化及运营的开源项目",
-  contact: "contact@openeuler.org",
-  copyright: "版权所有 © 2022 moocstudo 保留一切权利",
+  atom: "openEuler是由开放原子开源基金会（OpenAtom Foundation）孵化及运营的开源项目",
+  contact: "contact@openeuler.sh",
+  copyright: "版权所有 © 2022 moocstudio 保留一切权利",
 };
 
 function handleHrefClick(url) {

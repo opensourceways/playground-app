@@ -53,16 +53,16 @@ export const router = createRouter({
   },
 });
 
-// router.beforeEach((to) => {
-// if (!["home"].includes(to.name) && !isLogined()) {
-//   return { name: "home" };
-// }
-// });
-
 router.beforeEach((to) => {
   if (["chapter"].includes(to.name)) {
     mitt.emit(PLAYGROUND_PAGES.SET_FOOTER, false);
   } else {
     mitt.emit(PLAYGROUND_PAGES.SET_FOOTER, true);
+  }
+
+  if (["home"].includes(to.name)) {
+    mitt.emit(PLAYGROUND_PAGES.SET_BODY_BG, "#002fa7");
+  } else {
+    mitt.emit(PLAYGROUND_PAGES.SET_BODY_BG, "#f5f7fb");
   }
 });

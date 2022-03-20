@@ -1,8 +1,9 @@
 <script setup>
-import { computed, ref } from "vue";
+import { ref, computed } from "vue";
 
 import ODropdown from "@/components/ODropdown.vue";
 import ODropDownItem from "@/components/ODropdownItem.vue";
+import SvgIcon from "@/components/SvgIcon.vue";
 
 const props = defineProps({
   prevDisabled: {
@@ -22,6 +23,7 @@ const props = defineProps({
     default: 0,
   },
 });
+
 const emit = defineEmits(["prev-click", "next-click", "item-click"]);
 
 function handlePrevClick(e) {
@@ -40,13 +42,13 @@ function handleNextClick(e) {
   }
 }
 
-const triangleRotate = ref(false);
-function handleToggle(val) {
-  triangleRotate.value = val;
-}
-
-const label = computed(() => {
-  return `${props.activeIndex}/${props.count}`;
+const dropdown = ref(null);
+const isOpen = computed(() => {
+  if (!dropdown.value) {
+    return false;
+  } else {
+    return dropdown.value.isOpen;
+  }
 });
 
 const data = new Array(props.count).fill(null).map((item, idx) => {
@@ -64,16 +66,21 @@ const data = new Array(props.count).fill(null).map((item, idx) => {
       :class="{ 'is-disabled': prevDisabled }"
       @click="handlePrevClick"
     >
-      <div class="arrow"></div>
+      <svg-icon name="step-left" class="svg-icon"></svg-icon>
     </div>
-    <o-dropdown class="dropdown" @toggle="handleToggle">
+    <o-dropdown ref="dropdown" class="dropdown">
       <div class="dropdown-tool">
-        <div class="tool-lable">{{ label }}</div>
+        <p class="tool-lable">
+          <span class="tool-label-count">{{ activeIndex }}</span>
+          <span>/</span>
+          <span class="tool-label-count">{{ count }}</span>
+        </p>
         <div class="tool-icon">
-          <div
+          <svg-icon
+            name="arrow-solid"
             class="triangle"
-            :class="{ 'triangle-rotate': triangleRotate }"
-          ></div>
+            :class="{ 'triangle-rotate': isOpen }"
+          ></svg-icon>
         </div>
       </div>
 
@@ -92,7 +99,7 @@ const data = new Array(props.count).fill(null).map((item, idx) => {
       :class="{ 'is-disabled': nextDisabled }"
       @click="handleNextClick"
     >
-      <div class="arrow"></div>
+      <svg-icon name="step-right" class="svg-icon"></svg-icon>
     </div>
   </div>
 </template>
@@ -109,49 +116,62 @@ const data = new Array(props.count).fill(null).map((item, idx) => {
     align-items: center;
     width: 32px;
     height: 32px;
+    font-size: 24px;
     border: 1px solid #000000;
     cursor: pointer;
 
-    .arrow {
-      width: 10px;
-      height: 10px;
-      border-top: 1px solid #000;
-      border-left: 1px solid #000;
+    &.is-disabled {
+      border: 1px solid #c5c5c5 !important;
+      cursor: not-allowed;
+
+      .svg-icon {
+        color: #c5c5c5 !important;
+      }
     }
 
-    &.is-disabled {
-      border: 1px solid #c5c5c5;
-
-      .arrow {
-        border-top: 1px solid #c5c5c5;
-        border-left: 1px solid #c5c5c5;
+    &:hover {
+      border-color: #002fa7;
+      .svg-icon {
+        color: #002fa7;
       }
     }
   }
 
-  .prev {
-    .arrow {
-      transform: rotate(-45deg);
-    }
-  }
-
-  .next {
-    .arrow {
-      transform: rotate(135deg);
-    }
-  }
-
   .dropdown {
-    margin-left: 20px;
-    margin-right: 20px;
-    height: 32px;
-    border: 1px solid rgba(0, 0, 0, 1);
+    margin-left: 16px;
+    margin-right: 16px;
+
+    &.is-open {
+      .dropdown-tool {
+        border-color: #002fa7;
+        color: #002fa7;
+      }
+    }
 
     &-tool {
-      padding: 4px 4px 4px 8px;
-      min-width: 60px;
       display: flex;
       align-items: center;
+      min-width: 60px;
+      height: 32px;
+      padding: 4px 4px 4px 8px;
+      border: 1px solid rgba(0, 0, 0, 1);
+
+      &:hover {
+        border-color: #002fa7;
+        color: #002fa7;
+      }
+
+      .tool-label {
+        font-size: 14px;
+        font-weight: 400;
+        color: #000000;
+        line-height: 16px;
+        &-count {
+          display: inline-block;
+          min-width: 12px;
+          text-align: center;
+        }
+      }
 
       .tool-icon {
         display: flex;
@@ -159,23 +179,42 @@ const data = new Array(props.count).fill(null).map((item, idx) => {
         justify-content: center;
         width: 24px;
         height: 24px;
+        margin-left: 8px;
 
         .triangle {
-          width: 0;
-          height: 0;
-          border-width: 0 4px 7px;
-          border-style: solid;
-          border-color: transparent transparent #000000;
-          transform: rotate(180deg);
-
+          transform: rotate(90deg);
           transition: transform cubic-bezier(0.645, 0.045, 0.355, 1) 0.3s;
-
           &.triangle-rotate {
-            transform: rotate(0);
+            transform: rotate(-90deg);
           }
         }
       }
     }
+
+    &-item {
+      line-height: 32px !important;
+      text-align: center;
+
+      transition: color 0.2s, background-color 0.3s;
+
+      &:nth-child(odd) {
+        background: #f7f8fa;
+      }
+
+      &:nth-child(even) {
+        background: #ffffff;
+      }
+
+      &:hover {
+        background: #002fa7;
+        color: #ffffff;
+      }
+    }
+  }
+
+  :deep(.o-dropdown-menu) {
+    top: calc(100%);
+    border-top: none;
   }
 }
 </style>

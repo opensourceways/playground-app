@@ -1,12 +1,14 @@
 <script setup>
 import { computed, ref, watch } from "vue";
 import { useRoute, useRouter, onBeforeRouteUpdate } from "vue-router";
+import mitt from "@/shared/mitt";
 
 import Courses from "@/configs/courses";
-import mitt from "@/shared/mitt";
 import { courseList } from "@/shared/composition/course";
 import { queryChapterDetail } from "@/service/courseAPI";
-import { PLAYGROUND_KEYS } from "@/pages/playground/shared";
+import { setCourseStatus } from "@/service/api";
+
+import { PLAYGROUND_KEYS, PLAYGROUND_PAGES } from "@/pages/playground/shared";
 import { toNumCN } from "@/shared/utils";
 import { isLoggingIn, isLogined } from "@/shared/login";
 
@@ -18,7 +20,7 @@ import TerminalMask from "@/components/TerminalMask.vue";
 import CourseArticle from "@/components/CourseArticle.vue";
 import ChapterStep from "@/pages/course/chapter/ChapterStep.vue";
 import TerminalGroup from "@/components/TerminalGroup.vue";
-import { setCourseStatus } from "@/service/api";
+import RemainTime from "@/pages/playground/RemainTime.vue";
 
 const courseData = Courses.experience;
 
@@ -43,7 +45,7 @@ const finishBtnLabel = "FINISH";
 // 结束对话框文字
 const finishDlgLabels = {
   title: "课程完成！",
-  info: "恭喜你完成本门课程，进一寸有进一寸的欢喜",
+  info: "恭喜你完成本门课程，进一寸有进一寸的欢喜~",
   nextBtn: "下一章节",
   restartBtn: "重新开始",
 };
@@ -62,7 +64,7 @@ watch(
   },
   (val) => {
     if (val) {
-      router.push({ name: "home" });
+      mitt.emit(PLAYGROUND_PAGES.BACK_TO_HOME);
     }
   },
   { immediate: true }
@@ -119,10 +121,26 @@ const currentChapterTitle = computed(() => {
 // 当前步骤索引，0：开始； -1：结束； 其他：中间步骤
 const currentStepIdx = ref(0);
 
-// 当前步骤
-const currentStep = computed(() => {
-  return stepList.value[currentStepIdx.value - 1] || {};
+// 当前文章内容
+const articleHtml = computed(() => {
+  if (currentStepIdx.value === 0) {
+    return introduction.value;
+  } else if (currentStepIdx.value === -1) {
+    return finish.value;
+  } else {
+    return stepList.value[currentStepIdx.value - 1] || {};
+  }
 });
+
+// 滚动条置顶
+watch(
+  () => {
+    return currentStepIdx.value;
+  },
+  () => {
+    scroller.value.scrollTop = 0;
+  }
+);
 
 // 镜像信息是否加载完成
 const resourceLoaded = computed(() => {
@@ -156,6 +174,41 @@ watch(
 );
 
 const dropdown = ref(null);
+const showRemainTime = ref(false);
+const showRemainTimeDlg = ref(false);
+
+function toggleTimeoutDlg(show) {
+  showTimeutDlg.value = show;
+}
+
+const timeoutDlgSet = {
+  title: "体验时间到期！",
+  content: "您本次的体验时间已到期，欢迎重新开始，继续体验。",
+  buttons: [
+    {
+      id: 0,
+      label: "重新开始",
+      primary: true,
+      click() {
+        restartChapter();
+      },
+    },
+    {
+      id: 1,
+      label: "返回首页",
+      icon: "arrow-right",
+      isText: true,
+      click() {
+        console.log("重新开始");
+        toggleTimeoutDlg(false);
+        isBegin.value = false;
+        showRemainTime.value = false;
+
+        // backToHome();
+      },
+    },
+  ],
+};
 
 // 输入命令
 function handleCommandClick(e) {
@@ -202,11 +255,11 @@ function finishChapter() {
       },
     ],
   });
-  toggleFinishDialog(true);
+  toggleFinishDlg(true);
 }
 
 // 切换结束对话框
-function toggleFinishDialog(flag) {
+function toggleFinishDlg(flag) {
   if (flag === undefined) {
     showFinishDialog.value = !showFinishDialog.value;
   } else {
@@ -243,7 +296,7 @@ function handleItemClick(idx) {
 // 跳转至某一章节
 function gotoChapter(idx) {
   if (idx >= 0 && idx < chapterList.value.length) {
-    toggleFinishDialog(false);
+    toggleFinishDlg(false);
     terminals.value && terminals.value.closeAllTerminal();
     const item = chapterList.value[idx];
     if (item && item.content_dir) {
@@ -253,17 +306,20 @@ function gotoChapter(idx) {
     }
   }
 
-  toggleFinishDialog(false);
+  toggleFinishDlg(false);
 }
 
 // 重新开始某一章节
 function restartChapter() {
-  showFinishDialog.value = false;
+  toggleFinishDlg(false);
+
   terminals.value && terminals.value.closeAllTerminal();
   currentStepIdx.value = 0;
 }
 
-function onTerminalLoaded() {}
+function onTerminalLoaded(data) {
+  console.log(data);
+}
 
 function onTerminalDisconnect() {}
 
@@ -327,12 +383,18 @@ onBeforeRouteUpdate((to) => {
           </o-dropdown>
           <div class="dropdown-label">{{ currentChapterTitle }}</div>
         </div>
+        <!-- <div v-show="showRemainTime" class="time-tip"> -->
+        <!-- <remain-time ref="remainTimeIns"></remain-time> -->
+        <!-- </div> -->
       </div>
     </div>
     <div class="chapter-content">
       <div class="chapter-content-article">
-        <template v-if="currentStepIdx == 0">
-          <div class="article-top">
+        <div
+          class="article-top"
+          :class="{ reverse: currentStepIdx !== 0 && currentStepIdx !== -1 }"
+        >
+          <template v-if="currentStepIdx == 0">
             <o-button
               v-if="resourceLoaded"
               primary
@@ -340,18 +402,9 @@ onBeforeRouteUpdate((to) => {
               @click="startChapter"
               >{{ startBtnLabel }}</o-button
             >
-          </div>
+          </template>
 
-          <div class="article-bottom">
-            <course-article
-              :content="introduction.html"
-              @command-click="handleCommandClick"
-            ></course-article>
-          </div>
-        </template>
-
-        <template v-if="currentStepIdx !== 0 && currentStepIdx !== -1">
-          <div class="article-top" :class="{ reverse: true }">
+          <template v-if="currentStepIdx !== 0 && currentStepIdx !== -1">
             <chapter-step
               class="article-step"
               :count="stepList.length"
@@ -360,35 +413,28 @@ onBeforeRouteUpdate((to) => {
               @prev-click="handlePrevClick"
               @next-click="handleNextClick"
               @item-click="handleItemClick"
-            ></chapter-step>
-          </div>
-          <div ref="scroller" class="article-bottom">
-            <course-article
-              :content="currentStep.html"
-              @command-click="handleCommandClick"
-            ></course-article>
-          </div>
-        </template>
+            ></chapter-step
+          ></template>
 
-        <template v-if="currentStepIdx === -1">
-          <div class="article-top">
+          <template v-if="currentStepIdx === -1">
             <o-button primary icon="arrow-right" @click="finishChapter">{{
               finishBtnLabel
             }}</o-button>
-          </div>
-          <div class="article-bottom">
-            <course-article
-              :content="finish.html"
-              @command-click="handleCommandClick"
-            ></course-article>
-          </div>
-        </template>
+          </template>
+        </div>
+
+        <div ref="scroller" class="article-bottom">
+          <course-article
+            :content="articleHtml.html"
+            @command-click="handleCommandClick"
+          ></course-article>
+        </div>
       </div>
 
       <div class="chapter-content-terminal">
         <terminal-mask v-if="currentStepIdx == 0 || !resourceLoaded">
           <p class="mask-info">Welcome</p>
-          <p class="mask-info">LET'S PLAY _</p>
+          <p class="mask-info">LET'S PLAY<span class="bling">_</span></p>
         </terminal-mask>
         <terminal-group
           ref="terminals"
@@ -401,7 +447,7 @@ onBeforeRouteUpdate((to) => {
       </div>
     </div>
 
-    <o-dialog :show="showFinishDialog" @close-click="toggleFinishDialog(false)">
+    <o-dialog :show="showFinishDialog" @close-click="toggleFinishDlg(false)">
       <template #head>
         <div class="dlg-title">{{ finishDlgLabels.title }}</div>
       </template>
@@ -410,13 +456,12 @@ onBeforeRouteUpdate((to) => {
         <div class="dlg-actions">
           <o-button
             v-if="currentChapterIdx !== chapterList.length - 1"
-            icon="arrow-right"
             primary
-            :style="{ marginRight: '12px' }"
+            :style="{ marginRight: '24px' }"
             @click="gotoChapter(currentChapterIdx + 1)"
             >{{ finishDlgLabels.nextBtn }}</o-button
           >
-          <o-button primary @click="restartChapter">
+          <o-button icon="arrow-right" is-text @click="restartChapter">
             {{ finishDlgLabels.restartBtn }}</o-button
           >
         </div>
@@ -426,8 +471,19 @@ onBeforeRouteUpdate((to) => {
 </template>
 
 <style lang="scss" scoped>
+@keyframes bling {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
 .chapter-header {
-  height: 92px;
+  height: 80px;
   background: #f5f7fb;
   position: relative;
   z-index: 2;
@@ -447,40 +503,23 @@ onBeforeRouteUpdate((to) => {
       display: flex;
       align-items: center;
       height: 100%;
+
       .dropdown-icon {
         position: relative;
-        width: 26px;
-        height: 24px;
+        width: 20px;
+        height: 20px;
         cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
 
-        .row:nth-child(1) {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 26px;
+        .row {
+          width: 20px;
           height: 2px;
-          background: #000;
-        }
+          background-color: #000000;
 
-        .row:nth-child(2) {
-          position: absolute;
-          top: 50%;
-          left: 0;
-          transform: translateY(-50%);
-          width: 22px;
-          height: 2px;
-          background: #000;
-        }
-
-        .row:nth-child(3) {
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          width: 26px;
-          height: 2px;
-          background: #000;
-          &:hover {
-            background: #002fa7;
+          &:nth-child(2) {
+            width: 16px;
           }
         }
 
@@ -491,27 +530,12 @@ onBeforeRouteUpdate((to) => {
             background: #002fa7;
           }
         }
-
-        &-text {
-          margin-left: 16px;
-          font-size: 24px;
-          font-weight: normal;
-          color: #000000;
-          line-height: 28px;
-        }
       }
 
       .dropdown-item {
-        width: 300px;
-        border-left: 1px solid rgba(0, 47, 167, 1);
-        border-right: 1px solid rgba(0, 47, 167, 1);
+        min-width: 300px;
         transition: color 0.2s, background-color 0.3s;
-        &:first-child {
-          border-top: 1px solid rgba(0, 47, 167, 1);
-        }
-        &:last-child {
-          border-bottom: 1px solid rgba(0, 47, 167, 1);
-        }
+
         &:nth-child(odd) {
           background: #f7f8fa;
         }
@@ -528,11 +552,10 @@ onBeforeRouteUpdate((to) => {
 
       .dropdown-label {
         margin-left: 16px;
-        line-height: 28px;
         font-size: 24px;
+        font-weight: 500;
         color: #000000;
-        letter-spacing: 0;
-        font-weight: 400;
+        line-height: 28px;
       }
     }
   }
@@ -542,6 +565,7 @@ onBeforeRouteUpdate((to) => {
   display: flex;
   width: 100%;
   position: relative;
+  background-color: #ffffff;
   z-index: 1;
   height: calc(100vh - 172px);
 
@@ -555,13 +579,14 @@ onBeforeRouteUpdate((to) => {
     flex-direction: column;
     width: 26.25%;
     height: 100%;
-    padding: 32px 32px 50px;
+    padding: 32px 0 50px;
     @media screen and (max-width: 1023px) {
       width: 100%;
     }
 
     .article-top {
       display: flex;
+      padding: 0 32px 0 32px;
       margin-bottom: 32px;
       &.reverse {
         flex-direction: row-reverse;
@@ -570,8 +595,26 @@ onBeforeRouteUpdate((to) => {
 
     .article-bottom {
       height: 90%;
+      padding-right: 20px;
+      margin-right: 12px;
+      padding-left: 32px;
       overflow-x: hidden;
-      overflow-y: auto;
+
+      &::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        border-radius: 3px;
+        height: 0;
+        background-color: #d8d8d8;
+        background-clip: content-box;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
     }
   }
 
@@ -586,8 +629,35 @@ onBeforeRouteUpdate((to) => {
     }
 
     .mask-info {
-      font-size: 30px;
+      font-size: 49px;
+      font-weight: 400;
+      color: #d0f2ff;
+      line-height: 49px;
+
+      & + .mask-info {
+        margin-top: 27px;
+        .bling {
+          animation: bling 2s infinite reverse;
+        }
+      }
     }
   }
+}
+
+.dlg-title {
+  height: 32px;
+  font-size: 24px;
+  color: #000000;
+  letter-spacing: 0;
+  line-height: 32px;
+  font-weight: bold;
+}
+
+.dlg-body {
+  font-size: 14px;
+  color: #555555;
+  letter-spacing: 0;
+  line-height: 22px;
+  font-weight: 400;
 }
 </style>

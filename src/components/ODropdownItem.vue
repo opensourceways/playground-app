@@ -22,7 +22,13 @@ defineProps({
   font-weight: normal;
   background: #ffffff;
   color: #000000;
+  white-space: nowrap;
+
   cursor: pointer;
+
+  & + .o-dropdown-item {
+    border-top: none;
+  }
 
   &:hover {
     background: #002fa7;

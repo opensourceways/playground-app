@@ -1,4 +1,5 @@
 import { ref, computed } from "vue";
+
 import mitt from "@/shared/mitt";
 import { queryAuthentication, queryUserInfo } from "@/service/api";
 import {
@@ -34,6 +35,11 @@ export let loginStatus = ref(LOGIN_STATUS.NOT);
 function setStatus(val) {
   loginStatus.value = val;
 }
+
+// 是否未登录
+export const isLoginNot = computed(() => {
+  return loginStatus.value === LOGIN_STATUS.NOT;
+});
 
 // 是否登录中
 export const isLoggingIn = computed(() => {
@@ -187,7 +193,6 @@ export async function initGuard() {
           // loginMethods: [LoginMethods.PhoneCode],
         });
         guard.on("login", (authClient) => {
-          console.log("authClient:", authClient);
           if (authClient.id) {
             setAuthCode(authClient.id);
             setAuthIdentity(authClient.federationIdentityId || "");

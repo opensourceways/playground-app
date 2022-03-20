@@ -3,7 +3,7 @@ import { useAttrs } from "vue";
 defineProps({
   close: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   show: {
     type: Boolean,
@@ -25,7 +25,7 @@ function onCloseClick() {
       <div class="dialog-mask"></div>
       <div class="dialog-wrap">
         <div v-if="close" class="close-btn" @click="onCloseClick">
-          <svg-icon name="x"></svg-icon>
+          <svg-icon name="x" size="small"></svg-icon>
         </div>
         <div class="dialog-head">
           <slot name="head"></slot>

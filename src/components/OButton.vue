@@ -43,7 +43,7 @@ function onClick(e) {
 
 <style lang="scss">
 .o-button {
-  padding: 12px 28px;
+  padding: 11px 28px;
   line-height: 24px;
   font-size: 16px;
   background-color: transparent;
@@ -64,6 +64,12 @@ function onClick(e) {
     border-color: transparent;
     min-width: auto;
     padding: 0;
+    &:hover {
+      color: #000000;
+    }
+    .icon {
+      color: #0c41c9;
+    }
   }
 
   &.primary {

@@ -1,22 +1,23 @@
 <script setup>
 import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
-
 import mitt from "@/shared/mitt";
+
 import { goAuthorize, LOGIN_EVENTS, logout } from "@/shared/login";
 import { isLoggingIn } from "@/shared/login";
+import { PLAYGROUND_PAGES } from "@/pages/playground/shared";
 
 import ODialog from "./ODialog.vue";
 import OButton from "./OButton.vue";
-import LoadingDot from "./LoadingArc.vue";
+import LoadingArc from "./LoadingArc.vue";
 
-import logoImg from "@/assets/moocstudio-logo.png";
+import logoImg from "@/assets/logo/moocstudio-logo.png";
 
 const router = useRouter();
 
 const userInfo = reactive({});
 
-const logoutLabel = "LOG OUT";
+const logoutLabel = "退出登录";
 const loginLabel = "LOG IN";
 
 const logoutLabels = {
@@ -37,22 +38,26 @@ function toggleLogoutDlg(flag) {
 }
 
 function doLogin() {
-  goAuthorize();
+  mitt.emit(LOGIN_EVENTS.SHOW_LOGIN);
 }
 
 function doLogout() {
   toggleLogoutDlg(false);
   logout();
-  logoClick();
+  handleLogoClick();
 }
 
 function onAvatarLoad() {
   avatarLoaded.value = true;
 }
 
-function logoClick() {
-  router.push({ name: "home" });
+function handleLogoClick() {
+  mitt.emit(PLAYGROUND_PAGES.BACK_TO_HOME);
 }
+
+mitt.on(LOGIN_EVENTS.SHOW_LOGIN, () => {
+  goAuthorize();
+});
 
 mitt.on(LOGIN_EVENTS.LOGINED, (data) => {
   userInfo.userId = data.userId;
@@ -65,15 +70,19 @@ mitt.on(LOGIN_EVENTS.LOGOUT, () => {
   userInfo.name = "";
   userInfo.avatar = "";
 });
+
+mitt.on(PLAYGROUND_PAGES.BACK_TO_HOME, () => {
+  router.push({ name: "home" });
+});
 </script>
 
 <template>
   <div class="header">
-    <div class="header-logo" @click="logoClick">
+    <div class="header-logo" @click="handleLogoClick">
       <img :src="logoImg" alt="" srcset="" />
     </div>
     <div class="header-tool">
-      <loading-dot v-if="isLoggingIn" class="loading"></loading-dot>
+      <loading-arc v-if="isLoggingIn" class="loading"></loading-arc>
       <div v-else class="user-info">
         <p v-if="!userInfo.userId" class="user-login" @click="doLogin">
           {{ loginLabel }}
@@ -107,18 +116,15 @@ mitt.on(LOGIN_EVENTS.LOGOUT, () => {
       <template #foot>
         <div class="dlg-actions">
           <o-button
-            icon="arrow-right"
             primary
+            :style="{ marginRight: '24px' }"
             @click="toggleLogoutDlg(false)"
             >{{ logoutLabels.btnLabels[0] }}</o-button
           >
 
-          <o-button
-            icon="arrow-right"
-            style="margin-left: 12px"
-            @click="doLogout"
-            >{{ logoutLabels.btnLabels[1] }}</o-button
-          >
+          <o-button icon="arrow-right" is-text @click="doLogout">{{
+            logoutLabels.btnLabels[1]
+          }}</o-button>
         </div>
       </template>
     </o-dialog>
@@ -127,17 +133,13 @@ mitt.on(LOGIN_EVENTS.LOGOUT, () => {
 
 <style lang="scss">
 .header {
-  max-width: 1488px;
-  margin: 0 auto;
-  padding: 16px 36px;
   display: flex;
   align-items: center;
-  height: 100%;
   justify-content: space-between;
-
-  @media screen and (max-width: 1023px) {
-    padding: 16px 24px;
-  }
+  max-width: 1488px;
+  margin: 0 auto;
+  height: 100%;
+  padding: 16px 36px;
 
   &-logo {
     display: flex;
@@ -156,8 +158,9 @@ mitt.on(LOGIN_EVENTS.LOGOUT, () => {
     align-items: center;
 
     .loading {
-      font-size: 24px;
-      color: #002fa7;
+      font-size: 18px;
+      color: #ffffff;
+      background-color: #002fa7;
     }
 
     .user-info {
@@ -165,15 +168,17 @@ mitt.on(LOGIN_EVENTS.LOGOUT, () => {
       height: 100%;
       display: flex;
       align-items: center;
+      color: #ffffff;
       cursor: pointer;
 
       .user-login {
-        padding: 12px;
-        height: 48px;
-        line-height: 24px;
-        font-size: 20px;
-        color: #5470ba;
-        border: 1px solid #002fa7;
+        padding: 8px 16px;
+        height: 34px;
+        font-size: 18px;
+        font-weight: normal;
+        line-height: 18px;
+        color: #ffffff;
+        border: 1px solid #ffffff;
       }
 
       .user-avatar {
@@ -200,14 +205,21 @@ mitt.on(LOGIN_EVENTS.LOGOUT, () => {
         position: absolute;
         right: 0;
         top: 100%;
-        background-color: #fff;
-        box-shadow: 1px 2px 8px rgba($color: #000000, $alpha: 0.1);
-        padding: 8px 0;
+        border: 1px solid #002fa7;
+
         .menu-item {
-          padding: 8px 24px;
+          min-width: 120px;
+          height: 48px;
+          padding: 0 32px;
+          font-size: 14px;
+          font-weight: normal;
+          line-height: 48px;
+          background-color: #ffffff;
+          color: #000000;
           white-space: nowrap;
+          transition: color 0.2s, background-color 0.3s;
           cursor: pointer;
-          min-width: 110px;
+
           &:hover {
             color: #002fa7;
           }
@@ -229,7 +241,7 @@ mitt.on(LOGIN_EVENTS.LOGOUT, () => {
   color: #000000;
   letter-spacing: 0;
   line-height: 32px;
-  font-weight: 400;
+  font-weight: bold;
 }
 
 .dlg-body {

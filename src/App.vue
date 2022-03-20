@@ -7,19 +7,26 @@ import { PLAYGROUND_PAGES } from "@/pages/playground/shared";
 import AppHeader from "@/components/AppHeader.vue";
 import AppFooter from "@/components/AppFooter.vue";
 
+import bg from "@/assets/bg/home-bg-nav.png";
+
 const showFooter = ref(true);
+const bodyBg = ref("#002fa7");
 
 mitt.on(PLAYGROUND_PAGES.SET_FOOTER, (val) => {
   showFooter.value = val;
 });
+
+mitt.on(PLAYGROUND_PAGES.SET_BODY_BG, (val) => {
+  bodyBg.value = val;
+});
 </script>
 
 <template>
-  <header class="app-header">
+  <header class="app-header" :style="{ backgroundImage: `url(${bg})` }">
     <app-header></app-header>
   </header>
 
-  <main class="app-body">
+  <main class="app-body" :style="{ 'background-color': bodyBg }">
     <router-view></router-view>
   </main>
   <div class="app-dialogs"></div>
@@ -34,17 +41,17 @@ mitt.on(PLAYGROUND_PAGES.SET_FOOTER, (val) => {
   position: relative;
   z-index: 2;
   height: 80px;
-  background: #ffffff;
-  box-shadow: 0px 1px 3px 0px rgba(178, 178, 178, 0.5);
-  @media screen and (max-width: 1023px) {
-    height: 60px;
-  }
+  background-color: #002fa7;
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 .app-body {
   position: relative;
   z-index: 1;
-  min-height: calc(100vh - 80px);
+  min-height: calc(100vh - 317px);
 }
+
 .app-dialogs {
   position: relative;
   z-index: 100;

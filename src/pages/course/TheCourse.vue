@@ -1,15 +1,21 @@
 <script setup>
 import { computed, ref, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
+import mitt from "@/shared/mitt";
 
-import { isLogined } from "@/shared/login";
+import {
+  isLoginNot,
+  isLogined,
+  isLoginFailed,
+  LOGIN_EVENTS,
+} from "@/shared/login";
 import { courseList } from "@/shared/composition/course";
 import { queryCourseStatus } from "@/service/api";
 
 import OButton from "@/components/OButton.vue";
 import OCard from "@/components/OCard.vue";
 
-import bannerImg from "@/assets/banner/banner-course.png";
+import bannerBg from "@/assets/bg/course-bg-banner.png";
 
 const router = useRouter();
 const route = useRoute();
@@ -30,7 +36,9 @@ const startBtnLabels = ["开始课程", "继续学习"];
 
 // 开始课程
 function startCourse(item) {
-  if (item.content_dir) {
+  if (!isLogined.value) {
+    mitt.emit(LOGIN_EVENTS.SHOW_LOGIN);
+  } else if (item.content_dir) {
     router.push({
       path: `/course/${coursePath}/chapter/${item.content_dir}`,
     });
@@ -79,61 +87,74 @@ watch(
   },
   { immediate: true }
 );
+
+const showButton = computed(() => {
+  if (isLoginNot.value || isLoginFailed.value || statusInfoLoaded.value) {
+    return true;
+  }
+  return false;
+});
 </script>
 
 <template>
-  <div class="course-banner">
+  <div class="course-banner" :style="{ backgroundImage: `url(${bannerBg})` }">
     <div class="wrap">
       <div class="course-banner-label">
         <p class="banner-label-title">{{ courseInfo.title }}</p>
         <p class="banner-label-desc">{{ courseInfo.description }}</p>
       </div>
-      <div class="course-banner-img">
-        <img :src="bannerImg" alt="" />
-      </div>
     </div>
   </div>
   <div class="course-chapter">
-    <o-card
-      v-for="item in courseInfo.chapters"
-      :key="item.chapter_id"
-      :body-style="{
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-      }"
-      class="card"
-    >
-      <div class="card-content">
-        <img :src="courseInfo.logo" alt="" />
-        <p class="title">{{ item.title }}</p>
-        <p class="detail">{{ item.description }}</p>
-      </div>
+    <div class="wrap">
+      <o-card
+        v-for="item in courseInfo.chapters"
+        :key="item.chapter_id"
+        :body-style="{
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+        }"
+        class="card"
+      >
+        <div class="card-content">
+          <img :src="courseInfo.logo" alt="" />
+          <p class="title">{{ item.title }}</p>
+          <p class="detail">{{ item.description }}</p>
+        </div>
 
-      <div class="card-bandage">{{ item.estimated_time }}</div>
+        <div class="card-bandage">{{ item.estimated_time }}</div>
 
-      <div class="card-operate">
-        <o-button
-          :disabled="!isLogined"
-          :primary="isLogined"
-          icon="arrow-right"
-          :class="{ 'is-learned': chapterStatus.get(item.content_dir) }"
-          @click="startCourse(item)"
-          >{{
-            chapterStatus.get(item.content_dir)
-              ? startBtnLabels[1]
-              : startBtnLabels[0]
-          }}</o-button
-        >
-      </div>
-    </o-card>
+        <div class="card-operate">
+          <o-button
+            v-show="showButton"
+            :primary="isLogined"
+            icon="arrow-right"
+            :class="{
+              'is-learned': chapterStatus.get(item.content_dir),
+              'is-plain': !isLogined,
+            }"
+            @click="startCourse(item)"
+            >{{
+              chapterStatus.get(item.content_dir)
+                ? startBtnLabels[1]
+                : startBtnLabels[0]
+            }}</o-button
+          >
+        </div>
+      </o-card>
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .course-banner {
+  width: 100%;
   background: #002fa7;
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
 
   .wrap {
     display: flex;
@@ -141,128 +162,124 @@ watch(
     align-items: center;
     max-width: 1488px;
     margin: 0 auto;
-    padding: 40px 36px;
+    padding: 100px 36px 90px;
     @media screen and (max-width: 1023px) {
-      padding: 40px 24px;
-      flex-direction: column;
-      align-items: center;
+      padding: 50px 36px 45px;
     }
-  }
 
-  &-label {
-    .banner-label-title {
-      font-size: 54px;
-      color: #ffffff;
-      letter-spacing: 0;
-      line-height: 76px;
-      font-weight: 500;
-      @media screen and (max-width: 1023px) {
-        font-size: 40px;
-        line-height: 48px;
+    .course-banner-label {
+      .banner-label-title {
+        font-size: 54px;
+        color: #ffffff;
+        letter-spacing: 0;
+        line-height: 76px;
+        font-weight: 500;
+        @media screen and (max-width: 1023px) {
+          font-size: 40px;
+          line-height: 48px;
+        }
       }
-    }
-    .banner-label-desc {
-      margin-top: 6px;
-      font-size: 20px;
-      color: #ffffff;
-      letter-spacing: 0;
-      line-height: 28px;
-      font-weight: 400;
+      .banner-label-desc {
+        margin-top: 6px;
+        font-size: 20px;
+        color: #ffffff;
+        letter-spacing: 0;
+        line-height: 28px;
+        font-weight: 400;
+        opacity: 0.8;
 
-      @media screen and (max-width: 1023px) {
-        font-size: 16px;
-        line-height: 20px;
+        @media screen and (max-width: 1023px) {
+          // font-size: 16px;
+          // line-height: 20px;
+        }
       }
-    }
-  }
-
-  &-img {
-    max-width: 100%;
-    width: 400px;
-    height: 300px;
-
-    @media screen and (max-width: 1023px) {
-      margin-top: 32px;
-    }
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      vertical-align: top;
     }
   }
 }
 
 .course-chapter {
-  max-width: 1460px;
-  margin: 0 auto;
-  padding: 100px 36px 160px 36px;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(200px, 1fr));
-  column-gap: 32px;
-  row-gap: 32px;
+  width: 100%;
+  background-color: #f5f7fb;
+  .wrap {
+    max-width: 1488px;
+    margin: 0 auto;
+    padding: 60px 36px 96px 36px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(200px, 1fr));
+    column-gap: 32px;
+    row-gap: 32px;
 
-  @media screen and (max-width: 1023px) {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  }
-
-  .card {
-    position: relative;
-    box-shadow: 0px 12px 32px 0px rgba(190, 196, 204, 0.2);
-
-    &:hover {
-      box-shadow: 0px 4px 20px 4px rgba(190, 196, 204, 0.2);
+    @media screen and (max-width: 1023px) {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     }
-    .card-content {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
 
-      img {
-        width: 48px;
-        height: 48px;
-        object-fit: center;
-        vertical-align: top;
+    .card {
+      position: relative;
+      box-shadow: 0px 12px 32px 0px rgba(190, 196, 204, 0.2);
+
+      &:hover {
+        box-shadow: 0px 4px 20px 4px rgba(190, 196, 204, 0.2);
+      }
+      .card-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        img {
+          width: 48px;
+          height: 48px;
+          object-fit: center;
+          vertical-align: top;
+        }
+
+        .title {
+          margin-top: 20px;
+          font-size: 18px;
+          font-weight: normal;
+          color: #000000;
+          line-height: 24px;
+        }
+
+        .detail {
+          margin-top: 4px;
+          font-size: 14px;
+          font-weight: normal;
+          color: #555555;
+          line-height: 22px;
+        }
       }
 
-      .title {
-        margin-top: 20px;
-        font-size: 18px;
+      .card-operate {
+        margin-top: 48px;
+        min-height: 48px;
+
+        .is-learned {
+          background-color: #feb32a;
+          border-color: #feb32a;
+          &:hover {
+            background-color: #ffc864;
+            border-color: #ffc864;
+          }
+        }
+
+        .is-plain {
+          color: #ffffff;
+          background: #c5c5c5;
+          border-color: #c5c5c5;
+        }
+      }
+
+      .card-bandage {
+        position: absolute;
+        top: 0;
+        right: 12px;
+        padding: 3px 6px;
+        font-size: 12px;
         font-weight: normal;
         color: #000000;
-        line-height: 24px;
+        line-height: 14px;
+        background: #ffce76;
       }
-
-      .detail {
-        margin-top: 4px;
-        font-size: 14px;
-        font-weight: normal;
-        color: #555555;
-        line-height: 22px;
-      }
-    }
-
-    .card-operate {
-      margin-top: 48px;
-
-      // TODO:hover态颜色
-      .is-learned {
-        background-color: #feb32a;
-        border-color: #feb32a;
-      }
-    }
-
-    .card-bandage {
-      position: absolute;
-      top: 0;
-      right: 12px;
-      padding: 3px 6px;
-      font-size: 12px;
-      font-weight: normal;
-      color: #000000;
-      line-height: 14px;
-      background: #ffce76;
     }
   }
 }
