@@ -62,8 +62,6 @@ const chapterStatus = computed(() => {
   return rlt;
 });
 
-window.chapterStatus = chapterStatus;
-window.courseInfo = courseInfo;
 // 登录后获取用户学习进度
 watch(
   () => {

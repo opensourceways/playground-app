@@ -31,7 +31,9 @@ const coursePath = ref(route.params.coursePath);
 const chapterPath = ref(route.params.chapterPath);
 
 const terminals = ref(null);
+const remainTimeIns = ref(null);
 const scroller = ref(null);
+const dropdown = ref(null);
 
 const introduction = ref({});
 const stepList = ref([]);
@@ -87,9 +89,6 @@ const backendPathLoaded = ref(false);
 const chapterList = computed(() => {
   return courseInfo.value.chapters ? courseInfo.value.chapters : [];
 });
-
-window.chapterList = chapterList;
-window.courseList = courseList;
 
 // 章节标题列表
 const chapterTitleList = computed(() => {
@@ -173,43 +172,6 @@ watch(
   }
 );
 
-const dropdown = ref(null);
-const showRemainTime = ref(false);
-const showRemainTimeDlg = ref(false);
-
-function toggleTimeoutDlg(show) {
-  showTimeutDlg.value = show;
-}
-
-const timeoutDlgSet = {
-  title: "体验时间到期！",
-  content: "您本次的体验时间已到期，欢迎重新开始，继续体验。",
-  buttons: [
-    {
-      id: 0,
-      label: "重新开始",
-      primary: true,
-      click() {
-        restartChapter();
-      },
-    },
-    {
-      id: 1,
-      label: "返回首页",
-      icon: "arrow-right",
-      isText: true,
-      click() {
-        console.log("重新开始");
-        toggleTimeoutDlg(false);
-        isBegin.value = false;
-        showRemainTime.value = false;
-
-        // backToHome();
-      },
-    },
-  ],
-};
-
 // 输入命令
 function handleCommandClick(e) {
   console.log(e.command);
@@ -289,6 +251,7 @@ function handleNextClick() {
   }
 }
 
+// 中间某一步
 function handleItemClick(idx) {
   currentStepIdx.value = idx + 1;
 }
@@ -309,19 +272,73 @@ function gotoChapter(idx) {
   toggleFinishDlg(false);
 }
 
+// 终端是否加载
+const terminalLoaded = ref(false);
+// 是否显示剩余时间
+const showRemainTime = computed(() => {
+  return currentStepIdx.value !== 0 && terminalLoaded.value;
+});
+// 是否显示倒计时对话框
+const showTimeoutDlg = ref(false);
+// 切换倒计时对话框
+function toggleTimeoutDlg(show) {
+  showTimeoutDlg.value = show;
+}
+// 倒计时对话框文字内容
+const timeoutDlgSet = {
+  title: "提示",
+  content: "体验时间已结束，欢迎再来，还有更多的精品课程等你体验。",
+  buttons: [
+    {
+      id: 0,
+      label: "返回首页",
+      primary: true,
+      style: { marginRight: "24px" },
+      click() {
+        toggleTimeoutDlg(false);
+        mitt.emit(PLAYGROUND_PAGES.BACK_TO_HOME);
+      },
+    },
+    {
+      id: 1,
+      label: "重新开始",
+      icon: "arrow-right",
+      isText: true,
+      click() {
+        restartChapter();
+      },
+    },
+  ],
+};
+
 // 重新开始某一章节
 function restartChapter() {
   toggleFinishDlg(false);
-
+  toggleTimeoutDlg(false);
+  terminalLoaded.value = false;
+  remainTimeIns.value.reset();
   terminals.value && terminals.value.closeAllTerminal();
   currentStepIdx.value = 0;
 }
 
-function onTerminalLoaded(data) {
-  console.log(data);
+// handle terminal loaded
+function handleTerminalLoaded(data) {
+  terminalLoaded.value = true;
+  // TODO:
+  // remainTimeIns.value.updateTime(data.terminal.remainSecond);
+  remainTimeIns.value.updateTime(6);
 }
 
-function onTerminalDisconnect() {}
+// handle terminal disconnect
+function handleTerminalDisconnect() {
+  remainTimeIns.value.reset();
+}
+
+// handle timeout
+function handleTimeout() {
+  terminals.value && terminals.value.disconnectAllTerminal();
+  toggleTimeoutDlg(true);
+}
 
 // 获取章节具体信息
 function getChapterDetail() {
@@ -341,14 +358,18 @@ getChapterDetail();
 onBeforeRouteUpdate((to) => {
   const { params } = to;
 
-  terminals.value && terminals.value.closeAllTerminal(); // 关闭terminal
-  dropdown.value.toggleMenu(false); // 下拉菜单收起
-  currentStepIdx.value = 0; // 步骤置为0
-
+  // 关闭terminal
+  terminals.value && terminals.value.closeAllTerminal();
+  terminalLoaded.value = false;
+  // 重置倒计时
+  remainTimeIns.value.reset();
+  // 下拉菜单收起
+  dropdown.value.toggleMenu(false);
+  // 步骤置为0
+  currentStepIdx.value = 0;
   // 路由信息更新
   coursePath.value = params.coursePath;
   chapterPath.value = params.chapterPath;
-
   // 镜像资源信息更新
   resourceList.value = [];
   backendPathLoaded.value = false;
@@ -383,9 +404,11 @@ onBeforeRouteUpdate((to) => {
           </o-dropdown>
           <div class="dropdown-label">{{ currentChapterTitle }}</div>
         </div>
-        <!-- <div v-show="showRemainTime" class="time-tip"> -->
-        <!-- <remain-time ref="remainTimeIns"></remain-time> -->
-        <!-- </div> -->
+        <remain-time
+          v-show="showRemainTime"
+          ref="remainTimeIns"
+          @timeout="handleTimeout"
+        ></remain-time>
       </div>
     </div>
     <div class="chapter-content">
@@ -433,16 +456,16 @@ onBeforeRouteUpdate((to) => {
 
       <div class="chapter-content-terminal">
         <terminal-mask v-if="currentStepIdx == 0 || !resourceLoaded">
-          <p class="mask-info">Welcome</p>
-          <p class="mask-info">LET'S PLAY<span class="bling">_</span></p>
+          <p class="mask_label">Welcome</p>
+          <p class="mask_label">LET'S PLAY<span class="bling">_</span></p>
         </terminal-mask>
         <terminal-group
           ref="terminals"
           :max="5"
           :active-index="currentChapterIdx"
           :resource="resourceList"
-          @terminal-loaded="onTerminalLoaded"
-          @terminal-disconnect="onTerminalDisconnect"
+          @terminal-loaded="handleTerminalLoaded"
+          @terminal-disconnect="handleTerminalDisconnect"
         ></terminal-group>
       </div>
     </div>
@@ -463,6 +486,27 @@ onBeforeRouteUpdate((to) => {
           >
           <o-button icon="arrow-right" is-text @click="restartChapter">
             {{ finishDlgLabels.restartBtn }}</o-button
+          >
+        </div>
+      </template>
+    </o-dialog>
+
+    <o-dialog :show="showTimeoutDlg" :close="false">
+      <template #head>
+        <div class="dlg-title">{{ timeoutDlgSet.title }}</div>
+      </template>
+      <div class="dlg-body">{{ timeoutDlgSet.content }}</div>
+      <template #foot>
+        <div class="dlg-actions">
+          <o-button
+            v-for="btn in timeoutDlgSet.buttons"
+            :key="btn.id"
+            :primary="btn.primary"
+            :icon="btn.icon"
+            :is-text="btn.isText"
+            :style="btn.style"
+            @click="btn.click(btn)"
+            >{{ btn.label }}</o-button
           >
         </div>
       </template>
@@ -628,13 +672,13 @@ onBeforeRouteUpdate((to) => {
       height: calc(100vh - 172px);
     }
 
-    .mask-info {
+    .mask_label {
       font-size: 49px;
       font-weight: 400;
       color: #d0f2ff;
       line-height: 49px;
 
-      & + .mask-info {
+      & + .mask_label {
         margin-top: 27px;
         .bling {
           animation: bling 2s infinite reverse;

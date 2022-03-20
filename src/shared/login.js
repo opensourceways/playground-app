@@ -193,14 +193,14 @@ export async function initGuard() {
           // loginMethods: [LoginMethods.PhoneCode],
         });
         guard.on("login", (authClient) => {
-          if (authClient.id) {
+          if (authClient && authClient.id) {
             setAuthCode(authClient.id);
             setAuthIdentity(authClient.federationIdentityId || "");
             doSignUp();
             setTimeout(() => {
               guard.hide();
               removeGuard();
-            }, 800);
+            }, 300);
           }
         });
       } else {

@@ -90,10 +90,12 @@ function gotoCourse(item) {
 
   <div class="mooc-course">
     <div
+      v-show="courseList.length"
       class="mooc-course-bg_left"
       :style="{ backgroundImage: `url(${courseLeftBg})` }"
     ></div>
     <div
+      v-show="courseList.length"
       class="mooc-course-bg_right"
       :style="{ backgroundImage: `url(${courseRightBg})` }"
     ></div>
