@@ -23,7 +23,7 @@ const linkList = [
 const labels = {
   atom: "openEuler是由开放原子开源基金会（OpenAtom Foundation）孵化及运营的开源项目",
   contact: "contact@openeuler.sh",
-  copyright: "版权所有 © 2022 moocstudio 保留一切权利",
+  copyright: "版权所有 © 2022 openEuler 保留一切权利",
 };
 
 function handleHrefClick(url) {

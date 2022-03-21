@@ -1,5 +1,6 @@
 <script setup>
-import { onMounted, onUnmounted, ref, watch } from "vue";
+import { ref, watch } from "vue";
+import useClickOutside from "./hooks/useClickOutside";
 
 const dropdown = ref(null);
 const tool = ref(null);
@@ -19,19 +20,23 @@ function toggleMenu(flag) {
   }
 }
 
-function onClick(e) {
-  if (!isOpen.value) {
-    return;
-  }
-  if (!dropdown.value.contains(e.target)) {
-    toggleMenu(false);
-  }
-}
-
 defineExpose({
   toggleMenu,
   isOpen,
 });
+
+const isClickOutside = useClickOutside(dropdown);
+
+watch(
+  () => {
+    return isClickOutside.value;
+  },
+  (val) => {
+    if (isOpen.value && val) {
+      toggleMenu(false);
+    }
+  }
+);
 
 watch(
   () => {
@@ -46,14 +51,6 @@ watch(
     }
   }
 );
-
-onMounted(() => {
-  window.addEventListener("click", onClick);
-});
-
-onUnmounted(() => {
-  window.removeEventListener("click", onClick);
-});
 </script>
 
 <template>

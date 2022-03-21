@@ -324,9 +324,7 @@ function restartChapter() {
 // handle terminal loaded
 function handleTerminalLoaded(data) {
   terminalLoaded.value = true;
-  // TODO:
-  // remainTimeIns.value.updateTime(data.terminal.remainSecond);
-  remainTimeIns.value.updateTime(6);
+  remainTimeIns.value.updateTime(data.terminal.remainSecond);
 }
 
 // handle terminal disconnect
