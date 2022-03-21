@@ -619,7 +619,7 @@ onBeforeRouteUpdate((to) => {
   &-article {
     display: flex;
     flex-direction: column;
-    width: 26.25%;
+    width: 38.2%;
     height: 100%;
     padding: 32px 0 50px;
     @media screen and (max-width: 1023px) {
@@ -661,7 +661,7 @@ onBeforeRouteUpdate((to) => {
   }
 
   &-terminal {
-    width: 73.75%;
+    width: 61.2%;
     height: 100%;
     position: relative;
 
