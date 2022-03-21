@@ -213,6 +213,7 @@ const showButton = computed(() => {
 
     .card {
       position: relative;
+      background-color: #ffffff;
       box-shadow: 0px 12px 32px 0px rgba(190, 196, 204, 0.2);
 
       &:hover {
