@@ -174,12 +174,12 @@ watch(
 
 // 输入命令
 function handleCommandClick(e) {
-  console.log(e.command);
-  mitt.emit(PLAYGROUND_KEYS.ENTER, { commond: e.command });
+  console.log({ type: e.type, command: e.command });
+  mitt.emit(PLAYGROUND_KEYS.ENTER, { type: e.type, commond: e.command });
 }
 
 mitt.on(PLAYGROUND_KEYS.ENTER, (data) => {
-  terminals.value && terminals.value.enterCommond(data.commond);
+  terminals.value && terminals.value.enterCommond(data.type, data.commond);
 });
 
 // 开始章节

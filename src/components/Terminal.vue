@@ -289,9 +289,14 @@ function fit() {
 }
 
 // 输入命令
-function enter(commmond) {
+function enter(type, commmond) {
   if (webTTYInstance && commmond) {
-    webTTYInstance.input(commmond.endsWith("\n") ? commmond : commmond + "\n");
+    if (type === "run") {
+      webTTYInstance.run(commmond.endsWith("\n") ? commmond : commmond + "\n");
+    } else if (type === "print") {
+      webTTYInstance.run(commmond);
+      terminal && terminal.focus();
+    }
   }
 }
 

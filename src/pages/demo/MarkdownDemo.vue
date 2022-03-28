@@ -3,32 +3,57 @@ import CourseArticle from "@/components/CourseArticle.vue";
 import { handleMarkdown } from "@/shared/handle-markdown";
 import { watch, ref } from "vue";
 
-const initStr = `## 行内代码
-行内代码\`git init\`行内代码
-
-行内可点击代码\`git init\`{{git init}}行内可点击代码\`git init\`{{RUN}}行内可点击代码
+const initStr = `
+## 行内代码
+- 行内代码\`git init\`行内代码
+- 行内可执行代码\`git init\`{{RUN|git init}} 行内可执行代码\`git init\`{{RUN}}
+- 行内可打印代码\`git init\`{{PRINT|git init}} 行内可点击代码\`git init\`{{PRINT}}
 
 ## 多行代码块
 
-可点击代码块
+- 多行代码块
 
 \`\`\`
 git clone https://gitee.com/devin-cwd/openeuler-docs.git
 git push
-\`\`\`{{RUN}}
+\`\`\`
 
-代码块
+- 可执行多行代码块
+
 \`\`\`
 git clone https://gitee.com/devin-cwd/openeuler-docs.git
-\`\`\`
+git push
+\`\`\`{{RUN|git clone https://gitee.com/devin-cwd/openeuler-docs.git git push}}
 
-sh代码块
+- 可打印多行代码块
+\`\`\`
+git clone https://gitee.com/devin-cwd/openeuler-docs.git
+git push
+\`\`\`{{PRINT|git clone https://gitee.com/devin-cwd/openeuler-docs.git git push}}
+
+- 分行可执行多行代码块
+\`\`\`
+git clone https://gitee.com/devin-cwd/openeuler-docs.git
+\`\`\`{{RUN|git clone https://gitee.com/devin-cwd/openeuler-docs.git}}
+\`\`\`
+git push
+\`\`\`{{RUN}}
+
+- 分行可打印多行代码块
+\`\`\`
+git clone https://gitee.com/devin-cwd/openeuler-docs.git
+\`\`\`{{PRINT|git clone https://gitee.com/devin-cwd/openeuler-docs.git}}
+\`\`\`
+git push
+\`\`\`{{PRINT}}
+
+- sh代码块
 \`\`\`
 git clone https://gitee.com/devin-cwd/openeuler-docs.git
 git push
 \`\`\`
 
-sh分行可执行代码块
+- sh分行可执行代码块
 \`\`\`
 git clone https://gitee.com/devin-cwd/openeuler-docs.git
 \`\`\`{{RUN}}
@@ -36,11 +61,19 @@ git clone https://gitee.com/devin-cwd/openeuler-docs.git
 git push
 \`\`\`{{RUN}}
 
-bash代码块
+- bash代码块
+\`\`\`
+git clone https://gitee.com/devin-cwd/openeuler-docs.git
+git push
+\`\`\`
+
+- bash分行可执行代码块
 \`\`\`bash
 git clone https://gitee.com/devin-cwd/openeuler-docs.git
 \`\`\`{{RUN}}
-
+\`\`\`
+git push
+\`\`\`{{RUN}}
 `;
 
 const codeString = ref(initStr);
@@ -56,7 +89,7 @@ watch(
 
 function exec(e) {
   console.log(e.command);
-  alert(e.command);
+  alert(`type: ${e.type}\n${e.command}`);
 }
 </script>
 <template>
@@ -76,7 +109,7 @@ function exec(e) {
       <CourseArticle
         class="html"
         :content="result"
-        @click="exec"
+        @command-click="exec"
       ></CourseArticle>
     </div>
   </div>

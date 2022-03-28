@@ -150,7 +150,7 @@ function onResourceStatus(data) {
   }
 }
 
-function enterCommond(commond) {
+function enterCommond(type, commond) {
   if (!currentId.value) {
     return;
   }
@@ -158,7 +158,7 @@ function enterCommond(commond) {
     (item) => item.id === currentId.value
   );
 
-  terminalRefs[index].enter(commond);
+  terminalRefs[index].enter(type, commond);
 }
 
 defineExpose({

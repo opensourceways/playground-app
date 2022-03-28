@@ -1,8 +1,4 @@
 <script setup>
-const COMMAND_INNER = {
-  exec: "RUN",
-};
-
 defineProps({
   content: {
     type: String,
@@ -13,13 +9,19 @@ const emit = defineEmits(["command-click"]);
 function onClick(e) {
   const { target } = e;
   let command = target.getAttribute("exec");
-  if (command) {
-    if (command === COMMAND_INNER.exec) {
+  let type = target.getAttribute("type");
+  if (command || type) {
+    if (!type) {
+      type = "print";
+    }
+    if (!command) {
       command = target.innerText;
     }
+
     emit("command-click", {
       e,
       command,
+      type,
     });
   }
 }
@@ -40,7 +42,8 @@ function onClick(e) {
     background-color: #eceff0;
     // border-radius: 4px;
     padding: 0 4px;
-    &[exec] {
+    &[exec],
+    &[type] {
       cursor: pointer;
       background-color: #d7e2ff;
       // color: blue;
@@ -78,7 +81,8 @@ function onClick(e) {
     }
 
     code,
-    code[exec] {
+    code[exec],
+    code[type] {
       margin: 0;
       padding: 0;
       background-color: transparent;
