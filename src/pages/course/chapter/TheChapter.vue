@@ -10,17 +10,17 @@ import { setCourseStatus } from "@/service/api";
 
 import { PLAYGROUND_KEYS, PLAYGROUND_PAGES } from "@/pages/playground/shared";
 import { toNumCN } from "@/shared/utils";
-import { isLoggingIn, isLogined } from "@/shared/login";
+import { isLoggingIn, isLogined, LOGIN_EVENTS } from "@/shared/login";
 
 import ODialog from "@/components/ODialog.vue";
 import OButton from "@/components/OButton.vue";
 import ODropdown from "@/components/ODropdown.vue";
 import ODropDownItem from "@/components/ODropdownItem.vue";
-import TerminalMask from "@/components/TerminalMask.vue";
 import CourseArticle from "@/components/CourseArticle.vue";
 import ChapterStep from "@/pages/course/chapter/ChapterStep.vue";
 import TerminalGroup from "@/components/TerminalGroup.vue";
 import RemainTime from "@/pages/playground/RemainTime.vue";
+import TerminalPoster from "@/components/TerminalPoster.vue";
 
 const courseData = Courses.experience;
 
@@ -172,16 +172,6 @@ watch(
   }
 );
 
-// 输入命令
-function handleCommandClick(e) {
-  console.log({ type: e.type, command: e.command });
-  mitt.emit(PLAYGROUND_KEYS.ENTER, { type: e.type, commond: e.command });
-}
-
-mitt.on(PLAYGROUND_KEYS.ENTER, (data) => {
-  terminals.value && terminals.value.enterCommond(data.type, data.commond);
-});
-
 // 开始章节
 function startChapter() {
   setCourseStatus({
@@ -201,6 +191,19 @@ function startChapter() {
 mitt.on(PLAYGROUND_KEYS.START, (index) => {
   terminals.value && terminals.value.addTerminal(false, index);
 });
+
+// 点击开始
+function beginToTry() {
+  if (isLoggingIn.value) {
+    return;
+  } else {
+    if (!isLogined.value) {
+      mitt.emit(LOGIN_EVENTS.SHOW_LOGIN);
+    } else {
+      startChapter();
+    }
+  }
+}
 
 // 是否显示结束对话框
 const showFinishDialog = ref(false);
@@ -320,6 +323,16 @@ function restartChapter() {
   terminals.value && terminals.value.closeAllTerminal();
   currentStepIdx.value = 0;
 }
+
+// 输入命令
+function handleCommandClick(e) {
+  console.log({ type: e.type, command: e.command });
+  mitt.emit(PLAYGROUND_KEYS.ENTER, { type: e.type, commond: e.command });
+}
+
+mitt.on(PLAYGROUND_KEYS.ENTER, (data) => {
+  terminals.value && terminals.value.enterCommond(data.type, data.commond);
+});
 
 // handle terminal loaded
 function handleTerminalLoaded(data) {
@@ -453,10 +466,19 @@ onBeforeRouteUpdate((to) => {
       </div>
 
       <div class="chapter-content-terminal">
-        <terminal-mask v-if="currentStepIdx == 0 || !resourceLoaded">
+        <!-- <terminal-mask>
           <p class="mask_label">Welcome</p>
           <p class="mask_label">LET'S PLAY<span class="bling">_</span></p>
-        </terminal-mask>
+        </terminal-mask> -->
+        <div
+          v-if="currentStepIdx == 0 || !resourceLoaded"
+          class="terminal-mask"
+        >
+          <terminal-poster
+            class="poster"
+            @btn-click="beginToTry"
+          ></terminal-poster>
+        </div>
         <terminal-group
           ref="terminals"
           :max="5"
@@ -670,17 +692,37 @@ onBeforeRouteUpdate((to) => {
       height: calc(100vh - 172px);
     }
 
-    .mask_label {
-      font-size: 49px;
-      font-weight: 400;
-      color: #d0f2ff;
-      line-height: 49px;
+    // .mask_label {
+    //   font-size: 49px;
+    //   font-weight: 400;
+    //   color: #d0f2ff;
+    //   line-height: 49px;
 
-      & + .mask_label {
-        margin-top: 27px;
-        .bling {
-          animation: bling 2s infinite reverse;
-        }
+    //   & + .mask_label {
+    //     margin-top: 27px;
+    //     .bling {
+    //       animation: bling 2s infinite reverse;
+    //     }
+    //   }
+    // }
+
+    .terminal-mask {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      top: 0;
+      color: #eee;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+      .poster {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 42px;
       }
     }
   }
