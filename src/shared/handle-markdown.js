@@ -56,38 +56,84 @@ const getCode = (cmd) => {
 };
 
 const mkit = new Markdown({ html: true });
+
+/**
+ *
+ * @param {String} str
+ * 1-1: ```git clone```
+ * 1-2: ```[[git clone]]{{RUN}}```
+ *
+ * 2-1: ```
+ *      git clone
+ *      ```
+ * 2-2: ```
+ *      [[git clone]]{{RUN}}
+ *      ```
+ * 2-3: ```shell
+ *      [[git clone]]{{RUN}}
+ *      ```
+ *
+ * 3-1: `git clone`
+ * 3-2: `[[git clone]]{{RUN}}`
+ *
+ * @param {Function} parseFn
+ * @returns
+ */
 export function handleMarkdown(str, parseFn) {
   // 支持可执行命令
   let rlt = str
     // 不换行代码块
-    // .replace(/`{3}(.+?)`{3}{{([^}}]+?)}}/g, '<code exec="$2">$1</code>')
-    .replace(/`{3}(.+?)`{3}{{([^}}]+?)}}/g, (_, $1, $2) => {
-      const code = getCode($2);
-      return `<code ${getCmdStr(code.cmd)}type="${code.type}">${$1}</code>`;
-    })
-    // 行内代码
-    // .replace(/`([^`]+?)`{{([^}}]+?)}}/g, '<code exec="$2">$1</code>')
-    .replace(/`([^`]+?)`{{([^}}]+?)}}/g, (_, $1, $2) => {
-      const code = getCode($2);
-      return `<code ${getCmdStr(code.cmd)}type="${code.type}">${$1}</code>`;
+    .replace(/`{3}(.+?)`{3}/g, (_, $1) => {
+      let flag = false;
+      const rlt = $1.replace(
+        /\[\[([^\]\]]+?)\]\]{{([^}}]+?)}}/g,
+        (_, i1, i2) => {
+          flag = true;
+          const code = getCode(i2);
+          return `<span ${getCmdStr(code.cmd)}type="${code.type}">${i1}</span>`;
+        }
+      );
+
+      return flag
+        ? `<code class='inline-exec'>${rlt}</code>`
+        : `<code>${$1}</code>`;
     })
     // 换行代码块
-    .replace(/`{3}(.*)([^`{3}]+?)`{3}{{(.+?)}}/g, (_, $1, $2, $3) => {
-      console.log($1);
+    .replace(/`{3}(.*)([^]+?)`{3}/g, (_, $1, $2) => {
       const classname = $1 ? `class="language-${$1}"` : "";
+      let flag = false;
+      const rlt = $2.replace(
+        /\[\[([^(\]\])]+?)\]\]{{([^}}]+?)}}/g,
+        (_, i1, i2) => {
+          flag = true;
+          const code = getCode(i2);
+          return `<span ${getCmdStr(code.cmd)}type="${code.type}">${i1}</span>`;
+        }
+      );
+      return flag
+        ? `<pre><code ${classname}>${rlt.replace(/^\n/g, "")}</code></pre>`
+        : `<pre><code ${classname}>${$2.replace(/^\n/g, "")}</code></pre>`;
+    })
+    // 行内代码
+    .replace(/`([^`]+?)`/g, (_, $1) => {
+      let flag = false;
+      const rlt = $1.replace(
+        /\[\[([^\]\]]+?)\]\]{{([^}}]+?)}}/g,
+        (_, i1, i2) => {
+          flag = true;
+          const code = getCode(i2);
+          return `<span ${getCmdStr(code.cmd)}type="${code.type}">${i1}</span>`;
+        }
+      );
 
-      const code = getCode($3);
-      const cmdStr = `${getCmdStr(code.cmd)} `;
-      const typeStr = `type="${code.type}" `;
-
-      const content = $2.replace(/^\n/g, "");
-      return `<pre><code ${cmdStr}${typeStr}${classname}>${content}</code></pre>`;
+      return flag
+        ? `<code class='inline-exec'>${rlt}</code>`
+        : `<code>${$1}</code>`;
     });
 
   if (parseFn) {
     rlt = parseFn(rlt);
   }
-  // const test = mkit.render(rlt);
-  // console.log(test);
+
   return mkit.render(rlt);
 }

@@ -40,19 +40,53 @@ function onClick(e) {
   color: #555555;
   code {
     background-color: #eceff0;
-    // border-radius: 4px;
     padding: 0 4px;
     &[exec],
     &[type] {
       cursor: pointer;
       background-color: #d7e2ff;
-      // color: blue;
+      word-break: break-all;
+
+      &:hover {
+        background-color: #cbd6ee;
+      }
+      &:active {
+        background-color: #dce5f8;
+      }
+    }
+
+    & span[exec],
+    & span[type] {
+      cursor: pointer;
+      background-color: #d7e2ff;
       word-break: break-all;
       &:hover {
         background-color: #cbd6ee;
       }
       &:active {
         background-color: #dce5f8;
+      }
+    }
+
+    &.inline-exec,
+    &.inline-exec {
+      cursor: pointer;
+      background-color: #d7e2ff;
+      word-break: break-all;
+
+      &:hover {
+        background-color: #cbd6ee;
+        & span[exec],
+        & span[type] {
+          background-color: #cbd6ee;
+        }
+      }
+      &:active {
+        background-color: #dce5f8;
+        & span[exec],
+        & span[type] {
+          background-color: #dce5f8;
+        }
       }
     }
   }
@@ -86,6 +120,10 @@ function onClick(e) {
       margin: 0;
       padding: 0;
       background-color: transparent;
+      & span[exec],
+      & span[type] {
+        background-color: transparent;
+      }
     }
   }
   h1 {

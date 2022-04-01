@@ -6,8 +6,9 @@ import { watch, ref } from "vue";
 const initStr = `
 ## 行内代码
 - 行内代码\`git init\`行内代码
-- 行内可执行代码\`git init\`{{RUN|git init}} 行内可执行代码\`git init\`{{RUN}}
-- 行内可打印代码\`git init\`{{PRINT|git init}} 行内可点击代码\`git init\`{{PRINT}}
+- 行内可执行代码\`[[git init]]{{RUN}}\` 行内可执行代码\`[[git init]]{{RUN|git init}}\`
+- 行内可打印代码\`[[git init]]{{PRINT}}\` 行内可打印代码\`[[git init]]{{PRINT|git init}}\`
+- 行内可打印代码\`[[git config --global user.name]]{{PRINT}} "your name"\`
 
 ## 多行代码块
 
@@ -21,61 +22,34 @@ git push
 - 可执行多行代码块
 
 \`\`\`
-git clone https://gitee.com/devin-cwd/openeuler-docs.git
-git push
-\`\`\`{{RUN|git clone https://gitee.com/devin-cwd/openeuler-docs.git git push}}
+[[git clone https://gitee.com/devin-cwd/openeuler-docs.git]]{{RUN}}
+[[git push]]{{RUN|git push}}
+\`\`\`
 
 - 可打印多行代码块
 \`\`\`
-git clone https://gitee.com/devin-cwd/openeuler-docs.git
-git push
-\`\`\`{{PRINT|git clone https://gitee.com/devin-cwd/openeuler-docs.git git push}}
+[[git clone https://gitee.com/devin-cwd/openeuler-docs.git]]{{PRINT}}
+[[git push]]{{PRINT|git push}}
+\`\`\`
 
-- 分行可执行多行代码块
-\`\`\`
-git clone https://gitee.com/devin-cwd/openeuler-docs.git
-\`\`\`{{RUN|git clone https://gitee.com/devin-cwd/openeuler-docs.git}}
-\`\`\`
-git push
-\`\`\`{{RUN}}
-
-- 分行可打印多行代码块
-\`\`\`
-git clone https://gitee.com/devin-cwd/openeuler-docs.git
-\`\`\`{{PRINT|git clone https://gitee.com/devin-cwd/openeuler-docs.git}}
-\`\`\`
-git push
-\`\`\`{{PRINT}}
 
 - sh代码块
-\`\`\`
+\`\`\`shell
 git clone https://gitee.com/devin-cwd/openeuler-docs.git
 git push
 \`\`\`
-
-- sh分行可执行代码块
-\`\`\`
-git clone https://gitee.com/devin-cwd/openeuler-docs.git
-\`\`\`{{RUN}}
-\`\`\`
-git push
-\`\`\`{{RUN}}
 
 - bash代码块
-\`\`\`
-git clone https://gitee.com/devin-cwd/openeuler-docs.git
-git push
-\`\`\`
-
-- bash分行可执行代码块
 \`\`\`bash
 git clone https://gitee.com/devin-cwd/openeuler-docs.git
-\`\`\`{{RUN}}
-\`\`\`
 git push
-\`\`\`{{RUN}}
-`;
+\`\`\`
 
+## 兼容测试
+
+<code type="run" exec="git clone">git clone</code>
+<code class="inline-exec"><span type="run" exec="git push">git push</span></code>
+`;
 const codeString = ref(initStr);
 const result = ref(handleMarkdown(codeString.value));
 
@@ -92,6 +66,7 @@ function exec(e) {
   alert(`type: ${e.type}\n${e.command}`);
 }
 </script>
+
 <template>
   <div class="page-demo">
     <div class="section">
@@ -114,11 +89,16 @@ function exec(e) {
     </div>
   </div>
 </template>
+
 <style lang="scss" scoped>
 .page-demo {
   display: flex;
   padding: 60px;
   min-height: calc(100vh - 80px);
+}
+
+textarea {
+  font-size: smaller;
 }
 .section {
   flex: 1;
