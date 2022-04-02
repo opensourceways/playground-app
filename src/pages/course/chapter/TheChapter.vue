@@ -444,6 +444,7 @@ onBeforeRouteUpdate((to) => {
               :count="stepList.length"
               :active-index="currentStepIdx"
               :prev-disabled="currentStepIdx === 1"
+              :next-disabled="currentStepIdx === -1"
               @prev-click="handlePrevClick"
               @next-click="handleNextClick"
               @item-click="handleItemClick"
@@ -466,10 +467,6 @@ onBeforeRouteUpdate((to) => {
       </div>
 
       <div class="chapter-content-terminal">
-        <!-- <terminal-mask>
-          <p class="mask_label">Welcome</p>
-          <p class="mask_label">LET'S PLAY<span class="bling">_</span></p>
-        </terminal-mask> -->
         <div
           v-if="currentStepIdx == 0 || !resourceLoaded"
           class="terminal-mask"
@@ -643,7 +640,7 @@ onBeforeRouteUpdate((to) => {
     flex-direction: column;
     width: 38.2%;
     height: 100%;
-    padding: 32px 0 50px;
+    padding: 20px 0 48px;
     @media screen and (max-width: 1023px) {
       width: 100%;
     }
@@ -651,7 +648,10 @@ onBeforeRouteUpdate((to) => {
     .article-top {
       display: flex;
       padding: 0 32px 0 32px;
-      margin-bottom: 32px;
+      margin-bottom: 24px;
+      justify-content: space-between;
+      height: 48px;
+      align-items: center;
       &.reverse {
         flex-direction: row-reverse;
       }
