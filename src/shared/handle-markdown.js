@@ -85,57 +85,46 @@ export function handleMarkdown(str, parseFn) {
     // 不换行代码块
     .replace(/`{3}(.+?)`{3}/g, (_, $1) => {
       let flag = false;
-      const rlt = $1.replace(
-        /\[\[([^\]\]]+?)\]\]{{([^}}]+?)}}/g,
-        (_, i1, i2) => {
+      $1 = $1
+        .replace(/</g, "\\<")
+        .replace(/>/g, "\\>")
+        .replace(/\[\[([^\]\]]+?)\]\]{{([^}}]+?)}}/g, (_, i1, i2) => {
           flag = true;
           const code = getCode(i2);
-          return `<span ${getCmdStr(code.cmd)}type="${code.type}">${i1.replace(
-            /</g,
-            "\\<"
-          )}</span>`;
-        }
-      );
+          return `<span ${getCmdStr(code.cmd)}type="${code.type}">${i1}</span>`;
+        });
 
       return flag
-        ? `<code class='inline-exec'>${rlt}</code>`
+        ? `<code class='inline-exec'>${$1}</code>`
         : `<code>${$1}</code>`;
     })
     // 换行代码块
     .replace(/`{3}(.*)([^]+?)`{3}/g, (_, $1, $2) => {
       const classname = $1 ? `class="language-${$1}"` : "";
-      let flag = false;
-      const rlt = $2.replace(
-        /\[\[([^(\]\])]+?)\]\]{{([^}}]+?)}}/g,
-        (_, i1, i2) => {
-          flag = true;
+      $2 = $2
+        .replace(/</g, "&lt")
+        .replace(/>/g, "&amp")
+        .replace(/\[\[([^(\]\])]+?)\]\]{{([^}}]+?)}}/g, (_, i1, i2) => {
           const code = getCode(i2);
-          return `<span ${getCmdStr(code.cmd)}type="${code.type}">${i1.replace(
-            /</g,
-            "\\<"
-          )}</span>`;
-        }
-      );
-      return flag
-        ? `<pre><code ${classname}>${rlt.replace(/^\n/g, "")}</code></pre>`
-        : `<pre><code ${classname}>${$2.replace(/^\n/g, "")}</code></pre>`;
+          return `<span ${getCmdStr(code.cmd)}type="${code.type}">${i1}</span>`;
+        })
+        .replace(/^\n/g, "");
+
+      return `<pre><code ${classname}>${$2}</code></pre>`;
     })
     // 行内代码
     .replace(/`([^`]+?)`/g, (_, $1) => {
       let flag = false;
-      const rlt = $1.replace(
-        /\[\[([^\]\]]+?)\]\]{{([^}}]+?)}}/g,
-        (_, i1, i2) => {
+      $1 = $1
+        .replace(/</g, "\\<")
+        .replace(/>/g, "\\>")
+        .replace(/\[\[([^\]\]]+?)\]\]{{([^}}]+?)}}/g, (_, i1, i2) => {
           flag = true;
           const code = getCode(i2);
-          return `<span ${getCmdStr(code.cmd)}type="${code.type}">${i1.replace(
-            /</g,
-            "\\<"
-          )}</span>`;
-        }
-      );
+          return `<span ${getCmdStr(code.cmd)}type="${code.type}">${i1}</span>`;
+        });
       return flag
-        ? `<code class='inline-exec'>${rlt}</code>`
+        ? `<code class='inline-exec'>${$1}</code>`
         : `<code>${$1}</code>`;
     });
 

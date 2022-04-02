@@ -32,7 +32,6 @@ git push
 [[git push]]{{PRINT|git push}}
 \`\`\`
 
-
 - sh代码块
 \`\`\`shell
 git clone https://gitee.com/devin-cwd/openeuler-docs.git
@@ -50,6 +49,7 @@ git push
 <code type="run" exec="git clone">git clone</code>
 <code class="inline-exec"><span type="run" exec="git push">git push</span></code>
 `;
+
 const codeString = ref(initStr);
 const result = ref(handleMarkdown(codeString.value));
 
