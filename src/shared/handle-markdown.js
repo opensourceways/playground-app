@@ -90,7 +90,10 @@ export function handleMarkdown(str, parseFn) {
         (_, i1, i2) => {
           flag = true;
           const code = getCode(i2);
-          return `<span ${getCmdStr(code.cmd)}type="${code.type}">${i1}</span>`;
+          return `<span ${getCmdStr(code.cmd)}type="${code.type}">${i1.replace(
+            /</g,
+            "\\<"
+          )}</span>`;
         }
       );
 
@@ -107,7 +110,10 @@ export function handleMarkdown(str, parseFn) {
         (_, i1, i2) => {
           flag = true;
           const code = getCode(i2);
-          return `<span ${getCmdStr(code.cmd)}type="${code.type}">${i1}</span>`;
+          return `<span ${getCmdStr(code.cmd)}type="${code.type}">${i1.replace(
+            /</g,
+            "\\<"
+          )}</span>`;
         }
       );
       return flag
@@ -122,10 +128,12 @@ export function handleMarkdown(str, parseFn) {
         (_, i1, i2) => {
           flag = true;
           const code = getCode(i2);
-          return `<span ${getCmdStr(code.cmd)}type="${code.type}">${i1}</span>`;
+          return `<span ${getCmdStr(code.cmd)}type="${code.type}">${i1.replace(
+            /</g,
+            "\\<"
+          )}</span>`;
         }
       );
-
       return flag
         ? `<code class='inline-exec'>${rlt}</code>`
         : `<code>${$1}</code>`;
