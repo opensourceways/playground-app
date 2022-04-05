@@ -545,7 +545,7 @@ onBeforeRouteUpdate((to) => {
 }
 .chapter-header {
   height: 80px;
-  background: #f5f7fb;
+  background: var(--euler-bg-color);
   position: relative;
   z-index: 2;
 
@@ -577,7 +577,7 @@ onBeforeRouteUpdate((to) => {
         .row {
           width: 20px;
           height: 2px;
-          background-color: #000000;
+          background-color: var(--euler-color-black);
 
           &:nth-child(2) {
             width: 16px;
@@ -588,7 +588,7 @@ onBeforeRouteUpdate((to) => {
           .row:nth-child(1),
           .row:nth-child(2),
           .row:nth-child(3) {
-            background: #002fa7;
+            background: var(--euler-color-primary);
           }
         }
       }
@@ -598,16 +598,16 @@ onBeforeRouteUpdate((to) => {
         transition: color 0.2s, background-color 0.3s;
 
         &:nth-child(odd) {
-          background: #f7f8fa;
+          background: var(--euler-color-gray-3);
         }
 
         &:nth-child(even) {
-          background: #ffffff;
+          background: var(--euler-color-white);
         }
 
         &:hover {
-          background: #002fa7;
-          color: #ffffff;
+          background: var(--euler-color-primary);
+          color: var(--euler-color-white);
         }
       }
 
@@ -615,7 +615,7 @@ onBeforeRouteUpdate((to) => {
         margin-left: 16px;
         font-size: 24px;
         font-weight: 500;
-        color: #000000;
+        color: var(--euler-text-color-dark);
         line-height: 28px;
       }
     }
@@ -626,7 +626,7 @@ onBeforeRouteUpdate((to) => {
   display: flex;
   width: 100%;
   position: relative;
-  background-color: #ffffff;
+  background-color: var(--euler-color-white);
   z-index: 1;
   height: calc(100vh - 172px);
 
@@ -731,7 +731,7 @@ onBeforeRouteUpdate((to) => {
 .dlg-title {
   height: 32px;
   font-size: 24px;
-  color: #000000;
+  color: var(--euler-text-color-dark);
   letter-spacing: 0;
   line-height: 32px;
   font-weight: bold;
@@ -739,7 +739,7 @@ onBeforeRouteUpdate((to) => {
 
 .dlg-body {
   font-size: 14px;
-  color: #555555;
+  color: var(--euler-text-color-gray);
   letter-spacing: 0;
   line-height: 22px;
   font-weight: 400;

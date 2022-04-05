@@ -62,3 +62,28 @@ a {
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
+:root {
+  --o-color-primary: #002fa7;
+  --o-color-white: #ffffff;
+  --o-color-black: #000000;
+
+  --o-text-color-light: var(--o-color-white);
+  --o-text-color-dark: var(--o-color-black);
+
+  --euler-color-primary: #002fa7;
+  --euler-color-white: #ffffff;
+  --euler-color-black: #000000;
+  --euler-color-yellow-1: #feb32a;
+  --euler-color-yellow-2: #ffc864;
+  --euler-color-yellow-3: #ffce76;
+  --euler-color-gray-1: #c5c5c5;
+  --euler-color-gray-2: #555555;
+  --euler-color-gray-3: #f7f8fa;
+
+  --euler-footer-color: #191a20;
+  --euler-bg-color: #f5f7fb;
+  --euler-text-color-light: #ffffff;
+  --euler-text-color-dark: #000000;
+  --euler-text-color-gray: #555555;
+}

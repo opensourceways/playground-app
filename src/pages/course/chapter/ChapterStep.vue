@@ -117,22 +117,22 @@ const data = new Array(props.count).fill(null).map((item, idx) => {
     width: 32px;
     height: 32px;
     font-size: 24px;
-    border: 1px solid #000000;
+    border: 1px solid var(--euler-color-black);
     cursor: pointer;
 
     &.is-disabled {
-      border: 1px solid #c5c5c5 !important;
+      border: 1px solid var(--euler-color-gray-1) !important;
       cursor: not-allowed;
 
       .svg-icon {
-        color: #c5c5c5 !important;
+        color: var(--euler-color-gray-1) !important;
       }
     }
 
     &:hover {
-      border-color: #002fa7;
+      border-color: var(--euler-color-primary);
       .svg-icon {
-        color: #002fa7;
+        color: var(--euler-color-primary);
       }
     }
   }
@@ -143,8 +143,8 @@ const data = new Array(props.count).fill(null).map((item, idx) => {
 
     &.is-open {
       .dropdown-tool {
-        border-color: #002fa7;
-        color: #002fa7;
+        border-color: var(--euler-color-primary);
+        color: var(--euler-color-primary);
       }
     }
 
@@ -157,14 +157,14 @@ const data = new Array(props.count).fill(null).map((item, idx) => {
       border: 1px solid rgba(0, 0, 0, 1);
 
       &:hover {
-        border-color: #002fa7;
-        color: #002fa7;
+        border-color: var(--euler-color-primary);
+        color: var(--euler-color-primary);
       }
 
       .tool-label {
         font-size: 14px;
         font-weight: 400;
-        color: #000000;
+        color: var(--euler-text-color-dark);
         line-height: 16px;
         &-count {
           display: inline-block;
@@ -198,16 +198,16 @@ const data = new Array(props.count).fill(null).map((item, idx) => {
       transition: color 0.2s, background-color 0.3s;
 
       &:nth-child(odd) {
-        background: #f7f8fa;
+        background: var(--euler-color-gray-3);
       }
 
       &:nth-child(even) {
-        background: #ffffff;
+        background: var(--euler-color-white);
       }
 
       &:hover {
-        background: #002fa7;
-        color: #ffffff;
+        background: var(--euler-color-primary);
+        color: var(--euler-text-color-light);
       }
     }
   }

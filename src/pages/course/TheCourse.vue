@@ -149,7 +149,7 @@ const showButton = computed(() => {
 <style lang="scss" scoped>
 .course-banner {
   width: 100%;
-  background: #002fa7;
+  background: var(--euler-color-primary);
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
@@ -168,7 +168,7 @@ const showButton = computed(() => {
     .course-banner-label {
       .banner-label-title {
         font-size: 54px;
-        color: #ffffff;
+        color: var(--euler-text-color-light);
         letter-spacing: 0;
         line-height: 76px;
         font-weight: 500;
@@ -180,7 +180,7 @@ const showButton = computed(() => {
       .banner-label-desc {
         margin-top: 6px;
         font-size: 20px;
-        color: #ffffff;
+        color: var(--euler-text-color-light);
         letter-spacing: 0;
         line-height: 28px;
         font-weight: 400;
@@ -197,7 +197,7 @@ const showButton = computed(() => {
 
 .course-chapter {
   width: 100%;
-  background-color: #f5f7fb;
+  background-color: var(--euler-bg-color);
   .wrap {
     max-width: 1488px;
     margin: 0 auto;
@@ -207,13 +207,17 @@ const showButton = computed(() => {
     column-gap: 32px;
     row-gap: 32px;
 
+    @media screen and (max-width: 1279px) {
+      grid-template-columns: repeat(3, minmax(200px, 1fr));
+    }
+
     @media screen and (max-width: 1023px) {
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     }
 
     .card {
       position: relative;
-      background-color: #ffffff;
+      background-color: var(--euler-color-white);
       box-shadow: 0px 12px 32px 0px rgba(190, 196, 204, 0.2);
 
       &:hover {
@@ -235,7 +239,7 @@ const showButton = computed(() => {
           margin-top: 20px;
           font-size: 18px;
           font-weight: normal;
-          color: #000000;
+          color: var(--euler-text-color-dark);
           line-height: 24px;
         }
 
@@ -243,7 +247,7 @@ const showButton = computed(() => {
           margin-top: 4px;
           font-size: 14px;
           font-weight: normal;
-          color: #555555;
+          color: var(--euler-text-color-gray);
           line-height: 22px;
         }
       }
@@ -253,18 +257,18 @@ const showButton = computed(() => {
         min-height: 48px;
 
         .is-learned {
-          background-color: #feb32a;
-          border-color: #feb32a;
+          background-color: var(--euler-color-yellow-1);
+          border-color: var(--euler-color-yellow-1);
           &:hover {
-            background-color: #ffc864;
-            border-color: #ffc864;
+            background-color: var(--euler-color-yellow-2);
+            border-color: var(--euler-color-yellow-2);
           }
         }
 
         .is-plain {
-          color: #ffffff;
-          background: #c5c5c5;
-          border-color: #c5c5c5;
+          color: var(--euler-text-color-light);
+          background: var(--euler-color-gray-1);
+          border-color: var(--euler-color-gray-1);
         }
       }
 
@@ -275,9 +279,9 @@ const showButton = computed(() => {
         padding: 3px 6px;
         font-size: 12px;
         font-weight: normal;
-        color: #000000;
+        color: var(--euler-text-color-dark);
         line-height: 14px;
-        background: #ffce76;
+        background: var(--euler-color-yellow-3);
       }
     }
   }

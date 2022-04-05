@@ -139,7 +139,7 @@ function gotoCourse(item) {
 <style lang="scss" scoped>
 .mooc-banner {
   width: 100%;
-  background-color: #002fa7;
+  background-color: var(--euler-color-primary);
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
@@ -177,7 +177,7 @@ function gotoCourse(item) {
 
     .mooc-banner-label {
       font-size: 64px;
-      color: #ffffff;
+      color: var(--euler-text-color-light);
       letter-spacing: 0;
       line-height: 84px;
       font-weight: 500;
@@ -190,7 +190,7 @@ function gotoCourse(item) {
       .banner-label-desc {
         margin-top: 10px;
         font-size: 24px;
-        color: #ffffff;
+        color: var(--euler-text-color-light);
         letter-spacing: 0;
         line-height: 32px;
         font-weight: 400;
@@ -207,7 +207,7 @@ function gotoCourse(item) {
 
 .mooc-slogan {
   width: 100%;
-  background-color: #002fa7;
+  background-color: var(--euler-color-primary);
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
@@ -232,7 +232,7 @@ function gotoCourse(item) {
 
     .mooc-slogan-box {
       width: 100%;
-      background: #f5f7fb;
+      background: var(--euler-bg-color);
       padding: 64px 36px 40px;
       position: relative;
 
@@ -254,7 +254,7 @@ function gotoCourse(item) {
       .mooc-slogan-title {
         font-size: 40px;
         font-weight: normal;
-        color: #002fa7;
+        color: var(--euler-color-primary);
         line-height: 48px;
         text-align: center;
         font-weight: bold;
@@ -265,7 +265,7 @@ function gotoCourse(item) {
         text-align: center;
         font-size: 18px;
         font-weight: 400;
-        color: #555555;
+        color: var(--euler-text-color-gray);
         line-height: 24px;
       }
     }
@@ -274,7 +274,7 @@ function gotoCourse(item) {
 
 .mooc-course {
   width: 100%;
-  background-color: #002fa7;
+  background-color: var(--euler-color-primary);
   position: relative;
 
   .mooc-course-bg_left {
@@ -307,8 +307,12 @@ function gotoCourse(item) {
     .mooc-course-box {
       width: 100%;
       padding: 60px 180px;
-      background: #f5f7fb;
+      background: var(--euler-bg-color);
       position: relative;
+
+      @media screen and (max-width: 1279px) {
+        padding: 60px 64px;
+      }
 
       @media screen and (max-width: 1023px) {
         padding: 60px 36px;
@@ -329,7 +333,7 @@ function gotoCourse(item) {
         text-align: center;
         font-size: 36px;
         font-weight: normal;
-        color: #000000;
+        color: var(--euler-text-color-dark);
         line-height: 48px;
       }
 
@@ -344,7 +348,7 @@ function gotoCourse(item) {
         }
 
         .card {
-          background-color: #ffffff;
+          background-color: var(--euler-color-white);
           box-shadow: 0px 12px 32px 0px rgba(190, 196, 204, 0.2);
 
           &:hover {
@@ -366,7 +370,7 @@ function gotoCourse(item) {
               margin-top: 20px;
               font-size: 18px;
               font-weight: normal;
-              color: #000000;
+              color: var(--euler-text-color-dark);
               line-height: 24px;
             }
 
@@ -374,14 +378,13 @@ function gotoCourse(item) {
               margin-top: 4px;
               font-size: 14px;
               font-weight: normal;
-              color: #555555;
+              color: var(--euler-text-color-gray);
               line-height: 22px;
             }
           }
 
           .card-operate {
             margin-top: 48px;
-            color: red;
           }
         }
       }

@@ -82,7 +82,7 @@ function handleHrefClick(url) {
       font-size: 12px;
       line-height: 16px;
       font-weight: normal;
-      color: #ffffff;
+      color: var(--euler-text-color-light);
       text-align: center;
     }
   }
@@ -103,12 +103,12 @@ function handleHrefClick(url) {
       margin-top: 16px;
       font-size: 14px;
       font-weight: 400;
-      color: #ffffff;
+      color: var(--euler-text-color-light);
       line-height: 16px;
       .link-item {
         position: relative;
         display: inline-block;
-        color: #ffffff;
+        color: var(--euler-text-color-light);
         cursor: pointer;
 
         & + .link-item {
@@ -120,7 +120,7 @@ function handleHrefClick(url) {
             left: -12px;
             width: 1px;
             height: 16px;
-            background-color: #ffffff;
+            background-color: var(--euler-color-white);
           }
         }
       }
@@ -130,7 +130,7 @@ function handleHrefClick(url) {
       margin-top: 16px;
       height: 16px;
       font-size: 16px;
-      color: #ffffff;
+      color: var(--euler-text-color-light);
       line-height: 16px;
     }
 
@@ -139,7 +139,7 @@ function handleHrefClick(url) {
       height: 16px;
       font-size: 12px;
       font-weight: 300;
-      color: #ffffff;
+      color: var(--euler-text-color-light);
       line-height: 16px;
     }
   }
