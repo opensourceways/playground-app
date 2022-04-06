@@ -254,6 +254,14 @@ function handleNextClick() {
   }
 }
 
+const backToFirstStepLabel = "返回第一步";
+
+// 返回第一步
+function backToFirstStep() {
+  handleItemClick(0);
+  toggleFinishDlg(false);
+}
+
 // 中间某一步
 function handleItemClick(idx) {
   currentStepIdx.value = idx + 1;
@@ -455,6 +463,9 @@ onBeforeRouteUpdate((to) => {
             <o-button primary icon="arrow-right" @click="finishChapter">{{
               finishBtnLabel
             }}</o-button>
+            <!-- <o-button icon="arrow-right" is-text @click="handleItemClick(0)">
+              {{ backToFirstStepLabel }}</o-button
+            > -->
           </template>
         </div>
 
@@ -501,8 +512,8 @@ onBeforeRouteUpdate((to) => {
             @click="gotoChapter(currentChapterIdx + 1)"
             >{{ finishDlgLabels.nextBtn }}</o-button
           >
-          <o-button icon="arrow-right" is-text @click="restartChapter">
-            {{ finishDlgLabels.restartBtn }}</o-button
+          <o-button icon="arrow-right" is-text @click="backToFirstStep">
+            {{ backToFirstStepLabel }}</o-button
           >
         </div>
       </template>
