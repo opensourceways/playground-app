@@ -237,6 +237,7 @@ function gotoCourse(item) {
       position: relative;
 
       .mooc-slogan-logo {
+        user-select: none;
         position: absolute;
         max-width: 100%;
         overflow: hidden;
