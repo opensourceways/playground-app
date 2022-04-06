@@ -350,7 +350,7 @@ function handleTerminalLoaded(data) {
 
 // handle terminal disconnect
 function handleTerminalDisconnect() {
-  remainTimeIns.value.reset();
+  remainTimeIns.value && remainTimeIns.value.reset();
 }
 
 // handle timeout
