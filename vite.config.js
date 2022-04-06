@@ -21,7 +21,7 @@ export default defineConfig({
     port: 3456,
     proxy: {
       "/api": {
-        target: "https://moocstudio.openeuler.sh/",
+        target: "https://playground.osinfra.cn/",
         changeOrigin: true,
       },
     },
