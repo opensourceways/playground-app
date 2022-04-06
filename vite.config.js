@@ -21,12 +21,9 @@ export default defineConfig({
     port: 3456,
     proxy: {
       "/api": {
-        target: "https://preview.moocstudio.openeuler.sh/",
+        target: "https://moocstudio.openeuler.sh/",
         changeOrigin: true,
       },
     },
   },
-  // build: {
-  //   sourcemap: true,
-  // },
 });
