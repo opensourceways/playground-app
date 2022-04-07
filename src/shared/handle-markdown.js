@@ -86,8 +86,8 @@ export function handleMarkdown(str, parseFn) {
     .replace(/`{3}(.+?)`{3}/g, (_, $1) => {
       let flag = false;
       $1 = $1
-        // .replace(/</g, "\\<")
-        // .replace(/>/g, "\\>")
+        .replace(/</g, "&lt")
+        .replace(/>/g, "&gt")
         .replace(/\[\[([^\]\]]+?)\]\]{{([^}}]+?)}}/g, (_, i1, i2) => {
           flag = true;
           const code = getCode(i2);
@@ -102,8 +102,8 @@ export function handleMarkdown(str, parseFn) {
     .replace(/`{3}(.*)([^]+?)`{3}/g, (_, $1, $2) => {
       const classname = $1 ? `class="language-${$1}"` : "";
       $2 = $2
-        // .replace(/</g, "&lt")
-        // .replace(/>/g, "&amp")
+        .replace(/</g, "&lt")
+        .replace(/>/g, "&gt")
         .replace(/\[\[([^(\]\])]+?)\]\]{{([^}}]+?)}}/g, (_, i1, i2) => {
           const code = getCode(i2);
           return `<span ${getCmdStr(code.cmd)}type="${code.type}">${i1}</span>`;
@@ -116,8 +116,8 @@ export function handleMarkdown(str, parseFn) {
     .replace(/`([^`]+?)`/g, (_, $1) => {
       let flag = false;
       $1 = $1
-        // .replace(/</g, "\\<")
-        // .replace(/>/g, "\\>")
+        .replace(/</g, "&lt")
+        .replace(/>/g, "&gt")
         .replace(/\[\[([^\]\]]+?)\]\]{{([^}}]+?)}}/g, (_, i1, i2) => {
           flag = true;
           const code = getCode(i2);
