@@ -70,7 +70,7 @@ function onClick(e) {
 
     &.inline-exec,
     &.inline-exec {
-      cursor: pointer;
+      // cursor: pointer;
       background-color: #d7e2ff;
       word-break: break-all;
 
