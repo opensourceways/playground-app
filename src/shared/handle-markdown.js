@@ -79,57 +79,102 @@ const mkit = new Markdown({ html: true });
  * @param {Function} parseFn
  * @returns
  */
+// export function handleMarkdown(str, parseFn) {
+//   // 支持可执行命令
+//   let rlt = str
+//     // 不换行代码块
+//     .replace(/`{3}(.+?)`{3}/g, (_, $1) => {
+//       let flag = false;
+//       $1 = $1
+//         .replace(/</g, "&lt;")
+//         .replace(/>/g, "&gt;")
+//         .replace(/\[\[([^\]\]]+?)\]\]{{([^}}]+?)}}/g, (_, i1, i2) => {
+//           flag = true;
+//           const code = getCode(i2);
+//           return `<span ${getCmdStr(code.cmd)}type="${code.type}">${i1}</span>`;
+//         });
+
+//       return flag
+//         ? `<code class='inline-exec'>${$1}</code>`
+//         : `<code>${$1}</code>`;
+//     })
+//     // 换行代码块
+//     .replace(/`{3}(.*)([^]+?)`{3}/g, (_, $1, $2) => {
+//       const classname = $1 ? `class="language-${$1}"` : "";
+//       $2 = $2
+//         .replace(/</g, "&lt;")
+//         .replace(/>/g, "&gt;")
+//         .replace(/\[\[([^(\]\])]+?)\]\]{{([^}}]+?)}}/g, (_, i1, i2) => {
+//           const code = getCode(i2);
+//           return `<span ${getCmdStr(code.cmd)}type="${code.type}">${i1}</span>`;
+//         })
+//         .replace(/^\n/g, "");
+//       return `<pre><code ${classname}>${$2}</code></pre>`;
+//     })
+//     // 行内代码
+//     .replace(/`([^`]+?)`/g, (_, $1) => {
+//       let flag = false;
+//       $1 = $1
+//         .replace(/</g, "&lt;")
+//         .replace(/>/g, "&gt;")
+//         .replace(/\[\[([^\]\]]+?)\]\]{{([^}}]+?)}}/g, (_, i1, i2) => {
+//           flag = true;
+//           const code = getCode(i2);
+//           return `<span ${getCmdStr(code.cmd)}type="${code.type}">${i1}</span>`;
+//         });
+//       return flag
+//         ? `<code class='inline-exec'>${$1}</code>`
+//         : `<code>${$1}</code>`;
+//     });
+
+//   if (parseFn) {
+//     rlt = parseFn(rlt);
+//   }
+
+//   return mkit.render(rlt);
+// }
+
 export function handleMarkdown(str, parseFn) {
-  // 支持可执行命令
-  let rlt = str
-    // 不换行代码块
-    .replace(/`{3}(.+?)`{3}/g, (_, $1) => {
-      let flag = false;
-      $1 = $1
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/\[\[([^\]\]]+?)\]\]{{([^}}]+?)}}/g, (_, i1, i2) => {
-          flag = true;
-          const code = getCode(i2);
-          return `<span ${getCmdStr(code.cmd)}type="${code.type}">${i1}</span>`;
-        });
-
-      return flag
-        ? `<code class='inline-exec'>${$1}</code>`
-        : `<code>${$1}</code>`;
-    })
-    // 换行代码块
-    .replace(/`{3}(.*)([^]+?)`{3}/g, (_, $1, $2) => {
-      const classname = $1 ? `class="language-${$1}"` : "";
-      $2 = $2
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/\[\[([^(\]\])]+?)\]\]{{([^}}]+?)}}/g, (_, i1, i2) => {
-          const code = getCode(i2);
-          return `<span ${getCmdStr(code.cmd)}type="${code.type}">${i1}</span>`;
-        })
-        .replace(/^\n/g, "");
-      return `<pre><code ${classname}>${$2}</code></pre>`;
-    })
-    // 行内代码
-    .replace(/`([^`]+?)`/g, (_, $1) => {
-      let flag = false;
-      $1 = $1
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/\[\[([^\]\]]+?)\]\]{{([^}}]+?)}}/g, (_, i1, i2) => {
-          flag = true;
-          const code = getCode(i2);
-          return `<span ${getCmdStr(code.cmd)}type="${code.type}">${i1}</span>`;
-        });
-      return flag
-        ? `<code class='inline-exec'>${$1}</code>`
-        : `<code>${$1}</code>`;
-    });
-
+  let rlt = mkit.render(str);
   if (parseFn) {
     rlt = parseFn(rlt);
   }
+  const fragment = document.createElement("div");
+  fragment.innerHTML = rlt;
 
-  return mkit.render(rlt);
+  const inlineCode = fragment.querySelectorAll("code:not(pre code)");
+  console.log(inlineCode);
+  for (let i = 0, len = inlineCode.length; i < len; i++) {
+    const dom = inlineCode[i];
+    let flag = false;
+    let htmlStr = dom.innerHTML;
+    htmlStr = htmlStr
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/\[\[([^\]\]]+?)\]\]{{([^}}]+?)}}/g, (_, i1, i2) => {
+        flag = true;
+        const code = getCode(i2);
+        return `<span ${getCmdStr(code.cmd)}type="${code.type}">${i1}</span>`;
+      });
+    if (flag) {
+      dom.classList.add("inline-exec");
+    }
+    dom.innerHTML = htmlStr;
+  }
+
+  const blockCode = fragment.querySelectorAll("pre code");
+  for (let i = 0, len = blockCode.length; i < len; i++) {
+    const dom = blockCode[i];
+    let htmlStr = dom.innerHTML;
+    htmlStr = htmlStr
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/\[\[([^(\]\])]+?)\]\]{{([^}}]+?)}}/g, (_, i1, i2) => {
+        const code = getCode(i2);
+        return `<span ${getCmdStr(code.cmd)}type="${code.type}">${i1}</span>`;
+      });
+    dom.innerHTML = htmlStr;
+  }
+
+  return fragment.innerHTML;
 }
