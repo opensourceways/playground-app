@@ -165,6 +165,7 @@ export function handleMarkdown(str, parseFn) {
 
   const blockCode = fragment.querySelectorAll("pre code");
   for (let i = 0, len = blockCode.length; i < len; i++) {
+    const dom = blockCode[i];
     let htmlStr = dom.innerHTML;
     htmlStr = htmlStr
       .replace(/</g, "&lt;")
