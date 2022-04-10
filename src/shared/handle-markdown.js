@@ -135,15 +135,16 @@ const mkit = new Markdown({ html: true });
 // }
 
 export function handleMarkdown(str, parseFn) {
-  let rlt = mkit.render(str);
   if (parseFn) {
-    rlt = parseFn(rlt);
+    str = parseFn(str);
   }
+
+  let rlt = mkit.render(str);
+
   const fragment = document.createElement("div");
   fragment.innerHTML = rlt;
 
   const inlineCode = fragment.querySelectorAll("code:not(pre code)");
-  console.log(inlineCode);
   for (let i = 0, len = inlineCode.length; i < len; i++) {
     const dom = inlineCode[i];
     let flag = false;
@@ -164,7 +165,6 @@ export function handleMarkdown(str, parseFn) {
 
   const blockCode = fragment.querySelectorAll("pre code");
   for (let i = 0, len = blockCode.length; i < len; i++) {
-    const dom = blockCode[i];
     let htmlStr = dom.innerHTML;
     htmlStr = htmlStr
       .replace(/</g, "&lt;")
