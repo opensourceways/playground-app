@@ -144,36 +144,65 @@ export function handleMarkdown(str, parseFn) {
   const fragment = document.createElement("div");
   fragment.innerHTML = rlt;
 
-  const inlineCode = fragment.querySelectorAll("code:not(pre code)");
-  for (let i = 0, len = inlineCode.length; i < len; i++) {
-    const dom = inlineCode[i];
-    let flag = false;
-    let htmlStr = dom.innerHTML;
-    htmlStr = htmlStr
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/\[\[([^\]\]]+?)\]\]{{([^}}]+?)}}/g, (_, i1, i2) => {
-        flag = true;
-        const code = getCode(i2);
-        return `<span ${getCmdStr(code.cmd)}type="${code.type}">${i1}</span>`;
-      });
-    if (flag) {
-      dom.classList.add("inline-exec");
-    }
-    dom.innerHTML = htmlStr;
-  }
+  // const inlineCode = fragment.querySelectorAll("code:not(pre code)");
+  // for (let i = 0, len = inlineCode.length; i < len; i++) {
+  //   const dom = inlineCode[i];
+  //   let flag = false;
+  //   let htmlStr = dom.innerHTML;
+  //   htmlStr = htmlStr
+  //     .replace(/</g, "&lt;")
+  //     .replace(/>/g, "&gt;")
+  //     .replace(/\[\[([^\]\]]+?)\]\]{{([^}}]+?)}}/g, (_, i1, i2) => {
+  //       flag = true;
+  //       const code = getCode(i2);
+  //       return `<span ${getCmdStr(code.cmd)}type="${code.type}">${i1}</span>`;
+  //     });
+  //   if (flag) {
+  //     dom.classList.add("inline-exec");
+  //   }
+  //   dom.innerHTML = htmlStr;
+  // }
 
-  const blockCode = fragment.querySelectorAll("pre code");
-  for (let i = 0, len = blockCode.length; i < len; i++) {
-    const dom = blockCode[i];
+  // const blockCode = fragment.querySelectorAll("pre code");
+  // for (let i = 0, len = blockCode.length; i < len; i++) {
+  //   const dom = blockCode[i];
+  //   let htmlStr = dom.innerHTML;
+  //   htmlStr = htmlStr
+  //     .replace(/</g, "&lt;")
+  //     .replace(/>/g, "&gt;")
+  //     .replace(/\[\[([^(\]\])]+?)\]\]{{([^}}]+?)}}/g, (_, i1, i2) => {
+  //       const code = getCode(i2);
+  //       return `<span ${getCmdStr(code.cmd)}type="${code.type}">${i1}</span>`;
+  //     });
+  //   dom.innerHTML = htmlStr;
+  // }
+
+  const code = fragment.querySelectorAll("code");
+  for (let i = 0, len = code.length; i < len; i++) {
+    const dom = code[i];
     let htmlStr = dom.innerHTML;
-    htmlStr = htmlStr
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/\[\[([^(\]\])]+?)\]\]{{([^}}]+?)}}/g, (_, i1, i2) => {
-        const code = getCode(i2);
-        return `<span ${getCmdStr(code.cmd)}type="${code.type}">${i1}</span>`;
-      });
+    if (dom.parentNode.tagName !== "PRE") {
+      let flag = false;
+      htmlStr = htmlStr
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\[\[([^\]\]]+?)\]\]{{([^}}]+?)}}/g, (_, i1, i2) => {
+          flag = true;
+          const code = getCode(i2);
+          return `<span ${getCmdStr(code.cmd)}type="${code.type}">${i1}</span>`;
+        });
+      if (flag) {
+        dom.classList.add("inline-exec");
+      }
+    } else {
+      htmlStr = htmlStr
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\[\[([^(\]\])]+?)\]\]{{([^}}]+?)}}/g, (_, i1, i2) => {
+          const code = getCode(i2);
+          return `<span ${getCmdStr(code.cmd)}type="${code.type}">${i1}</span>`;
+        });
+    }
     dom.innerHTML = htmlStr;
   }
 
