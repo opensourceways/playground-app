@@ -1,4 +1,4 @@
-FROM ianwalter/pnpm as Builder
+FROM gplane/pnpm as Builder
 
 RUN mkdir -p /home/openeuler-playground/web
 WORKDIR /home/openeuler-playground/web
