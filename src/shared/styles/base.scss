@@ -64,26 +64,26 @@ a {
 }
 
 :root {
-  --o-color-primary: #002fa7;
+  --o-color-primary: #7D32EA ;
   --o-color-white: #ffffff;
   --o-color-black: #000000;
 
   --o-text-color-light: var(--o-color-white);
   --o-text-color-dark: var(--o-color-black);
 
-  --euler-color-primary: #002fa7;
-  --euler-color-white: #ffffff;
-  --euler-color-black: #000000;
-  --euler-color-yellow-1: #feb32a;
-  --euler-color-yellow-2: #ffc864;
-  --euler-color-yellow-3: #ffce76;
-  --euler-color-gray-1: #c5c5c5;
-  --euler-color-gray-2: #555555;
-  --euler-color-gray-3: #f7f8fa;
+  --gauss-color-primary: #7D32EA;
+  --gauss-color-white: #ffffff;
+  --gauss-color-black: #000000;
+  --gauss-color-yellow-1: #23CDE3;
+  --gauss-color-yellow-2: #23CDDC;
+  --gauss-color-yellow-3: #ffce76;
+  --gauss-color-gray-1: #c5c5c5;
+  --gauss-color-gray-2: #555555;
+  --gauss-color-gray-3: #f7f8fa;
 
-  --euler-footer-color: #191a20;
-  --euler-bg-color: #f5f7fb;
-  --euler-text-color-light: #ffffff;
-  --euler-text-color-dark: #000000;
-  --euler-text-color-gray: #555555;
+  --gauss-footer-color: #191a20;
+  --gauss-bg-color: #f5f7fb;
+  --gauss-text-color-light: #ffffff;
+  --gauss-text-color-dark: #000000;
+  --gauss-text-color-gray: #555555;
 }

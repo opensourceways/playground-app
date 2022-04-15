@@ -160,7 +160,7 @@ mitt.on(PLAYGROUND_PAGES.BACK_TO_HOME, () => {
     .loading {
       font-size: 18px;
       color: #ffffff;
-      background-color: var(--euler-color-primary);
+      background-color: var(--gauss-color-primary);
     }
 
     .user-info {
@@ -168,7 +168,7 @@ mitt.on(PLAYGROUND_PAGES.BACK_TO_HOME, () => {
       height: 100%;
       display: flex;
       align-items: center;
-      color: var(--euler-text-color-light);
+      color: var(--gauss-text-color-light);
       cursor: pointer;
 
       .user-login {
@@ -177,15 +177,15 @@ mitt.on(PLAYGROUND_PAGES.BACK_TO_HOME, () => {
         font-size: 18px;
         font-weight: normal;
         line-height: 18px;
-        color: var(--euler-text-color-light);
-        border: 1px solid var(--euler-color-white);
+        color: var(--gauss-text-color-light);
+        border: 1px solid var(--gauss-color-white);
       }
 
       .user-avatar {
         width: 40px;
         height: 40px;
         border-radius: 50%;
-        background: var(--euler-color-primary);
+        background: var(--gauss-color-primary);
         &.loaded {
           background: transparent;
         }
@@ -205,7 +205,7 @@ mitt.on(PLAYGROUND_PAGES.BACK_TO_HOME, () => {
         position: absolute;
         right: 0;
         top: 100%;
-        border: 1px solid var(--euler-color-primary);
+        border: 1px solid var(--gauss-color-primary);
 
         .menu-item {
           min-width: 120px;
@@ -214,14 +214,14 @@ mitt.on(PLAYGROUND_PAGES.BACK_TO_HOME, () => {
           font-size: 14px;
           font-weight: normal;
           line-height: 48px;
-          background-color: var(--euler-text-color-light);
-          color: var(--euler-text-color-dark);
+          background-color: var(--gauss-text-color-light);
+          color: var(--gauss-text-color-dark);
           white-space: nowrap;
           transition: color 0.2s, background-color 0.3s;
           cursor: pointer;
 
           &:hover {
-            color: var(--euler-color-primary);
+            color: var(--gauss-color-primary);
           }
         }
       }
@@ -238,7 +238,7 @@ mitt.on(PLAYGROUND_PAGES.BACK_TO_HOME, () => {
 .dlg-title {
   height: 32px;
   font-size: 24px;
-  color: var(--euler-text-color-dark);
+  color: var(--gauss-text-color-dark);
   letter-spacing: 0;
   line-height: 32px;
   font-weight: bold;
@@ -246,7 +246,7 @@ mitt.on(PLAYGROUND_PAGES.BACK_TO_HOME, () => {
 
 .dlg-body {
   font-size: 14px;
-  color: var(--euler-color-gray-2);
+  color: var(--gauss-color-gray-2);
   letter-spacing: 0;
   line-height: 22px;
   font-weight: 400;

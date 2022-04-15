@@ -139,7 +139,7 @@ function gotoCourse(item) {
 <style lang="scss" scoped>
 .mooc-banner {
   width: 100%;
-  background-color: var(--euler-color-primary);
+  background-color: var(--gauss-color-primary);
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
@@ -177,7 +177,7 @@ function gotoCourse(item) {
 
     .mooc-banner-label {
       font-size: 64px;
-      color: var(--euler-text-color-light);
+      color: var(--gauss-text-color-light);
       letter-spacing: 0;
       line-height: 84px;
       font-weight: 500;
@@ -190,7 +190,7 @@ function gotoCourse(item) {
       .banner-label-desc {
         margin-top: 10px;
         font-size: 24px;
-        color: var(--euler-text-color-light);
+        color: var(--gauss-text-color-light);
         letter-spacing: 0;
         line-height: 32px;
         font-weight: 400;
@@ -207,7 +207,7 @@ function gotoCourse(item) {
 
 .mooc-slogan {
   width: 100%;
-  background-color: var(--euler-color-primary);
+  background-color: var(--gauss-color-primary);
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
@@ -232,7 +232,7 @@ function gotoCourse(item) {
 
     .mooc-slogan-box {
       width: 100%;
-      background: var(--euler-bg-color);
+      background: var(--gauss-bg-color);
       padding: 64px 36px 40px;
       position: relative;
 
@@ -255,7 +255,7 @@ function gotoCourse(item) {
       .mooc-slogan-title {
         font-size: 40px;
         font-weight: normal;
-        color: var(--euler-color-primary);
+        color: var(--gauss-color-primary);
         line-height: 48px;
         text-align: center;
         font-weight: bold;
@@ -266,7 +266,7 @@ function gotoCourse(item) {
         text-align: center;
         font-size: 18px;
         font-weight: 400;
-        color: var(--euler-text-color-gray);
+        color: var(--gauss-text-color-gray);
         line-height: 24px;
       }
     }
@@ -275,7 +275,7 @@ function gotoCourse(item) {
 
 .mooc-course {
   width: 100%;
-  background-color: var(--euler-color-primary);
+  background-color: #672cea;
   position: relative;
 
   .mooc-course-bg_left {
@@ -308,7 +308,7 @@ function gotoCourse(item) {
     .mooc-course-box {
       width: 100%;
       padding: 60px 180px;
-      background: var(--euler-bg-color);
+      background: var(--gauss-bg-color);
       position: relative;
 
       @media screen and (max-width: 1279px) {
@@ -334,7 +334,7 @@ function gotoCourse(item) {
         text-align: center;
         font-size: 36px;
         font-weight: normal;
-        color: var(--euler-text-color-dark);
+        color: var(--gauss-text-color-dark);
         line-height: 48px;
       }
 
@@ -349,7 +349,7 @@ function gotoCourse(item) {
         }
 
         .card {
-          background-color: var(--euler-color-white);
+          background-color: var(--gauss-color-white);
           box-shadow: 0px 12px 32px 0px rgba(190, 196, 204, 0.2);
 
           &:hover {
@@ -371,7 +371,7 @@ function gotoCourse(item) {
               margin-top: 20px;
               font-size: 18px;
               font-weight: normal;
-              color: var(--euler-text-color-dark);
+              color: var(--gauss-text-color-dark);
               line-height: 24px;
             }
 
@@ -379,7 +379,7 @@ function gotoCourse(item) {
               margin-top: 4px;
               font-size: 14px;
               font-weight: normal;
-              color: var(--euler-text-color-gray);
+              color: var(--gauss-text-color-gray);
               line-height: 22px;
             }
           }

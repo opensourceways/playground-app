@@ -556,7 +556,7 @@ onBeforeRouteUpdate((to) => {
 }
 .chapter-header {
   height: 80px;
-  background: var(--euler-bg-color);
+  background: var(--gauss-bg-color);
   position: relative;
   z-index: 2;
 
@@ -588,7 +588,7 @@ onBeforeRouteUpdate((to) => {
         .row {
           width: 20px;
           height: 2px;
-          background-color: var(--euler-color-black);
+          background-color: var(--gauss-color-black);
 
           &:nth-child(2) {
             width: 16px;
@@ -599,7 +599,7 @@ onBeforeRouteUpdate((to) => {
           .row:nth-child(1),
           .row:nth-child(2),
           .row:nth-child(3) {
-            background: var(--euler-color-primary);
+            background: var(--gauss-color-primary);
           }
         }
       }
@@ -609,16 +609,16 @@ onBeforeRouteUpdate((to) => {
         transition: color 0.2s, background-color 0.3s;
 
         &:nth-child(odd) {
-          background: var(--euler-color-gray-3);
+          background: var(--gauss-color-gray-3);
         }
 
         &:nth-child(even) {
-          background: var(--euler-color-white);
+          background: var(--gauss-color-white);
         }
 
         &:hover {
-          background: var(--euler-color-primary);
-          color: var(--euler-color-white);
+          background: var(--gauss-color-primary);
+          color: var(--gauss-color-white);
         }
       }
 
@@ -626,7 +626,7 @@ onBeforeRouteUpdate((to) => {
         margin-left: 16px;
         font-size: 24px;
         font-weight: 500;
-        color: var(--euler-text-color-dark);
+        color: var(--gauss-text-color-dark);
         line-height: 28px;
       }
     }
@@ -637,7 +637,7 @@ onBeforeRouteUpdate((to) => {
   display: flex;
   width: 100%;
   position: relative;
-  background-color: var(--euler-color-white);
+  background-color: var(--gauss-color-white);
   z-index: 1;
   height: calc(100vh - 172px);
 
@@ -742,7 +742,7 @@ onBeforeRouteUpdate((to) => {
 .dlg-title {
   height: 32px;
   font-size: 24px;
-  color: var(--euler-text-color-dark);
+  color: var(--gauss-text-color-dark);
   letter-spacing: 0;
   line-height: 32px;
   font-weight: bold;
@@ -750,7 +750,7 @@ onBeforeRouteUpdate((to) => {
 
 .dlg-body {
   font-size: 14px;
-  color: var(--euler-text-color-gray);
+  color: var(--gauss-text-color-gray);
   letter-spacing: 0;
   line-height: 22px;
   font-weight: 400;

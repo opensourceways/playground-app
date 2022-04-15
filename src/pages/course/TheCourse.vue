@@ -149,7 +149,7 @@ const showButton = computed(() => {
 <style lang="scss" scoped>
 .course-banner {
   width: 100%;
-  background: var(--euler-color-primary);
+  background: var(--gauss-color-primary);
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
@@ -168,7 +168,7 @@ const showButton = computed(() => {
     .course-banner-label {
       .banner-label-title {
         font-size: 54px;
-        color: var(--euler-text-color-light);
+        color: var(--gauss-text-color-light);
         letter-spacing: 0;
         line-height: 76px;
         font-weight: 500;
@@ -180,7 +180,7 @@ const showButton = computed(() => {
       .banner-label-desc {
         margin-top: 6px;
         font-size: 20px;
-        color: var(--euler-text-color-light);
+        color: var(--gauss-text-color-light);
         letter-spacing: 0;
         line-height: 28px;
         font-weight: 400;
@@ -197,7 +197,7 @@ const showButton = computed(() => {
 
 .course-chapter {
   width: 100%;
-  background-color: var(--euler-bg-color);
+  background-color: var(--gauss-bg-color);
   .wrap {
     max-width: 1488px;
     margin: 0 auto;
@@ -217,7 +217,7 @@ const showButton = computed(() => {
 
     .card {
       position: relative;
-      background-color: var(--euler-color-white);
+      background-color: var(--gauss-color-white);
       box-shadow: 0px 12px 32px 0px rgba(190, 196, 204, 0.2);
 
       &:hover {
@@ -239,7 +239,7 @@ const showButton = computed(() => {
           margin-top: 20px;
           font-size: 18px;
           font-weight: normal;
-          color: var(--euler-text-color-dark);
+          color: var(--gauss-text-color-dark);
           line-height: 24px;
         }
 
@@ -247,7 +247,7 @@ const showButton = computed(() => {
           margin-top: 4px;
           font-size: 14px;
           font-weight: normal;
-          color: var(--euler-text-color-gray);
+          color: var(--gauss-text-color-gray);
           line-height: 22px;
         }
       }
@@ -257,18 +257,18 @@ const showButton = computed(() => {
         min-height: 48px;
 
         .is-learned {
-          background-color: var(--euler-color-yellow-1);
-          border-color: var(--euler-color-yellow-1);
+          background-color: var(--gauss-color-yellow-1);
+          border-color: var(--gauss-color-yellow-1);
           &:hover {
-            background-color: var(--euler-color-yellow-2);
-            border-color: var(--euler-color-yellow-2);
+            background-color: var(--gauss-color-yellow-2);
+            border-color: var(--gauss-color-yellow-2);
           }
         }
 
         .is-plain {
-          color: var(--euler-text-color-light);
-          background: var(--euler-color-gray-1);
-          border-color: var(--euler-color-gray-1);
+          color: var(--gauss-text-color-light);
+          background: var(--gauss-color-gray-1);
+          border-color: var(--gauss-color-gray-1);
         }
       }
 
@@ -279,9 +279,9 @@ const showButton = computed(() => {
         padding: 3px 6px;
         font-size: 12px;
         font-weight: normal;
-        color: var(--euler-text-color-dark);
+        color: var(--gauss-text-color-dark);
         line-height: 14px;
-        background: var(--euler-color-yellow-3);
+        background: var(--gauss-color-yellow-3);
       }
     }
   }

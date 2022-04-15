@@ -117,22 +117,22 @@ const data = new Array(props.count).fill(null).map((item, idx) => {
     width: 32px;
     height: 32px;
     font-size: 24px;
-    border: 1px solid var(--euler-color-black);
+    border: 1px solid var(--gauss-color-black);
     cursor: pointer;
 
     &.is-disabled {
-      border: 1px solid var(--euler-color-gray-1) !important;
+      border: 1px solid var(--gauss-color-gray-1) !important;
       cursor: not-allowed;
 
       .svg-icon {
-        color: var(--euler-color-gray-1) !important;
+        color: var(--gauss-color-gray-1) !important;
       }
     }
 
     &:hover {
-      border-color: var(--euler-color-primary);
+      border-color: var(--gauss-color-primary);
       .svg-icon {
-        color: var(--euler-color-primary);
+        color: var(--gauss-color-primary);
       }
     }
   }
@@ -143,8 +143,8 @@ const data = new Array(props.count).fill(null).map((item, idx) => {
 
     &.is-open {
       .dropdown-tool {
-        border-color: var(--euler-color-primary);
-        color: var(--euler-color-primary);
+        border-color: var(--gauss-color-primary);
+        color: var(--gauss-color-primary);
       }
     }
 
@@ -157,14 +157,14 @@ const data = new Array(props.count).fill(null).map((item, idx) => {
       border: 1px solid rgba(0, 0, 0, 1);
 
       &:hover {
-        border-color: var(--euler-color-primary);
-        color: var(--euler-color-primary);
+        border-color: var(--gauss-color-primary);
+        color: var(--gauss-color-primary);
       }
 
       .tool-label {
         font-size: 14px;
         font-weight: 400;
-        color: var(--euler-text-color-dark);
+        color: var(--gauss-text-color-dark);
         line-height: 16px;
         &-count {
           display: inline-block;
@@ -198,16 +198,16 @@ const data = new Array(props.count).fill(null).map((item, idx) => {
       transition: color 0.2s, background-color 0.3s;
 
       &:nth-child(odd) {
-        background: var(--euler-color-gray-3);
+        background: var(--gauss-color-gray-3);
       }
 
       &:nth-child(even) {
-        background: var(--euler-color-white);
+        background: var(--gauss-color-white);
       }
 
       &:hover {
-        background: var(--euler-color-primary);
-        color: var(--euler-text-color-light);
+        background: var(--gauss-color-primary);
+        color: var(--gauss-text-color-light);
       }
     }
   }

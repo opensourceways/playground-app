@@ -53,8 +53,10 @@ function onClick(e) {
   min-width: 120px;
   transition: color 0.2s, background-color 0.3s, border-color 0.3s;
   &:hover {
-    border-color: #0c41c9;
-    color: #0c41c9;
+    // border-color: #0c41c9;
+    // color: #0c41c9;
+    border-color: #7d32ea;
+    color: #7d32ea;
   }
   &:active {
     border-color: #032783;
@@ -68,21 +70,22 @@ function onClick(e) {
       color: #000000;
     }
     .icon {
-      color: #0c41c9;
+      // color: #0c41c9;
+      color: #7d32ea;
     }
   }
 
   &.primary {
     color: #fff;
-    border-color: #002fa7;
-    background-color: #002fa7;
+    border-color: #7d32ea;
+    background-color: #7d32ea;
     &:hover {
-      border-color: #0c41c9;
-      background-color: #0c41c9;
+      border-color: #7d32ff;
+      background-color: #7d32ff;
     }
     &:active {
-      border-color: #032783;
-      background-color: #032783;
+      border-color: #7d32ff;
+      background-color: #7d32ff;
     }
     &.is-disabled,
     &.is-disabled:hover {

@@ -41,7 +41,7 @@ mitt.on(PLAYGROUND_PAGES.SET_BODY_BG, (val) => {
   position: relative;
   z-index: 2;
   height: 80px;
-  background-color: var(--euler-color-primary);
+  background-color: var(--gauss-color-primary);
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
@@ -58,6 +58,6 @@ mitt.on(PLAYGROUND_PAGES.SET_BODY_BG, (val) => {
 }
 
 .app-footer {
-  background: var(--euler-footer-color);
+  background: var(--gauss-footer-color);
 }
 </style>
