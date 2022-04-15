@@ -6,24 +6,24 @@ const linkList = [
   {
     id: "brand",
     text: "品牌",
-    url: "https://www.openeuler.org/zh/other/brand/",
+    url: "https://opengauss.org/zh/trademark.html",
   },
   {
     id: "privacy",
     text: "隐私政策",
-    url: "https://www.openeuler.org/zh/other/privacy/",
+    url: "https://opengauss.org/zh/privacyPolicy.html",
   },
   {
     id: "law",
     text: "法律声明",
-    url: "https://www.openeuler.org/zh/other/legal/",
+    url: "https://opengauss.org/zh/legal.html",
   },
 ];
 
 const labels = {
-  atom: "openEuler是由开放原子开源基金会（OpenAtom Foundation）孵化及运营的开源项目",
-  contact: "contact@openeuler.sh",
-  copyright: "版权所有 © 2022 openEuler 保留一切权利",
+  atom: "openGauss是由开放原子开源基金会（OpenAtom Foundation）孵化及运营的开源项目",
+  contact: "contact@opengauss.sh",
+  copyright: "版权所有 © 2022 openGauss 保留一切权利",
 };
 
 function handleHrefClick(url) {
