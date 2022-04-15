@@ -1,5 +1,4 @@
 <script setup>
-import {} from "vue";
 const props = defineProps({
   primary: {
     type: Boolean,
@@ -28,6 +27,7 @@ function onClick(e) {
   emit("click", e);
 }
 </script>
+
 <template>
   <button
     class="o-button"
@@ -40,16 +40,16 @@ function onClick(e) {
     </div>
   </button>
 </template>
+
 <style lang="scss">
 .o-button {
-  padding: 7px 16px;
-  line-height: 32px;
+  padding: 11px 28px;
+  line-height: 24px;
   font-size: 16px;
   background-color: transparent;
   border: 1px solid #333;
   outline: none;
   cursor: pointer;
-  color: #333;
   min-width: 120px;
   transition: color 0.2s, background-color 0.3s, border-color 0.3s;
   &:hover {
@@ -64,6 +64,12 @@ function onClick(e) {
     border-color: transparent;
     min-width: auto;
     padding: 0;
+    &:hover {
+      color: #000000;
+    }
+    .icon {
+      color: #0c41c9;
+    }
   }
 
   &.primary {
@@ -80,15 +86,16 @@ function onClick(e) {
     }
     &.is-disabled,
     &.is-disabled:hover {
-      background-color: #b8d9ff;
-      border-color: #b8d9ff;
       color: #eee;
+      background-color: #c5c5c5;
+      border-color: #c5c5c5;
     }
   }
   &.is-disabled,
   &.is-disabled:hover {
-    color: #999;
-    border-color: #999;
+    color: #ffffff;
+    background: #c5c5c5;
+    border-color: #c5c5c5;
     cursor: not-allowed;
   }
 
@@ -100,7 +107,7 @@ function onClick(e) {
   }
 
   .icon {
-    margin-left: 8px;
+    margin-left: 10px;
   }
 }
 </style>

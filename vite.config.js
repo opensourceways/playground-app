@@ -3,7 +3,6 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import ViteSvgIconsPlugin from "vite-plugin-svg-icons";
 
-// https://vitejs.dev/config/
 export default defineConfig({
   base: "./",
   resolve: {
@@ -19,10 +18,10 @@ export default defineConfig({
     }),
   ],
   server: {
+    port: 3457,
     proxy: {
       "/api": {
-        target: "https://test.playground.osinfra.cn/",
-        // target: "http://159.138.2.2:8080",
+        target: "https://opengaussplayground.test.osinfra.cn/",
         changeOrigin: true,
       },
     },

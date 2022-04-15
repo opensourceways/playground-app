@@ -99,35 +99,42 @@ defineExpose({
 </script>
 
 <template>
-  <div class="remain-time-label">{{ remainTimeLabel }}</div>
-  <div class="remain-time" :class="{ warning: remainTime.warning }">
-    <span class="time-item">{{ remainTime.hour }}</span
-    >:<span class="time-item">{{ remainTime.minute }}</span
-    >:<span class="time-item">{{ remainTime.second }}</span>
+  <div class="remain-time">
+    <div class="remain-time-label">{{ remainTimeLabel }}</div>
+    <div class="remain-time" :class="{ warning: remainTime.warning }">
+      <span class="time-item">{{ remainTime.hour }}</span
+      >:<span class="time-item">{{ remainTime.minute }}</span
+      >:<span class="time-item">{{ remainTime.second }}</span>
+    </div>
   </div>
 </template>
 
 <style lang="scss">
-.remain-time-label {
-  font-size: 16px;
-  color: #002fa7;
-}
 .remain-time {
-  font-size: 18px;
-  color: #002fa7;
   display: flex;
-  .time-item {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    line-height: 32px;
-    width: 32px;
-    background-color: #fff;
-    margin: 0 4px;
-    box-shadow: 0px 12px 32px 0px rgba(190, 196, 204, 0.2);
+  align-items: center;
+  .remain-time-label {
+    font-size: 16px;
+    color: #002fa7;
   }
-  &.warning {
-    color: red;
+
+  .remain-time {
+    font-size: 18px;
+    color: #002fa7;
+    display: flex;
+    .time-item {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      line-height: 32px;
+      width: 32px;
+      background-color: #fff;
+      margin: 0 4px;
+      box-shadow: 0px 12px 32px 0px rgba(190, 196, 204, 0.2);
+    }
+    &.warning {
+      color: red;
+    }
   }
 }
 </style>

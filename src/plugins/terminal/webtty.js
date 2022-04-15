@@ -124,7 +124,11 @@ export class WebTTY {
     };
   }
 
-  input(input) {
-    this.connection.send(msgInput + input);
+  run(command) {
+    this.connection.send(msgInput + command);
+  }
+
+  print(command) {
+    this.term.output(command);
   }
 }

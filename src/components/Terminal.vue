@@ -153,8 +153,9 @@ async function createInstance(isNew) {
       token,
       userId,
       contactEmail: resource.email,
-      templatePath: resource.template,
-      resourceId: resource.id,
+      backend: resource.backend,
+      courseId: resource.courseId,
+      chapterId: resource.chapterId,
       // 1 复用原来资源；2 强制删除原来资源，重新创建
       forceDelete: isNew ? 2 : 1,
     });
@@ -288,9 +289,14 @@ function fit() {
 }
 
 // 输入命令
-function enter(commmond) {
+function enter(type, commmond) {
   if (webTTYInstance && commmond) {
-    webTTYInstance.input(commmond.endsWith("\n") ? commmond : commmond + "\n");
+    if (type === "run") {
+      webTTYInstance.run(commmond.endsWith("\n") ? commmond : commmond + "\n");
+    } else if (type === "print") {
+      webTTYInstance.run(commmond);
+      terminal && terminal.focus();
+    }
   }
 }
 
