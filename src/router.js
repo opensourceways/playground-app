@@ -61,7 +61,7 @@ router.beforeEach((to) => {
   }
 
   if (["home"].includes(to.name)) {
-    mitt.emit(PLAYGROUND_PAGES.SET_BODY_BG, "#002fa7");
+    mitt.emit(PLAYGROUND_PAGES.SET_BODY_BG, "#7721f4");
   } else {
     mitt.emit(PLAYGROUND_PAGES.SET_BODY_BG, "#f5f7fb");
   }

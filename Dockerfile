@@ -1,8 +1,8 @@
 FROM gplane/pnpm as Builder
 
-RUN mkdir -p /home/openeuler-playground/web
-WORKDIR /home/openeuler-playground/web
-COPY . /home/openeuler-playground/web
+RUN mkdir -p /home/opengauss-moocstudio/web
+WORKDIR /home/opengauss-moocstudio/web
+COPY . /home/opengauss-moocstudio/web
 
 RUN pnpm install
 
@@ -12,7 +12,7 @@ FROM nginx:1.20.0
 
 # COPY ./deploy/test-login.html /usr/share/nginx/html/test-login.html
 
-COPY --from=Builder /home/openeuler-playground/web/dist/ /usr/share/nginx/html/
+COPY --from=Builder /home/opengauss-moocstudio/web/dist/ /usr/share/nginx/html/
 RUN chmod -R 755 /usr/share/nginx/html
 COPY ./deploy/nginx/nginx.conf /etc/nginx/nginx.conf
 

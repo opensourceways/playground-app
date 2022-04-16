@@ -55,11 +55,11 @@ function onClick(e) {
   &:hover {
     // border-color: #0c41c9;
     // color: #0c41c9;
-    border-color: #7d32ea;
-    color: #7d32ea;
+    border-color: #551db0;
+    color: #551db0;
   }
   &:active {
-    border-color: #032783;
+    border-color: #551db0;
   }
 
   &.is-text {
@@ -71,7 +71,7 @@ function onClick(e) {
     }
     .icon {
       // color: #0c41c9;
-      color: #7d32ea;
+      color: #551db0;
     }
   }
 
@@ -80,8 +80,8 @@ function onClick(e) {
     border-color: #7d32ea;
     background-color: #7d32ea;
     &:hover {
-      border-color: #7d32ff;
-      background-color: #7d32ff;
+      border-color: #551db0;
+      background-color: #551db0;
     }
     &:active {
       border-color: #7d32ff;

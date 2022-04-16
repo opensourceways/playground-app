@@ -31,7 +31,7 @@ defineProps({
   }
 
   &:hover {
-    background: #002fa7;
+    background: #7d32ea;
     color: #ffffff;
   }
 

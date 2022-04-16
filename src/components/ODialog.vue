@@ -142,7 +142,7 @@ function onCloseClick() {
     line-height: 1;
     font-size: 24px;
     &:hover {
-      color: #002fa7;
+      color: #7d32ea;
     }
   }
 }

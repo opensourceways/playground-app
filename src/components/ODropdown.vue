@@ -92,7 +92,7 @@ watch(
     left: 0;
     min-width: 100%;
     top: calc(100% + 18px);
-    border: 1px solid #002fa7;
+    border: 1px solid #7d32ea;
     z-index: 1;
     height: 0;
     transition: height cubic-bezier(0.645, 0.045, 0.355, 1) 0.3s,

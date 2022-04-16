@@ -115,12 +115,12 @@ defineExpose({
   align-items: center;
   .remain-time-label {
     font-size: 16px;
-    color: #002fa7;
+    color: #7d32ea;
   }
 
   .remain-time {
     font-size: 18px;
-    color: #002fa7;
+    color: #7d32ea;
     display: flex;
     .time-item {
       display: flex;

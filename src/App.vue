@@ -10,7 +10,7 @@ import AppFooter from "@/components/AppFooter.vue";
 import bg from "@/assets/bg/home-bg-nav.png";
 
 const showFooter = ref(true);
-const bodyBg = ref("#002fa7");
+const bodyBg = ref("#7721f4");
 
 mitt.on(PLAYGROUND_PAGES.SET_FOOTER, (val) => {
   showFooter.value = val;

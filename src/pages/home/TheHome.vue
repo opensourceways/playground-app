@@ -243,7 +243,7 @@ function gotoCourse(item) {
         overflow: hidden;
         font-size: 72px;
         font-weight: bold;
-        color: #002fa7;
+        color: var(--gauss-color-primary);
         line-height: 85px;
         letter-spacing: 21px;
         opacity: 0.1;
@@ -275,7 +275,7 @@ function gotoCourse(item) {
 
 .mooc-course {
   width: 100%;
-  background-color: #672cea;
+  background-color: #7721f4;
   position: relative;
 
   .mooc-course-bg_left {

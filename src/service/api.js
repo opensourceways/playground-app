@@ -62,8 +62,8 @@ export function queryAppId() {
 }
 
 /**
- * 获取用户信息及userToken
- * @param {*} params
+ * 获取token及用户信息
+ * @param {Object} params {id:'', federationIdentityId: ''}
  * @returns
  */
 export function queryAuthentication(params) {
