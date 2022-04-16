@@ -27,7 +27,7 @@ const bannerLabels = {
 
 // sologan文字
 const sloganLables = {
-  title: "Your first coding experience in openEuler",
+  title: "Your first coding experience in openGauss",
   logo: "moocstudio",
   description: [
     { id: "first", text: "Moocstudio是集计算机课程编写和学习一体的教育平台" },

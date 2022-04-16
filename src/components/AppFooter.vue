@@ -21,7 +21,7 @@ const linkList = [
 ];
 
 const labels = {
-  atom: "openGauss是由开放原子开源基金会（OpenAtom Foundation）孵化及运营的开源项目",
+  atom: "",
   contact: "contact@opengauss.sh",
   copyright: "版权所有 © 2022 openGauss 保留一切权利",
 };
@@ -35,7 +35,6 @@ function handleHrefClick(url) {
   <div class="footer">
     <div class="atom">
       <img :src="atomLogo" alt="" class="atom-logo" />
-      <p class="atom-desc">{{ labels.atom }}</p>
     </div>
     <div class="footer-content">
       <img :src="moocLogo" alt="" class="logo" />
