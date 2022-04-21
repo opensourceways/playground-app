@@ -1,5 +1,5 @@
 <script setup>
-import atomLogo from "@/assets/logo/atom-logo.png";
+import gaussLogo from "@/assets/logo/gauss-logo.png";
 import moocLogo from "@/assets/logo/moocstudio-logo-footer.png";
 
 const linkList = [
@@ -22,7 +22,7 @@ const linkList = [
 
 const labels = {
   atom: "",
-  contact: "contact@opengauss.sh",
+  contact: "contact@opengauss.org",
   copyright: "版权所有 © 2022 openGauss 保留一切权利",
 };
 
@@ -33,8 +33,10 @@ function handleHrefClick(url) {
 
 <template>
   <div class="footer">
-    <div class="atom">
-      <img :src="atomLogo" alt="" class="atom-logo" />
+    <div class="footer-label">
+      <img :src="gaussLogo" alt="" class="gauss-logo" />
+      <p class="contact">{{ labels.contact }}</p>
+      <p class="copyright">{{ labels.copyright }}</p>
     </div>
     <div class="footer-content">
       <img :src="moocLogo" alt="" class="logo" />
@@ -47,8 +49,6 @@ function handleHrefClick(url) {
           >{{ item.text }}</a
         >
       </div>
-      <p class="contact">{{ labels.contact }}</p>
-      <p class="copyright">{{ labels.copyright }}</p>
     </div>
   </div>
 </template>
@@ -65,13 +65,13 @@ function handleHrefClick(url) {
     flex-direction: column;
     justify-content: center;
   }
-  .atom {
+  .footer-label {
     @media screen and (max-width: 1023px) {
       display: flex;
       flex-direction: column;
       align-items: center;
     }
-    &-logo {
+    .gauss-logo {
       height: 48px;
       vertical-align: top;
     }
@@ -83,6 +83,23 @@ function handleHrefClick(url) {
       font-weight: normal;
       color: var(--gauss-text-color-light);
       text-align: center;
+    }
+
+    .contact {
+      margin-top: 16px;
+      height: 16px;
+      font-size: 16px;
+      color: var(--gauss-text-color-light);
+      line-height: 16px;
+    }
+
+    .copyright {
+      margin-top: 16px;
+      height: 16px;
+      font-size: 12px;
+      font-weight: 300;
+      color: var(--gauss-text-color-light);
+      line-height: 16px;
     }
   }
 
@@ -123,23 +140,6 @@ function handleHrefClick(url) {
           }
         }
       }
-    }
-
-    .contact {
-      margin-top: 16px;
-      height: 16px;
-      font-size: 16px;
-      color: var(--gauss-text-color-light);
-      line-height: 16px;
-    }
-
-    .copyright {
-      margin-top: 16px;
-      height: 16px;
-      font-size: 12px;
-      font-weight: 300;
-      color: var(--gauss-text-color-light);
-      line-height: 16px;
     }
   }
 }
