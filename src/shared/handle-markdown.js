@@ -198,7 +198,7 @@ export function handleMarkdown(str, parseFn) {
       htmlStr = htmlStr
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
-        .replace(/\[\[([^(\]\])]+?)\]\]{{([^}}]+?)}}/g, (_, i1, i2) => {
+        .replace(/\[\[([^\]\]]+?)\]\]{{([^}}]+?)}}/g, (_, i1, i2) => {
           const code = getCode(i2);
           return `<span ${getCmdStr(code.cmd)}type="${code.type}">${i1}</span>`;
         });
