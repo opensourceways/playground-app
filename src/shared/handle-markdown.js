@@ -186,11 +186,16 @@ export function handleMarkdown(str, parseFn) {
       htmlStr = htmlStr
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
-        .replace(/\[\[([^\]\]]+?)\]\]{{([^}}]+?)}}/g, (_, i1, i2) => {
-          flag = true;
-          const code = getCode(i2);
-          return `<span ${getCmdStr(code.cmd)}type="${code.type}">${i1}</span>`;
-        });
+        .replace(
+          /\[\[((?!\]\])[\s\S]+?)\]\]{{((?!}})[\s\S]+?)}}/g,
+          (_, i1, i2) => {
+            flag = true;
+            const code = getCode(i2);
+            return `<span ${getCmdStr(code.cmd)}type="${
+              code.type
+            }">${i1}</span>`;
+          }
+        );
       if (flag) {
         dom.classList.add("inline-exec");
       }
@@ -198,10 +203,15 @@ export function handleMarkdown(str, parseFn) {
       htmlStr = htmlStr
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
-        .replace(/\[\[([^\]\]]+?)\]\]{{([^}}]+?)}}/g, (_, i1, i2) => {
-          const code = getCode(i2);
-          return `<span ${getCmdStr(code.cmd)}type="${code.type}">${i1}</span>`;
-        });
+        .replace(
+          /\[\[((?!\]\])[\s\S]+?)\]\]{{((?!}})[\s\S]+?)}}/g,
+          (_, i1, i2) => {
+            const code = getCode(i2);
+            return `<span ${getCmdStr(code.cmd)}type="${
+              code.type
+            }">${i1}</span>`;
+          }
+        );
     }
     dom.innerHTML = htmlStr;
   }
