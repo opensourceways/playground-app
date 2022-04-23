@@ -19,19 +19,17 @@ const router = useRouter();
 // banner文字
 const bannerLabels = {
   title: [
-    { id: "first", text: "在浏览器中" },
-    { id: "second", text: "使用真实环境学习新技术" },
+    { id: "first", text: "使用真实环境" },
+    { id: "second", text: "学习openGauss数据库" },
   ],
   description: "软件工程师互动学习与培训平台",
 };
 
 // sologan文字
 const sloganLables = {
-  title: "Your first coding experience in openGauss",
+  title: "Your first coding experience openGauss in your browser",
   logo: "moocstudio",
-  description: [
-    { id: "first", text: "Moocstudio是集计算机课程编写和学习一体的教育平台" },
-  ],
+  description: [{ id: "first", text: "在openGauss的第一次编码体验" }],
 };
 
 // course文字
