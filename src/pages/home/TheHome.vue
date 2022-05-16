@@ -28,9 +28,9 @@ const bannerLabels = {
 // sologan文字
 const sloganLables = {
   title: "Your first coding experience in openEuler",
-  logo: "moocstudio",
+  logo: "MoocStudio",
   description: [
-    { id: "first", text: "Moocstudio是集计算机课程编写和学习一体的教育平台" },
+    { id: "first", text: "MoocStudio是集计算机课程编写和学习一体的教育平台" },
   ],
 };
 
@@ -243,7 +243,7 @@ function gotoCourse(item) {
         overflow: hidden;
         font-size: 72px;
         font-weight: bold;
-        color: #002fa7;
+        color: var(--euler-color-primary);
         line-height: 85px;
         letter-spacing: 21px;
         opacity: 0.1;

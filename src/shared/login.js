@@ -68,14 +68,14 @@ export function getUserInfo() {
   }
 }
 
-// 注册
+// 登录
 export async function doSignUp() {
   const code = getAuthCode();
   const identity = getAuthIdentity();
   if (code) {
     try {
       setStatus(LOGIN_STATUS.DOING);
-
+      // 使用用户id和身份源id获取用户token及其他信息
       const res = await queryAuthentication({
         id: code,
         federationIdentityId: identity,
@@ -178,11 +178,16 @@ export function reLogin() {
   showLogin();
 }
 
+/**
+ * 调用登录组件
+ * @returns
+ */
 export async function initGuard() {
   if (!guard) {
     try {
       const res = await queryAppId();
       if (res.code === 200) {
+        // 初始化登录组件
         guard = new Guard(res.callbackInfo.appId, {
           title: "openEuler",
           mode: GuardMode.Modal,
@@ -190,13 +195,16 @@ export async function initGuard() {
           escCloseable: true,
           disableRegister: true,
           disableResetPwd: true,
-          // loginMethods: [LoginMethods.PhoneCode],
         });
         guard.on("login", (authClient) => {
           if (authClient && authClient.id) {
+            // 用户id
             setAuthCode(authClient.id);
+            // 身份源id
             setAuthIdentity(authClient.federationIdentityId || "");
+            // 登录，获取用户token
             doSignUp();
+
             setTimeout(() => {
               guard.hide();
               removeGuard();
