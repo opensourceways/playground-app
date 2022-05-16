@@ -28,7 +28,7 @@ const bannerLabels = {
 // sologan文字
 const sloganLables = {
   title: "Your first coding experience openGauss in your browser",
-  logo: "moocstudio",
+  logo: "MoocStudio",
   description: [{ id: "first", text: "在openGauss的第一次编码体验" }],
 };
 
