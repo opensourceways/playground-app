@@ -8,6 +8,6 @@ const STATUS_MAP = {
 
 export const courseList = ref([]);
 
-queryCourseListInfo(STATUS_MAP.test).then((data) => {
+queryCourseListInfo(STATUS_MAP.online).then((data) => {
   courseList.value = data;
 });
