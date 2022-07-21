@@ -19,14 +19,14 @@ import { getUserAuth } from "../shared/login";
 //   return request.post(url, params).then((res) => res.data);
 // }
 
-// /**
-//  * 获取用户信息
-//  * @returns
-//  */
-// export function queryUserInfo(params) {
-//   const url = "/api/playground/user/information";
-//   return request.get(url, { params }).then((res) => res.data);
-// }
+/**
+ * 获取用户信息
+ * @returns
+ */
+export function queryUserInfo(params) {
+  const url = "/api/playground/user/information";
+  return request.get(url, { params }).then((res) => res.data);
+}
 
 /**
  * 创建crd资源
@@ -78,7 +78,7 @@ export function queryAuthentication(params) {
  * @param {*} params
  * @returns
  */
-export function queryUserInfo(params) {
+export function queryUserTokenInfo(params) {
   const url = "/api/playground/oauth2/callback";
   return request.get(url, { params }).then((res) => {
     return res.data;
