@@ -3,7 +3,7 @@ import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import mitt from "@/shared/mitt";
 
-import { goAuthorize, LOGIN_EVENTS, logout, getUserAuth } from "@/shared/login";
+import { goAuthorize, LOGIN_EVENTS, logout } from "@/shared/login";
 import { isLoggingIn } from "@/shared/login";
 import { PLAYGROUND_PAGES } from "@/pages/playground/shared";
 
@@ -63,13 +63,6 @@ mitt.on(LOGIN_EVENTS.LOGINED, (_userInfo) => {
   userInfo.name = _userInfo.nickname || "";
   userInfo.avatar = _userInfo.picture || "";
 });
-function getUserInfo() {
-  const { userInfo: _userInfo } = getUserAuth();
-  userInfo.userId = _userInfo.sub || "";
-  userInfo.name = _userInfo.nickname || "";
-  userInfo.avatar = _userInfo.picture || "";
-}
-getUserInfo();
 
 mitt.on(LOGIN_EVENTS.LOGOUT, () => {
   userInfo.userId = "";

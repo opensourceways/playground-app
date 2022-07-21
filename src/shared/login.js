@@ -2,7 +2,7 @@ import { ref, computed } from "vue";
 
 import mitt from "@/shared/mitt";
 import { AuthenticationClient } from "authing-js-sdk";
-import { queryAppId, queryUserInfo } from "@/service/api";
+import { queryAppId, queryUserTokenInfo, queryUserInfo } from "@/service/api";
 
 export const LOGIN_EVENTS = {
   SHOW_LOGIN: "show-login",
@@ -66,21 +66,37 @@ export function getCodeByUrl() {
       code: query.code,
       state: query.state,
     };
-    queryUserInfo(param).then((res) => {
+    queryUserTokenInfo(param).then((res) => {
       const {
         token = "",
         idtoken = "",
         user: { picture = "", nickname = "", sub = "" },
       } = res;
-      saveUserAuth(token, { picture, nickname, sub, idtoken });
+      saveUserAuth(token, { sub, idtoken });
       mitt.emit(LOGIN_EVENTS.LOGINED, { picture, nickname, sub });
       // 去掉url中的code
+      setStatus(LOGIN_STATUS.DONE);
       let newUrl = location.origin + "/#/home";
       if (window.history.replaceState) {
         window.history.replaceState({}, "", newUrl);
       } else {
         window.location.href = newUrl;
       }
+    });
+  } else {
+    refreshToken();
+  }
+}
+function refreshToken() {
+  const { userId, token } = getUserAuth();
+  if (userId && token) {
+    queryUserInfo({
+      token,
+      userId,
+    }).then((res) => {
+      const { userInfo } = res;
+      setStatus(LOGIN_STATUS.DONE);
+      mitt.emit(LOGIN_EVENTS.LOGINED, userInfo);
     });
   }
 }
