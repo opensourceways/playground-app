@@ -79,7 +79,7 @@ export function queryAuthentication(params) {
  * @returns
  */
 export function queryUserInfo(params) {
-  const url = "/api/playground/user/information";
+  const url = "/api/playground/oauth2/callback";
   return request.get(url, { params }).then((res) => {
     return res.data;
   });
