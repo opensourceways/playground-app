@@ -1,3 +1,3 @@
-import { doSignUp } from "@/shared/login";
+import { getCodeByUrl } from "@/shared/login";
 
-doSignUp();
+getCodeByUrl();

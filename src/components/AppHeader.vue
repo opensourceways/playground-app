@@ -3,7 +3,7 @@ import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import mitt from "@/shared/mitt";
 
-import { goAuthorize, LOGIN_EVENTS, logout } from "@/shared/login";
+import { goAuthorize, LOGIN_EVENTS, logout, getUserAuth } from "@/shared/login";
 import { isLoggingIn } from "@/shared/login";
 import { PLAYGROUND_PAGES } from "@/pages/playground/shared";
 
@@ -14,7 +14,6 @@ import LoadingArc from "./LoadingArc.vue";
 import logoImg from "@/assets/logo/moocstudio-logo.png";
 
 const router = useRouter();
-
 const userInfo = reactive({});
 
 const logoutLabel = "退出登录";
@@ -59,11 +58,18 @@ mitt.on(LOGIN_EVENTS.SHOW_LOGIN, () => {
   goAuthorize();
 });
 
-mitt.on(LOGIN_EVENTS.LOGINED, (data) => {
-  userInfo.userId = data.userId;
-  userInfo.name = data.nickName || data.email;
-  userInfo.avatar = data.avatarUrl;
+mitt.on(LOGIN_EVENTS.LOGINED, (_userInfo) => {
+  userInfo.userId = _userInfo.sub || "";
+  userInfo.name = _userInfo.nickname || "";
+  userInfo.avatar = _userInfo.picture || "";
 });
+function getUserInfo() {
+  const { userInfo: _userInfo } = getUserAuth();
+  userInfo.userId = _userInfo.sub || "";
+  userInfo.name = _userInfo.nickname || "";
+  userInfo.avatar = _userInfo.picture || "";
+}
+getUserInfo();
 
 mitt.on(LOGIN_EVENTS.LOGOUT, () => {
   userInfo.userId = "";
