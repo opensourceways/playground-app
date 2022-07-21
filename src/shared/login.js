@@ -140,12 +140,15 @@ export function getUserAuth() {
 export function showLogin() {
   mitt.emit(LOGIN_EVENTS.SHOW_LOGIN);
 }
-const redirectUri = "https://preview.moocstudio.openeuler.sh/";
+const redirectUri = `${location.origin}/`;
 // 退出
 export function logout() {
   queryAppId().then((res) => {
     if (res.code === 200) {
-      const client1 = createClient(res.callbackInfo.appId);
+      const client1 = createClient(
+        res.callbackInfo.appId,
+        res.callbackInfo.appHost
+      );
       const { userInfo } = getUserAuth();
       let logoutUrl = client1.buildLogoutUrl({
         protocol: "oidc",
@@ -160,10 +163,10 @@ export function logout() {
     }
   });
 }
-function createClient(appId) {
+function createClient(appId, appHost) {
   return new AuthenticationClient({
-    appId: appId,
-    appHost: "https://openeuler.authing.cn",
+    appId,
+    appHost,
     redirectUri,
   });
 }
@@ -176,7 +179,10 @@ export function reLogin() {
 export async function goAuthorize() {
   queryAppId().then((res) => {
     if (res.code === 200) {
-      const client = createClient(res.callbackInfo.appId);
+      const client = createClient(
+        res.callbackInfo.appId,
+        res.callbackInfo.appHost
+      );
       // 构造 OIDC 授权登录 URL
       let url = client.buildAuthorizeUrl();
       // 如果需要获取 Refresh token，请在 scope 中加入 offline_access 项
