@@ -1,15 +1,8 @@
 import { ref, computed } from "vue";
 
 import mitt from "@/shared/mitt";
-import { queryAuthentication, queryUserInfo } from "@/service/api";
-import {
-  getAuthCode,
-  getAuthIdentity,
-  setAuthCode,
-  setAuthIdentity,
-} from "./login-code";
-import { Guard, GuardMode } from "@authing/native-js-ui-components";
-import { queryAppId } from "@/service/api";
+import { AuthenticationClient } from "authing-js-sdk";
+import { queryAppId, queryUserInfo } from "@/service/api";
 
 export const LOGIN_EVENTS = {
   SHOW_LOGIN: "show-login",
@@ -27,7 +20,7 @@ export const LOGIN_STATUS = {
 
 const LOGIN_KEYS = {
   USER_TOKEN: "_U_T_",
-  USER_ID: "_U_I_",
+  USER_INFO: "_U_I_",
 };
 
 export let loginStatus = ref(LOGIN_STATUS.NOT);
@@ -57,7 +50,6 @@ export const isLoginFailed = computed(() => {
 });
 
 let userInfo = null;
-let guard = null;
 
 // 获取用户信息
 export function getUserInfo() {
@@ -67,60 +59,80 @@ export function getUserInfo() {
     return null;
   }
 }
-
-// 登录
-export async function doSignUp() {
-  const code = getAuthCode();
-  const identity = getAuthIdentity();
-  if (code) {
-    try {
-      setStatus(LOGIN_STATUS.DOING);
-      // 使用用户id和身份源id获取用户token及其他信息
-      const res = await queryAuthentication({
-        id: code,
-        federationIdentityId: identity,
-      });
-
-      if (res.code === 200) {
-        afterLogined(res.userInfo);
+export function getCodeByUrl() {
+  const query = getUrlParam();
+  if (query.code && query.state) {
+    const param = {
+      code: query.code,
+      state: query.state,
+    };
+    queryUserInfo(param).then((res) => {
+      const {
+        token = "",
+        idtoken = "",
+        user: { picture = "", nickname = "", sub = "" },
+      } = res;
+      saveUserAuth(token, { picture, nickname, sub, idtoken });
+      mitt.emit(LOGIN_EVENTS.LOGINED, { picture, nickname, sub });
+      // 去掉url中的code
+      let newUrl = location.origin + "/#/home";
+      if (window.history.replaceState) {
+        window.history.replaceState({}, "", newUrl);
       } else {
-        throw new Error(res.code + " " + res.message);
+        window.location.href = newUrl;
       }
-    } catch (error) {
-      setStatus(LOGIN_STATUS.FAILED);
-
-      console.error("授权获取用户信息失败", error);
-    }
-  } else {
-    requestUserInfo();
+    });
   }
 }
 
+function getUrlParam(url = window.location.search) {
+  const param = {};
+  const arr = url.split("?");
+  if (arr[1]) {
+    const _arr = arr[1].split("&") || [];
+    _arr.forEach((item) => {
+      const it = item.split("=");
+      if (it.length === 2) {
+        param[it[0]] = it[1];
+      }
+    });
+  }
+  return param;
+}
+
 // 存储用户id及token，用于下次登录
-export function saveUserAuth(id, code) {
-  if (!id && !code) {
-    localStorage.removeItem(LOGIN_KEYS.USER_ID);
+export function saveUserAuth(code, info) {
+  if (!info && !code) {
+    localStorage.removeItem(LOGIN_KEYS.USER_INFO);
     localStorage.removeItem(LOGIN_KEYS.USER_TOKEN);
   } else {
-    localStorage.setItem(LOGIN_KEYS.USER_ID, id);
+    localStorage.setItem(LOGIN_KEYS.USER_INFO, JSON.stringify(info));
     localStorage.setItem(LOGIN_KEYS.USER_TOKEN, code);
   }
 }
 
 // 获取用户id及token
 export function getUserAuth() {
-  let token = localStorage.getItem(LOGIN_KEYS.USER_TOKEN);
-  let userId = localStorage.getItem(LOGIN_KEYS.USER_ID);
-  if (token === "undefined" || userId === "undefined") {
+  let token = localStorage.getItem(LOGIN_KEYS.USER_TOKEN) || "";
+  let userInfo = localStorage.getItem(LOGIN_KEYS.USER_INFO);
+  let userId = -1;
+  if (token === "undefined" || userInfo === "undefined") {
     saveUserAuth();
     token = "";
+    userInfo = {};
     userId = -1;
   } else {
-    userId = parseInt(userId);
+    try {
+      userInfo = JSON.parse(userInfo) || {};
+    } catch {
+      userInfo = {};
+    }
+    userId = userInfo.sub || -1;
   }
   return {
     userId,
     token,
+    userInfo,
   };
 }
 
@@ -128,49 +140,35 @@ export function getUserAuth() {
 export function showLogin() {
   mitt.emit(LOGIN_EVENTS.SHOW_LOGIN);
 }
-
+const redirectUri = `${location.origin}/`;
 // 退出
 export function logout() {
-  setStatus(LOGIN_STATUS.NOT);
-  userInfo = null;
-  saveUserAuth();
-  mitt.emit(LOGIN_EVENTS.LOGOUT);
-}
-
-// 请求用户信息
-export async function requestUserInfo() {
-  const { userId, token } = getUserAuth();
-  if (userId && token) {
-    try {
-      setStatus(LOGIN_STATUS.DOING);
-
-      const res = await queryUserInfo({
-        token,
-        userId,
+  queryAppId().then((res) => {
+    if (res.code === 200) {
+      const client1 = createClient(
+        res.callbackInfo.appId,
+        res.callbackInfo.appHost
+      );
+      const { userInfo } = getUserAuth();
+      let logoutUrl = client1.buildLogoutUrl({
+        protocol: "oidc",
+        expert: true,
+        redirectUri,
+        idToken: userInfo.idtoken,
       });
-
-      if (res.code === 200 && res.userInfo.userId) {
-        afterLogined(res.userInfo);
-      } else {
-        throw new Error(res.code + " " + res.message);
-      }
-    } catch (err) {
-      setStatus(LOGIN_STATUS.FAILED);
+      setStatus(LOGIN_STATUS.NOT);
       saveUserAuth();
-      console.error("获取用户信息失败", err);
+      mitt.emit(LOGIN_EVENTS.LOGOUT);
+      location.href = logoutUrl;
     }
-  }
+  });
 }
-
-function afterLogined(userInfo) {
-  if (!userInfo || !userInfo.userId) {
-    return;
-  }
-  saveUserAuth(userInfo.userId, userInfo.userToken);
-
-  setStatus(LOGIN_STATUS.DONE);
-
-  mitt.emit(LOGIN_EVENTS.LOGINED, userInfo);
+function createClient(appId, appHost) {
+  return new AuthenticationClient({
+    appId,
+    appHost,
+    redirectUri,
+  });
 }
 
 export function reLogin() {
@@ -178,56 +176,21 @@ export function reLogin() {
   showLogin();
 }
 
-/**
- * 调用登录组件
- * @returns
- */
-export async function initGuard() {
-  if (!guard) {
-    try {
-      const res = await queryAppId();
-      if (res.code === 200) {
-        // 初始化登录组件
-        guard = new Guard(res.callbackInfo.appId, {
-          title: "openGauss",
-          mode: GuardMode.Modal,
-          clickCloseable: true,
-          escCloseable: true,
-          disableRegister: true,
-          disableResetPwd: true,
-        });
-        guard.on("login", (authClient) => {
-          if (authClient && authClient.id) {
-            // 用户id
-            setAuthCode(authClient.id);
-            // 身份源id
-            setAuthIdentity(authClient.federationIdentityId || "");
-            // 登录，获取用户token
-            doSignUp();
-
-            setTimeout(() => {
-              guard.hide();
-              removeGuard();
-            }, 300);
-          }
-        });
-      } else {
-        console.error("获取登录信息失败！");
-      }
-    } catch (error) {
-      console.error("获取登录信息失败！");
-    }
-  }
-  return guard;
-}
-
 export async function goAuthorize() {
-  const guard = await initGuard();
-  if (guard) {
-    guard.show();
-  }
-}
-
-export function removeGuard() {
-  guard = null;
+  queryAppId().then((res) => {
+    if (res.code === 200) {
+      const client = createClient(
+        res.callbackInfo.appId,
+        res.callbackInfo.appHost
+      );
+      // 构造 OIDC 授权登录 URL
+      let url = client.buildAuthorizeUrl();
+      // 如果需要获取 Refresh token，请在 scope 中加入 offline_access 项
+      let url2 = client.buildAuthorizeUrl({
+        scope: "openid profile offline_access",
+      });
+      location.href = url;
+      url2;
+    }
+  });
 }
