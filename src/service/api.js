@@ -90,12 +90,11 @@ export function queryUserTokenInfo(params) {
  * @returns
  */
 export function queryCourseStatus() {
-  const { userId, token } = getUserAuth();
+  const { token } = getUserAuth();
   const url = "/api/playground/users/course/chapter";
   return request
     .get(url, {
       params: {
-        userId,
         token,
       },
     })
@@ -110,11 +109,9 @@ export function queryCourseStatus() {
  * @returns
  */
 export function setCourseStatus(params) {
-  const { userId, token } = getUserAuth();
+  const { token } = getUserAuth();
   const url = "/api/playground/users/course/chapter";
-  return request
-    .post(url, Object.assign({ token, userId }, params))
-    .then((res) => {
-      return res.data;
-    });
+  return request.post(url, Object.assign({ token }, params)).then((res) => {
+    return res.data;
+  });
 }
