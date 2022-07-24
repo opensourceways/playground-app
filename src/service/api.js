@@ -84,18 +84,28 @@ export function queryUserTokenInfo(params) {
     return res.data;
   });
 }
+/**
+ * 获取idtoken
+ * @param {*} params
+ * @returns
+ */
+export function queryIDToken(params) {
+  const url = "/api/playground/user/getIdToken";
+  return request.get(url, { params }).then((res) => {
+    return res.data;
+  });
+}
 
 /**
  * 获取用户学习进度
  * @returns
  */
 export function queryCourseStatus() {
-  const { userId, token } = getUserAuth();
+  const { token } = getUserAuth();
   const url = "/api/playground/users/course/chapter";
   return request
     .get(url, {
       params: {
-        userId,
         token,
       },
     })
@@ -110,11 +120,9 @@ export function queryCourseStatus() {
  * @returns
  */
 export function setCourseStatus(params) {
-  const { userId, token } = getUserAuth();
+  const { token } = getUserAuth();
   const url = "/api/playground/users/course/chapter";
-  return request
-    .post(url, Object.assign({ token, userId }, params))
-    .then((res) => {
-      return res.data;
-    });
+  return request.post(url, Object.assign({ token }, params)).then((res) => {
+    return res.data;
+  });
 }

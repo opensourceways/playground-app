@@ -59,7 +59,7 @@ mitt.on(LOGIN_EVENTS.SHOW_LOGIN, () => {
 });
 
 mitt.on(LOGIN_EVENTS.LOGINED, (_userInfo) => {
-  userInfo.userId = _userInfo.sub || "";
+  userInfo.userId = _userInfo.picture || "";
   userInfo.name = _userInfo.nickname || "";
   userInfo.avatar = _userInfo.picture || "";
 });

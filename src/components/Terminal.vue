@@ -143,15 +143,14 @@ function ensureResourceReady(resId) {
  * 创建资源实例
  */
 async function createInstance(isNew) {
-  const { userId, token } = getUserAuth();
-  if (!userId || !props.dataset) {
+  const { token } = getUserAuth();
+  if (!props.dataset) {
     return;
   }
   try {
     const { resource } = props.dataset;
     const res = await createCrdResouse({
       token,
-      userId,
       contactEmail: resource.email,
       backend: resource.backend,
       courseId: resource.courseId,
