@@ -84,6 +84,17 @@ export function queryUserTokenInfo(params) {
     return res.data;
   });
 }
+/**
+ * 获取idtoken
+ * @param {*} params
+ * @returns
+ */
+export function queryIDToken(params) {
+  const url = "/api/playground/user/getIdToken";
+  return request.get(url, { params }).then((res) => {
+    return res.data;
+  });
+}
 
 /**
  * 获取用户学习进度
