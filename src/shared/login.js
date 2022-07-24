@@ -2,10 +2,16 @@ import { ref, computed } from "vue";
 
 import mitt from "@/shared/mitt";
 import { AuthenticationClient } from "authing-js-sdk";
-import { queryAppId, queryUserTokenInfo, queryUserInfo } from "@/service/api";
+import {
+  queryAppId,
+  queryUserTokenInfo,
+  queryUserInfo,
+  queryIDToken,
+} from "@/service/api";
 
 export const LOGIN_EVENTS = {
   SHOW_LOGIN: "show-login",
+  SHOW_LOGINED: "show-logined",
   LOGOUT: "do-logout",
   LOGINED: "logined",
 };
@@ -67,32 +73,20 @@ export function getCodeByUrl() {
       state: query.state,
     };
     queryUserTokenInfo(param).then((res) => {
-      const {
-        token = "",
-        idtoken = "",
-        user: { picture = "", nickname = "", sub = "" },
-      } = res;
-      saveUserAuth(token, { sub, idtoken });
-      mitt.emit(LOGIN_EVENTS.LOGINED, { picture, nickname, sub });
-      // 去掉url中的code
-      setStatus(LOGIN_STATUS.DONE);
-      let newUrl = location.origin + "/#/home";
-      if (window.history.replaceState) {
-        window.history.replaceState({}, "", newUrl);
-      } else {
-        window.location.href = newUrl;
-      }
+      const { token = "" } = res;
+      saveUserAuth(token);
+      let newUrl = location.origin;
+      window.parent.window.location.href = newUrl;
     });
   } else {
     refreshToken();
   }
 }
 function refreshToken() {
-  const { userId, token } = getUserAuth();
-  if (userId && token) {
+  const { token } = getUserAuth();
+  if (token) {
     queryUserInfo({
       token,
-      userId,
     }).then((res) => {
       const { userInfo } = res;
       setStatus(LOGIN_STATUS.DONE);
@@ -117,12 +111,10 @@ function getUrlParam(url = window.location.search) {
 }
 
 // 存储用户id及token，用于下次登录
-export function saveUserAuth(code, info) {
-  if (!info && !code) {
-    localStorage.removeItem(LOGIN_KEYS.USER_INFO);
+export function saveUserAuth(code) {
+  if (!code) {
     localStorage.removeItem(LOGIN_KEYS.USER_TOKEN);
   } else {
-    localStorage.setItem(LOGIN_KEYS.USER_INFO, JSON.stringify(info));
     localStorage.setItem(LOGIN_KEYS.USER_TOKEN, code);
   }
 }
@@ -130,25 +122,12 @@ export function saveUserAuth(code, info) {
 // 获取用户id及token
 export function getUserAuth() {
   let token = localStorage.getItem(LOGIN_KEYS.USER_TOKEN) || "";
-  let userInfo = localStorage.getItem(LOGIN_KEYS.USER_INFO);
-  let userId = -1;
-  if (token === "undefined" || userInfo === "undefined") {
+  if (token === "undefined") {
     saveUserAuth();
     token = "";
-    userInfo = {};
-    userId = -1;
-  } else {
-    try {
-      userInfo = JSON.parse(userInfo) || {};
-    } catch {
-      userInfo = {};
-    }
-    userId = userInfo.sub || -1;
   }
   return {
-    userId,
     token,
-    userInfo,
   };
 }
 
@@ -159,24 +138,26 @@ export function showLogin() {
 const redirectUri = `${location.origin}/`;
 // 退出
 export function logout() {
-  queryAppId().then((res) => {
-    if (res.code === 200) {
-      const client1 = createClient(
-        res.callbackInfo.appId,
-        res.callbackInfo.appHost
-      );
-      const { userInfo } = getUserAuth();
-      let logoutUrl = client1.buildLogoutUrl({
-        protocol: "oidc",
-        expert: true,
-        redirectUri,
-        idToken: userInfo.idtoken,
-      });
-      setStatus(LOGIN_STATUS.NOT);
-      saveUserAuth();
-      mitt.emit(LOGIN_EVENTS.LOGOUT);
-      location.href = logoutUrl;
-    }
+  const { token } = getUserAuth();
+  queryIDToken({ token }).then((idToken) => {
+    queryAppId().then((res) => {
+      if (res.code === 200) {
+        const client1 = createClient(
+          res.callbackInfo.appId,
+          res.callbackInfo.appHost
+        );
+        let logoutUrl = client1.buildLogoutUrl({
+          protocol: "oidc",
+          expert: true,
+          redirectUri,
+          idToken: idToken,
+        });
+        setStatus(LOGIN_STATUS.NOT);
+        saveUserAuth();
+        mitt.emit(LOGIN_EVENTS.LOGOUT);
+        location.href = logoutUrl;
+      }
+    });
   });
 }
 function createClient(appId, appHost) {
@@ -205,7 +186,7 @@ export async function goAuthorize() {
       let url2 = client.buildAuthorizeUrl({
         scope: "openid profile offline_access",
       });
-      location.href = url;
+      mitt.emit(LOGIN_EVENTS.SHOW_LOGINED, url);
       url2;
     }
   });
